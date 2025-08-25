@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HuertoHogar | Del Campo al Hogar</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <img src="static/img/Logo Huerto Hogar.jpg" alt="HuertoHogar Logo" class="logo">
+        <h1>HUERTO HOGAR</h1>
+        <p class="slogan">DEL CAMPO AL HOGAR</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#about">Nosotros</a></li>
+            <li><a href="#products">Productos</a></li>
+            <li><a href="#deseos">Deseos</a></li>
+            <li><a href="#diseno">Diseño Visual</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="about">
+            <h2>Nuestra Misión y Visión</h2>
+            <p class="mission">Nuestra misión es proporcionar productos frescos y de calidad directamente desde el campo hasta la puerta de nuestros clientes, garantizando la frescura y el sabor en cada entrega. Nos comprometemos a fomentar una conexión más cercana entre los consumidores y los agricultores locales, apoyando prácticas agrícolas sostenibles y promoviendo una alimentación saludable en todos los hogares chilenos.</p>
+            <p class="vision">Nuestra visión es ser la tienda online líder en la distribución de productos frescos y naturales en Chile, reconocida por nuestra calidad excepcional, servicio al cliente y compromiso con la sostenibilidad. Aspiramos a expandir nuestra presencia a nivel nacional e internacional, estableciendo un nuevo estándar en la distribución de productos agrícolas directos del productor al consumidor.</p>
+        </section>
+
+        <section id="products">
+            <h2>Catálogo de Productos</h2>
+            <div class="filters">
+                <button class="filter-btn active" data-category="all">Todos</button>
+                <button class="filter-btn" data-category="Frutas Frescas">Frutas Frescas</button>
+                <button class="filter-btn" data-category="Verduras Orgánicas">Verduras Orgánicas</button>
+                <button class="filter-btn" data-category="Productos Orgánicos">Productos Orgánicos</button>
+                <button class="filter-btn" data-category="Productos Lácteos">Productos Lácteos</button>
+            </div>
+            <div id="product-list" class="product-grid">
+            </div>
+        </section>
+
+        <aside id="cart">
+            <h3>Mi Carrito de Compras</h3>
+            <div id="cart-items">
+                <p>Tu carrito está vacío.</p>
+            </div>
+            <div id="cart-summary">
+                <p>Total: <span id="cart-total">$0 CLP</span></p>
+            </div>
+        </aside>
+
+        <section id="deseos">
+            <h2>Deseos para la Página Web</h2>
+            <div class="deseos-grid">
+                <article>
+                    <h3>Contenido Educativo</h3>
+                    <p>Incluir un blog o sección de noticias sobre alimentación saludable y sostenibilidad.</p>
+                </article>
+                <article>
+                    <h3>Programas de Fidelización</h3>
+                    <p>Desarrollar un sistema de puntos o descuentos para clientes frecuentes.</p>
+                </article>
+                <article>
+                    <h3>Integración con Redes Sociales</h3>
+                    <p>Implementar funciones para compartir productos y promociones en redes sociales.</p>
+                </article>
+                <article>
+                    <h3>Búsqueda Avanzada</h3>
+                    <p>Ofrecer herramientas de búsqueda con opciones de filtrado para encontrar productos específicos rápidamente.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="diseno">
+            <h2>Propuesta de Diseño Visual</h2>
+            <div class="diseno-grid">
+                <div class="colores">
+                    <h3>Colores</h3>
+                    <div class="color-item">
+                        <div class="color-box" style="background-color: #F7F7F7;"></div>
+                        <span>Blanco Suave (#F7F7F7)</span>
+                    </div>
+                    <div class="color-item">
+                        <div class="color-box" style="background-color: #2E8B57;"></div>
+                        <span>Verde Esmeralda (#2E8B57)</span>
+                    </div>
+                    <div class="color-item">
+                        <div class="color-box" style="background-color: #FFD700;"></div>
+                        <span>Amarillo Mostaza (#FFD700)</span>
+                    </div>
+                    <div class="color-item">
+                        <div class="color-box" style="background-color: #8B4513;"></div>
+                        <span>Marrón Claro (#8B4513)</span>
+                    </div>
+                </div>
+                <div class="tipografia">
+                    <h3>Tipografía</h3>
+                    <p class="font-montserrat">**Montserrat**</p>
+                    <p class="font-playfair">**Playfair Display**</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>HuertoHogar © 2025. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="static/script.js"></script>
+</body>
+</html>
