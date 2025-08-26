@@ -1,5 +1,8 @@
 # 🥑 HuertoHogar - Tienda Online de Productos Frescos
 
+![Estado del proyecto](https://img.shields.io/badge/estado-en%20desarrollo-yellow)
+![Licencia](https://img.shields.io/badge/licencia-MIT-green)
+
 **HuertoHogar** es una tienda online dedicada a llevar la frescura y calidad de los productos del campo directamente a la puerta de nuestros clientes en Chile. Con más de 6 años de experiencia y presencia en 9 ciudades, promovemos un estilo de vida saludable y sostenible.
 
 ---
@@ -29,10 +32,24 @@ Ser la tienda online líder en la distribución de productos frescos y naturales
 
 ---
 
+## 🖼️ Capturas de pantalla
+
+### Página principal
+![Página principal](assets/img/home.png)
+
+### Registro de usuario
+![Registro de usuario](assets/img/registro.png)
+
+### Catálogo de productos
+![Catálogo de productos](assets/img/productos.png)
+
+> _Agrega más capturas si lo deseas, solo sube las imágenes a `assets/img/` y enlázalas aquí._
+
+---
+
 ## 🛠️ Tecnologías utilizadas
 
 - HTML5, CSS3, JavaScript
-- [Frameworks/librerías si corresponde]
 - Google Fonts: Montserrat, Playfair Display
 - Font Awesome
 
