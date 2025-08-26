@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HuertoHogar | Del Campo al Hogar</title>
+    <title>Blog - HuertoHogar</title>
     <link rel="stylesheet" href="assets/css/normalize.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +25,7 @@
                 <a href="blog.html">Blog</a>
             </nav>
             <div class="header-actions">
-                <div class="search-bar">
+                 <div class="search-bar">
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="Buscar...">
                 </div>
@@ -38,48 +38,42 @@
         </div>
     </header>
 
-    <main>
-        <section class="hero-section" style="background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url('https://images.pexels.com/photos/128402/pexels-photo-128402.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');">
-            <h1>Del Campo a tu Hogar</h1>
-            <p>Productos frescos, orgánicos y llenos de sabor, seleccionados para ti.</p>
-            <a href="productos.html" class="btn btn-primary">Descubre Nuestros Productos</a>
-        </section>
-
-        <section id="categories" class="content-section">
-            <h2 class="section-title">Nuestras Categorías</h2>
-            <div class="category-grid">
-                 <div class="category-card grid-card">
-                    <img src="https://media.istockphoto.com/id/467652436/es/foto/mezcla-de-frutas-frescas.jpg?s=612x612&w=0&k=20&c=CJEx3NOdOKNzJ_1XokafBhz84h8_J6OOXvp1cfmIogQ=" alt="Frutas Frescas">
-                    <h3>Frutas Frescas</h3>
-                </div>
-                <div class="category-card grid-card" style="--delay: 0.1s">
-                    <img src="https://media.istockphoto.com/id/1203599923/es/foto/fondo-gastron%C3%B3mico-con-surtido-de-verduras-org%C3%A1nicas-frescas.jpg?s=170667a&w=0&k=20&c=1VdiE2kPhNDVbws9bEanQA2JEMR6xrBjrq1PHvkhLp0=" alt="Verduras Orgánicas">
-                    <h3>Verduras Orgánicas</h3>
-                </div>
-                <div class="category-card grid-card" style="--delay: 0.2s">
-                    <img src="https://jappi.com.co/wp-content/uploads/2022/09/Jappi-1-1.jpg" alt="Productos Orgánicos">
-                    <h3>Productos Orgánicos</h3>
-                </div>
-                <div class="category-card grid-card" style="--delay: 0.3s">
-                    <img src="https://images.ecestaticos.com/5R1YUlQPhHlncdmKDsmSByzzAD4=/42x19:661x483/1200x899/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F773%2F094%2F19d%2F77309419d4585c2d4a3590623d2e9170.jpg" alt="Lácteos">
-                    <h3>Lácteos</h3>
-                </div>
-            </div>
-        </section>
-
-        <section id="products" class="content-section">
-            <h2 class="section-title">Productos Destacados</h2>
-            <div id="product-list-home" class="product-grid">
-                </div>
-        </section>
+    <main class="page-container">
+        <h1 class="page-title">Nuestro Blog</h1>
+        <p class="page-subtitle">Consejos, recetas y noticias sobre alimentación saludable y sostenibilidad.</p>
         
-        <section id="about" class="content-section about-section">
-            <div class="about-content">
-                <h2>Nuestra Misión es Conectarte con la Tierra</h2>
-                <p>En HuertoHogar, nuestra misión es llevar productos frescos y orgánicos directamente de los campos chilenos a tu hogar, garantizando calidad y sostenibilidad. Apoyamos a los agricultores locales y promovemos un estilo de vida saludable.</p>
-                <a href="nosotros.html" class="btn btn-secondary">Conoce más sobre nosotros</a>
+        <div class="blog-grid content-section">
+            <div class="blog-card grid-card">
+                <img src="https://images.pexels.com/photos/1656666/pexels-photo-1656666.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Receta de ensalada">
+                <div class="blog-info">
+                    <span class="blog-category">Recetas</span>
+                    <h3>Ensalada de Verano con Ingredientes Frescos</h3>
+                    <p>Descubre cómo preparar una deliciosa y nutritiva ensalada con los productos de nuestra última cosecha...</p>
+                    <a href="#" class="read-more-link">Leer más →</a>
+                </div>
             </div>
-        </section>
+
+            <div class="blog-card grid-card" style="--delay: 0.1s">
+                <img src="https://images.pexels.com/photos/4198023/pexels-photo-4198023.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Compostaje casero">
+                <div class="blog-info">
+                    <span class="blog-category">Sostenibilidad</span>
+                    <h3>5 Pasos Sencillos para Empezar a Compostar en Casa</h3>
+                    <p>Aprende a reducir tus residuos y a crear abono para tus plantas con esta guía de compostaje para principiantes...</p>
+                    <a href="#" class="read-more-link">Leer más →</a>
+                </div>
+            </div>
+
+            <div class="blog-card grid-card" style="--delay: 0.2s">
+                <img src="https://images.pexels.com/photos/257853/pexels-photo-257853.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Beneficios de la miel">
+                <div class="blog-info">
+                    <span class="blog-category">Salud</span>
+                    <h3>Los Beneficios de la Miel Orgánica para tu Bienestar</h3>
+                    <p>Más allá de endulzar, la miel pura de abeja tiene propiedades increíbles para tu salud. Te contamos todo aquí...</p>
+                    <a href="#" class="read-more-link">Leer más →</a>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <footer class="main-footer">
@@ -108,7 +102,7 @@
         </div>
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
-
+    
     <div id="cart-overlay" class="hidden"></div>
     <div id="cart-offcanvas" class="hidden">
         <div class="cart-header">

@@ -1,0 +1,374 @@
+/* === HOJA DE ESTILOS HUERTOHOGAR - FINAL Y COMPLETA === */
+
+/* --- 1. Variables y Estilos Base --- */
+:root {
+    /* Paleta de colores oficial del PDF */
+    --color-background: #F7F7F7;
+    --color-primary: #2E8B57;      /* Verde Esmeralda */
+    --color-accent: #FFD700;       /* Amarillo Mostaza */
+    --color-title: #8B4513;        /* Marrón Claro */
+    --color-text-main: #333333;    /* Gris Oscuro */
+    --color-text-secondary: #666666; /* Gris Medio */
+    
+    /* Fuentes oficiales del PDF */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Montserrat', sans-serif;
+
+    /* Utilidades de diseño */
+    --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 6px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-text-main);
+    line-height: 1.6;
+    margin: 0;
+}
+body.cart-open { overflow: hidden; }
+
+/* --- 2. Encabezado y Navegación --- */
+.main-header {
+    background: #FFFFFF;
+    border-bottom: 1px solid #EAEAEA;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--color-text-main);
+}
+.logo { max-width: 50px; height: auto; }
+.logo-container h2 { font-family: var(--font-heading); color: var(--color-title); margin: 0; font-size: 1.75rem; }
+.main-nav { display: flex; gap: 2.5rem; }
+.main-nav a {
+    text-decoration: none;
+    color: var(--color-text-main);
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 4px;
+}
+.main-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-primary);
+    transition: width 0.3s ease;
+}
+.main-nav a:hover::after { width: 100%; }
+.header-actions { display: flex; align-items: center; gap: 1.5rem; }
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-background);
+    border-radius: var(--border-radius);
+    padding: 0.5rem 1rem;
+    border: 1px solid #EAEAEA;
+}
+.search-bar i { color: var(--color-text-secondary); }
+.search-bar input {
+    border: none;
+    background: none;
+    outline: none;
+    padding-left: 0.5rem;
+    font-family: var(--font-body);
+    color: var(--color-text-main);
+}
+.login-link {
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--color-text-main);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    transition: background-color 0.2s ease;
+}
+.login-link:hover { background-color: #f0f0f0; }
+.cart-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    position: relative;
+    color: var(--color-text-main);
+}
+.cart-counter {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: var(--color-accent);
+    color: var(--color-text-main);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- 3. Componentes Generales --- */
+.content-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    text-align: center;
+    margin: 0 0 3rem 0;
+    color: var(--color-title);
+}
+.btn {
+    padding: 0.8rem 1.8rem;
+    border-radius: var(--border-radius);
+    border: none;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+.btn-primary { background-color: var(--color-primary); color: white; }
+.btn-secondary { background-color: #EAEAEA; color: var(--color-text-main); }
+
+/* --- 4. Estilos de Secciones --- */
+.hero-section {
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Efecto Parallax */
+}
+.hero-section h1 { font-family: var(--font-heading); font-size: 3.5rem; margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
+.hero-section p { font-size: 1.25rem; margin: 1rem 0 2rem 0; max-width: 600px; }
+.category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+.category-card { position: relative; overflow: hidden; border-radius: var(--border-radius); box-shadow: var(--shadow-soft); }
+.category-card img { width: 100%; height: 300px; object-fit: cover; transition: transform 0.3s ease; }
+.category-card:hover img { transform: scale(1.05); }
+.category-card h3 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 1rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    color: white;
+    font-family: var(--font-heading);
+}
+.product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+.product-card {
+    background: #FFFFFF;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-medium); }
+.product-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-bottom: 1px solid #f0f0f0;
+}
+.product-info { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; text-align: center; }
+.product-info h4 { margin: 0 0 0.5rem 0; font-size: 1.25rem; }
+.product-info .price { color: var(--color-primary); font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; }
+.add-to-cart-btn {
+    margin-top: auto;
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.2s ease;
+}
+.add-to-cart-btn:hover { background-color: #257549; }
+.about-section { background-color: var(--color-surface); text-align: center; }
+.about-content { max-width: 800px; margin: 0 auto; }
+
+/* --- 5. Carrito Deslizable --- */
+#cart-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); z-index: 1010; opacity: 0;
+    transition: opacity 0.3s ease; pointer-events: none;
+}
+#cart-overlay.visible { opacity: 1; pointer-events: auto; }
+#cart-offcanvas {
+    position: fixed; top: 0; right: 0; width: 100%; max-width: 400px;
+    height: 100%; background-color: white; z-index: 1020; display: flex;
+    flex-direction: column; box-shadow: -5px 0 15px rgba(0,0,0,0.15);
+    transform: translateX(100%); transition: transform 0.3s ease;
+}
+#cart-offcanvas.visible { transform: translateX(0); }
+.hidden { display: block !important; visibility: hidden; }
+#cart-overlay.visible.hidden, #cart-offcanvas.visible.hidden { visibility: visible; }
+.cart-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #EAEAEA; }
+.cart-header h3 { font-family: var(--font-heading); margin: 0; font-size: 1.5rem; color: var(--color-title); }
+.close-btn { background: none; border: none; font-size: 2.5rem; cursor: pointer; color: var(--color-text-secondary); }
+.cart-body { flex-grow: 1; overflow-y: auto; padding: 1.5rem; }
+.cart-item { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid #EAEAEA; }
+.cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
+.item-details { flex-grow: 1; }
+.item-details h4 { margin: 0 0 0.5rem 0; font-size: 1rem; }
+.item-details .price { color: var(--color-text-secondary); }
+.remove-btn { background: none; border: none; font-size: 1.5rem; color: #cc0000; cursor: pointer; }
+.cart-footer { padding: 1.5rem; border-top: 1px solid #EAEAEA; }
+.summary-line { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+.checkout-btn { width: 100%; }
+
+/* --- 6. Pie de Página --- */
+.main-footer {
+    background-color: #333333;
+    color: #FFFFFF;
+    padding: 4rem 2rem 2rem;
+    margin-top: 4rem;
+}
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto 2rem auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    text-align: left;
+}
+.footer-section h4 { font-family: var(--font-heading); font-size: 1.25rem; margin-bottom: 1rem; color: var(--color-accent); }
+.footer-section p { color: #CCCCCC; }
+.footer-section ul { list-style: none; padding: 0; }
+.footer-section li { margin-bottom: 0.5rem; }
+.footer-section a { text-decoration: none; color: #FFFFFF; transition: color 0.2s ease; }
+.footer-section a:hover { color: var(--color-accent); }
+.social-icons { display: flex; gap: 1rem; }
+.social-icons a { font-size: 1.5rem; color: #FFFFFF; }
+.footer-bottom { text-align: center; border-top: 1px solid #555555; padding-top: 2rem; color: var(--color-text-secondary); }
+
+/* --- 7. Estilos de Páginas Adicionales --- */
+.page-container { max-width: 1200px; margin: 2rem auto; padding: 2rem; }
+.page-title { font-family: var(--font-heading); font-size: 3rem; text-align: center; margin-bottom: 3rem; color: var(--color-title); }
+.page-subtitle {
+    text-align: center;
+    max-width: 600px;
+    margin: -2rem auto 3rem auto;
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+}
+.filters-container { display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; }
+.filter-btn { background-color: #FFFFFF; border: 1px solid #DDDDDD; padding: 0.75rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
+.filter-btn:hover { background-color: #f0f0f0; }
+.filter-btn.active { background-color: var(--color-primary); color: white; border-color: var(--color-primary); }
+.about-us-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; margin-bottom: 4rem; text-align: left; }
+.about-text-section h3 { font-family: var(--font-heading); font-size: 1.8rem; color: var(--color-primary); margin-bottom: 1rem; }
+.map-section { text-align: center; }
+.map-section .section-title { margin-bottom: 1rem; }
+.map-container { border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow-medium); border: 1px solid #EAEAEA; height: 480px; }
+.form-container { max-width: 500px; margin: 2rem auto; padding: 3rem; background-color: #FFFFFF; border-radius: var(--border-radius); box-shadow: var(--shadow-soft); }
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+.form-group input { width: 100%; padding: 0.75rem 1rem; border: 1px solid #ced4da; border-radius: 8px; font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s; }
+.form-group input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.2); outline: none; }
+.form-btn { width: 100%; padding: 1rem; font-size: 1.1rem; }
+.form-switch { text-align: center; margin-top: 1.5rem; }
+.form-switch a { color: var(--color-primary); font-weight: 700; text-decoration: none; }
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+.blog-card {
+    background-color: #FFFFFF;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.blog-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-medium); }
+.blog-card img { width: 100%; height: 200px; object-fit: cover; }
+.blog-info { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
+.blog-category {
+    display: inline-block;
+    background-color: var(--color-accent);
+    color: var(--color-text-main);
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    align-self: flex-start;
+}
+.blog-info h3 { font-family: var(--font-heading); font-size: 1.5rem; color: var(--color-title); margin: 0 0 0.5rem 0; }
+.blog-info p { color: var(--color-text-secondary); margin: 0 0 1.5rem 0; flex-grow: 1; }
+.read-more-link { font-weight: 700; color: var(--color-primary); text-decoration: none; align-self: flex-start; transition: color 0.2s ease; }
+.read-more-link:hover { color: var(--color-text-main); }
+
+
+/* --- 8. Animaciones Modernas --- */
+.content-section {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.content-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.grid-card {
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    opacity: 0;
+    transform: translateY(30px);
+    transition-delay: var(--delay, 0s);
+}
+.content-section.is-visible .grid-card {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- 9. Responsividad --- */
+@media (max-width: 992px) {
+    .main-nav, .search-bar { display: none; }
+    .header-actions { flex-grow: 1; justify-content: flex-end; }
+}
+@media (max-width: 768px) {
+    .header-content { flex-wrap: wrap; justify-content: space-between; }
+    .logo-container { order: 1; }
+    .header-actions { order: 2; }
+    .main-nav { display: none; }
+    .hero-section h1 { font-size: 2.5rem; }
+    .content-section, .page-container { padding: 2rem 1rem; }
+    .page-title { font-size: 2.2rem; }
+}
