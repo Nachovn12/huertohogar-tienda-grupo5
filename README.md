@@ -43,6 +43,8 @@ Ser la tienda online líder en la distribución de productos frescos y naturales
 ### Catálogo de productos
 ![Catálogo de productos](assets/img/productos.png)
 
+---
+
 ## 🛠️ Tecnologías utilizadas
 
 - HTML5, CSS3, JavaScript
