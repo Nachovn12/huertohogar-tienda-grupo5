@@ -10,6 +10,76 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <!-- OpenStreetMap con Leaflet (Alternativa gratuita) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        /* Estilos personalizados para marcadores */
+        .custom-marker {
+            background: transparent;
+            border: none;
+        }
+        
+        .marker-circle {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2E8B57, #4CAF50);
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .marker-number {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        /* Estilos para popups personalizados */
+        .custom-popup .leaflet-popup-content-wrapper {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border: 2px solid #2E8B57;
+        }
+        
+        .custom-popup .leaflet-popup-content {
+            margin: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .custom-popup .leaflet-popup-tip {
+            background: #ffffff;
+            border: 2px solid #2E8B57;
+        }
+        
+        /* Efectos hover mejorados */
+        .marker-circle:hover {
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(46, 139, 87, 0.4);
+            border-color: #FFD700;
+        }
+        
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            .marker-circle {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .marker-number {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -56,7 +126,75 @@
             <h2 class="section-title">Nuestras Tiendas</h2>
             <p>Operamos en más de 9 puntos a lo largo del país, incluyendo Santiago, Puerto Montt, Villarrica, Nacimiento, Viña del Mar, Valparaíso, y Concepción.</p>
             <div class="map-container">
-                 <iframe src="http://googleusercontent.com/maps/google.com/36" width="100%" height="480" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div id="map" style="width: 100%; height: 480px;"></div>
+            </div>
+            <div class="stores-info">
+                <h3>Ubicaciones de Nuestras Tiendas</h3>
+                <div class="stores-grid">
+                    <div class="store-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Santiago</h4>
+                            <p>Av. Providencia 1234, Providencia</p>
+                        </div>
+                    </div>
+                    <div class="store-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Puerto Montt</h4>
+                            <p>Av. Diego Portales 567, Puerto Montt</p>
+                        </div>
+                    </div>
+                    <div class="store-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Villarrica</h4>
+                            <p>Av. Bernardo O'Higgins 890, Villarrica</p>
+                        </div>
+                    </div>
+                    <div class="store-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Nacimiento</h4>
+                            <p>Av. Manuel Rodríguez 234, Nacimiento</p>
+                        </div>
+                    </div>
+                    <div class="store-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Viña del Mar</h4>
+                            <p>Av. Libertad 456, Viña del Mar</p>
+                        </div>
+                    </div>
+                    <div class="store-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Valparaíso</h4>
+                            <p>Av. Argentina 789, Valparaíso</p>
+                        </div>
+                    </div>
+                    <div class="store-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Concepción</h4>
+                            <p>Av. Pedro de Valdivia 321, Concepción</p>
+                        </div>
+                    </div>
+                    <div class="store-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>La Serena</h4>
+                            <p>Av. Francisco de Aguirre 654, La Serena</p>
+                        </div>
+                    </div>
+                    <div class="store-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Antofagasta</h4>
+                            <p>Av. Argentina 987, Antofagasta</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -106,5 +244,237 @@
     </div>
     
     <script src="assets/js/script.js"></script>
+    <script>
+        // Coordenadas de las tiendas en Chile
+        const stores = [
+            {
+                name: 'Santiago',
+                address: 'Av. Providencia 1234, Providencia',
+                lat: -33.4489,
+                lng: -70.6693,
+                info: 'Tienda Principal - Santiago Centro'
+            },
+            {
+                name: 'Puerto Montt',
+                address: 'Av. Diego Portales 567, Puerto Montt',
+                lat: -41.4718,
+                lng: -72.9396,
+                info: 'Tienda Puerto Montt - Región de Los Lagos'
+            },
+            {
+                name: 'Villarrica',
+                address: 'Av. Bernardo O\'Higgins 890, Villarrica',
+                lat: -39.2856,
+                lng: -72.2273,
+                info: 'Tienda Villarrica - Región de La Araucanía'
+            },
+            {
+                name: 'Nacimiento',
+                address: 'Av. Manuel Rodríguez 234, Nacimiento',
+                lat: -37.5026,
+                lng: -72.6731,
+                info: 'Tienda Nacimiento - Región del Biobío'
+            },
+            {
+                name: 'Viña del Mar',
+                address: 'Av. Libertad 456, Viña del Mar',
+                lat: -33.0245,
+                lng: -71.5518,
+                info: 'Tienda Viña del Mar - Región de Valparaíso'
+            },
+            {
+                name: 'Valparaíso',
+                address: 'Av. Argentina 789, Valparaíso',
+                lat: -33.0472,
+                lng: -71.6127,
+                info: 'Tienda Valparaíso - Puerto Principal'
+            },
+            {
+                name: 'Concepción',
+                address: 'Av. Pedro de Valdivia 321, Concepción',
+                lat: -36.8201,
+                lng: -73.0444,
+                info: 'Tienda Concepción - Región del Biobío'
+            },
+            {
+                name: 'La Serena',
+                address: 'Av. Francisco de Aguirre 654, La Serena',
+                lat: -29.9045,
+                lng: -71.2489,
+                info: 'Tienda La Serena - Región de Coquimbo'
+            },
+            {
+                name: 'Antofagasta',
+                address: 'Av. Argentina 987, Antofagasta',
+                lat: -23.6345,
+                lng: -70.3989,
+                info: 'Tienda Antofagasta - Región de Antofagasta'
+            }
+        ];
+
+        // Función para inicializar el mapa de OpenStreetMap
+        function initMap() {
+            try {
+                // Verificar que Leaflet esté disponible
+                if (typeof L === 'undefined') {
+                    console.error('Leaflet no está disponible');
+                    handleMapError();
+                    return;
+                }
+
+                // Crear el mapa centrado en Chile
+                const map = L.map('map').setView([-35.6751, -71.5430], 6);
+
+                // Agregar capa de OpenStreetMap
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    maxZoom: 18
+                }).addTo(map);
+
+                // Crear marcadores personalizados para cada tienda
+                stores.forEach((store, index) => {
+                    // Crear icono personalizado con número
+                    const customIcon = L.divIcon({
+                        className: 'custom-marker',
+                        html: `
+                            <div class="marker-circle">
+                                <span class="marker-number">${index + 1}</span>
+                            </div>
+                        `,
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 40],
+                        popupAnchor: [0, -40]
+                    });
+
+                    // Crear marcador con popup
+                    const marker = L.marker([store.lat, store.lng], { icon: customIcon }).addTo(map);
+                    
+                    // Crear contenido del popup
+                    const popupContent = `
+                        <div class="store-popup">
+                            <h3 style="margin: 0 0 8px 0; color: #2E8B57; font-size: 16px;">${store.name}</h3>
+                            <p style="margin: 0 0 5px 0; font-size: 14px; color: #666;">
+                                <i class="fas fa-map-marker-alt" style="color: #2E8B57; margin-right: 5px;"></i>
+                                ${store.address}
+                            </p>
+                            <p style="margin: 0; font-size: 12px; color: #999; font-style: italic;">
+                                ${store.info}
+                            </p>
+                        </div>
+                    `;
+                    
+                    // Agregar popup al marcador
+                    marker.bindPopup(popupContent, {
+                        maxWidth: 250,
+                        className: 'custom-popup'
+                    });
+
+                    // Efecto hover en el marcador
+                    marker.on('mouseover', function() {
+                        this.getElement().querySelector('.marker-circle').style.transform = 'scale(1.1)';
+                    });
+                    
+                    marker.on('mouseout', function() {
+                        this.getElement().querySelector('.marker-circle').style.transform = 'scale(1)';
+                    });
+                });
+
+                // Agregar controles personalizados
+                const mapControls = L.control({ position: 'topright' });
+                mapControls.onAdd = function() {
+                    const div = L.DomUtil.create('div', 'map-controls');
+                    div.style.cssText = `
+                        background: white;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        padding: 10px;
+                        font-family: Arial, sans-serif;
+                        font-size: 12px;
+                        color: #333;
+                        margin: 10px;
+                    `;
+                    div.innerHTML = `
+                        <div style="margin-bottom: 5px;"><strong>HuertoHogar</strong></div>
+                        <div>${stores.length} tiendas en Chile</div>
+                    `;
+                    return div;
+                };
+                mapControls.addTo(map);
+
+                // Centrar el mapa para mostrar todas las tiendas
+                const bounds = L.latLngBounds(stores.map(store => [store.lat, store.lng]));
+                map.fitBounds(bounds, { padding: [20, 20] });
+
+                // Agregar botón para centrar el mapa
+                const centerButton = L.control({ position: 'topleft' });
+                centerButton.onAdd = function() {
+                    const div = L.DomUtil.create('div', 'center-button');
+                    div.style.cssText = `
+                        background: #2E8B57;
+                        color: white;
+                        border-radius: 8px;
+                        padding: 8px 12px;
+                        font-family: Arial, sans-serif;
+                        font-size: 12px;
+                        cursor: pointer;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                        transition: all 0.3s ease;
+                        margin: 10px;
+                    `;
+                    div.innerHTML = '<i class="fas fa-crosshairs"></i> Centrar';
+                    div.onclick = function() {
+                        map.fitBounds(bounds, { padding: [20, 20] });
+                    };
+                    div.onmouseover = function() {
+                        this.style.background = '#4CAF50';
+                        this.style.transform = 'scale(1.05)';
+                    };
+                    div.onmouseout = function() {
+                        this.style.background = '#2E8B57';
+                        this.style.transform = 'scale(1)';
+                    };
+                    return div;
+                };
+                centerButton.addTo(map);
+
+                console.log('✅ Mapa de OpenStreetMap inicializado correctamente');
+            } catch (error) {
+                console.error('❌ Error al inicializar el mapa:', error);
+                handleMapError();
+            }
+        }
+
+        // Función para manejar errores del mapa
+        function handleMapError() {
+            const mapContainer = document.getElementById('map');
+            if (mapContainer) {
+                mapContainer.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: #f8f9fa; border-radius: 12px; padding: 2rem;">
+                        <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: #2E8B57; margin-bottom: 1rem;"></i>
+                        <h3 style="margin: 0 0 0.5rem 0; color: #333; text-align: center;">Mapa no disponible</h3>
+                        <p style="margin: 0; color: #666; text-align: center; line-height: 1.5;">
+                            Estamos trabajando para mostrar nuestras ubicaciones.<br>
+                            Contacta con nosotros para más información.
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        // Inicializar el mapa cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializando mapa de OpenStreetMap...');
+            
+            // Esperar un poco para asegurar que Leaflet esté cargado
+            setTimeout(() => {
+                if (typeof L !== 'undefined') {
+                    initMap();
+                } else {
+                    console.error('❌ Leaflet no está disponible');
+                    handleMapError();
+                }
+            }, 500);
+        });
+    </script>
 </body>
 </html>
