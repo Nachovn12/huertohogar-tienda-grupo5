@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Renderizado Inicial ---
     if (productListHome) {
-        renderProducts('all', productListHome, 4);
+        renderProducts('all', productListHome, 6);
     }
     if (productListFull) {
         renderProducts('all', productListFull);
