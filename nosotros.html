@@ -99,7 +99,14 @@
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="Buscar...">
                 </div>
-                <a href="login.html" class="login-link">Ingresar</a>
+                <a href="login.html" class="login-link" id="user-login-link">Ingresar</a>
+                <div class="user-profile" id="user-profile" style="display: none;">
+                    <span class="user-name" id="user-name"></span>
+                    <div class="user-menu">
+                        <a href="cuenta.html" class="user-menu-item">Mi Cuenta</a>
+                        <button id="logout-btn" class="user-menu-item logout-btn">Cerrar Sesión</button>
+                    </div>
+                </div>
                 <button id="open-cart-btn" class="cart-button">
                     <i class="fas fa-shopping-cart"></i>
                     <span id="cart-counter" class="cart-counter">0</span>
@@ -244,6 +251,7 @@
     </div>
     
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/auth.js"></script>
     <script>
         // Coordenadas de las tiendas en Chile
         const stores = [

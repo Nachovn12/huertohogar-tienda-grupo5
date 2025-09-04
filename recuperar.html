@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - HuertoHogar</title>
+    <title>Recuperar Contraseña - HuertoHogar</title>
     <link rel="stylesheet" href="assets/css/normalize.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,14 +29,7 @@
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="Buscar...">
                 </div>
-                <a href="login.html" class="login-link" id="user-login-link">Ingresar</a>
-                <div class="user-profile" id="user-profile" style="display: none;">
-                    <span class="user-name" id="user-name"></span>
-                    <div class="user-menu">
-                        <a href="cuenta.html" class="user-menu-item">Mi Cuenta</a>
-                        <button id="logout-btn" class="user-menu-item logout-btn">Cerrar Sesión</button>
-                    </div>
-                </div>
+                <a href="login.html" class="login-link">Ingresar</a>
                 <button id="open-cart-btn" class="cart-button">
                     <i class="fas fa-shopping-cart"></i>
                     <span id="cart-counter" class="cart-counter">0</span>
@@ -47,34 +40,15 @@
 
     <main class="page-container">
         <div class="form-container content-section">
-            <h1 class="page-title">Iniciar Sesión</h1>
-            <form data-auth="login" aria-label="Formulario de inicio de sesión">
+            <h1 class="page-title">Recuperar Contraseña</h1>
+            <form data-auth="recover" aria-label="Formulario de recuperación">
                 <div class="form-group">
-                    <label for="email">Correo Electrónico</label>
-                    <input type="email" id="email" name="email" autocomplete="email" required aria-required="true">
+                    <label for="recover-email">Correo Electrónico</label>
+                    <input type="email" id="recover-email" name="recover-email" required aria-required="true" placeholder="tucorreo@dominio.com">
                 </div>
-                <div class="form-group">
-                    <label for="password">Contraseña</label>
-                    <div class="password-input-container">
-                        <input type="password" id="password" name="password" required aria-required="true">
-                        <button type="button" class="password-toggle" data-target="password" aria-label="Mostrar contraseña">
-                            <i class="fas fa-eye"></i>
-                            <i class="fas fa-eye-slash"></i>
-                        </button>
-                    </div>
-                    <div style="text-align: right; margin-top: 0.5rem;">
-                        <a href="recuperar.html" class="read-more-link">¿Olvidaste tu contraseña?</a>
-                    </div>
-                </div>
-                <div class="form-group" style="margin-top: 1rem;">
-                    <div class="form-check">
-                        <input type="checkbox" id="remember" name="remember">
-                        <span>Recordar sesión</span>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary form-btn">Ingresar</button>
-                <p class="form-switch">¿No tienes una cuenta? <a href="registro.html">Regístrate aquí</a></p>
+                <button type="submit" class="btn btn-primary form-btn">Enviar Instrucciones</button>
             </form>
+            <p class="form-switch">¿Ya tienes el token? <a href="restablecer.html">Restablecer contraseña</a></p>
         </div>
     </main>
 
@@ -104,7 +78,7 @@
         </div>
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
-    
+
     <div id="cart-overlay" class="hidden"></div>
     <div id="cart-offcanvas" class="hidden">
         <div class="cart-header">
@@ -121,8 +95,9 @@
             <button class="btn btn-primary checkout-btn">Finalizar Compra</button>
         </div>
     </div>
-    
+
     <script src="assets/js/script.js"></script>
     <script src="assets/js/auth.js"></script>
 </body>
 </html>
+
