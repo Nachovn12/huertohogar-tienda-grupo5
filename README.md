@@ -1,9 +1,12 @@
 # 🥑 HuertoHogar - Tienda Online de Productos Frescos
 
-![Estado del proyecto](https://img.shields.io/badge/estado-en%20desarrollo-yellow)
-![Licencia](https://img.shields.io/badge/licencia-MIT-green)
+[![🌐 Probar Aplicación](https://img.shields.io/badge/🌐-Probar%20Aplicación-2E8B57?style=for-the-badge&logo=chrome&logoColor=white)](https://nachovn12.github.io/huertohogar-tienda-grupo5/)
+[![Estado del proyecto](https://img.shields.io/badge/estado-en%20desarrollo-yellow)](https://github.com/Nachovn12/huertohogar-tienda-grupo5)
+[![Licencia](https://img.shields.io/badge/licencia-MIT-green)](LICENSE)
 
 **HuertoHogar** es una tienda online dedicada a llevar la frescura y calidad de los productos del campo directamente a la puerta de nuestros clientes en Chile. Con más de 6 años de experiencia y presencia en 9 ciudades, promovemos un estilo de vida saludable y sostenible.
+
+> 🚀 **[Prueba la aplicación ahora mismo](https://nachovn12.github.io/huertohogar-tienda-grupo5/)** - Compatible con todos los dispositivos
 
 ---
 
@@ -121,23 +124,21 @@ huertohogar-tienda-grupo5/
 
 ---
 
-## 🌐 Demo en Vivo
+## 🌐 Prueba la Aplicación
 
-### 🚀 **Prueba la aplicación ahora mismo**
-[![Demo en Vivo](https://img.shields.io/badge/🌐-Demo%20en%20Vivo-blue?style=for-the-badge&logo=github)](https://nachovn12.github.io/huertohogar-tienda-grupo5/)
+### 🚀 **Demo en Vivo - Prueba Ahora**
+[![🌐 Probar Aplicación](https://img.shields.io/badge/🌐-Probar%20Aplicación-2E8B57?style=for-the-badge&logo=chrome&logoColor=white)](https://nachovn12.github.io/huertohogar-tienda-grupo5/)
 
 **🔗 [https://nachovn12.github.io/huertohogar-tienda-grupo5/](https://nachovn12.github.io/huertohogar-tienda-grupo5/)**
 
-> 💡 **Compatible con todos los dispositivos**: Móviles, tablets, laptops y escritorio
+> 📱 **Compatible con todos los dispositivos**: Móviles, tablets, laptops y escritorio  
+> 🔄 **Actualización automática**: Siempre la versión más reciente
 
 ---
 
-## 🚀 Instalación y uso
+## 🚀 Instalación Local (Para Desarrolladores)
 
-### Opción 1: Usar la Demo (Recomendado)
-Simplemente visita el enlace de arriba para probar la aplicación sin instalación.
-
-### Opción 2: Instalación Local
+Si prefieres ejecutar el proyecto localmente:
 
 1. **Clona el repositorio**:
    ```bash
@@ -156,20 +157,6 @@ Simplemente visita el enlace de arriba para probar la aplicación sin instalaci�
 4. **Para desarrollo**:
    - Usa VS Code con Live Server extension
    - O cualquier servidor HTTP local
-
----
-
-## 📱 Cómo activar GitHub Pages (Para el enlace de demo)
-
-Si el enlace de demo no funciona, sigue estos pasos para activar GitHub Pages:
-
-1. **Ve a tu repositorio en GitHub**: https://github.com/Nachovn12/huertohogar-tienda-grupo5
-2. **Haz clic en "Settings"** (Configuración)
-3. **Desplázate hacia abajo** hasta encontrar "Pages" en el menú lateral
-4. **En "Source"** selecciona "Deploy from a branch"
-5. **Selecciona "main"** como branch y "/ (root)" como folder
-6. **Haz clic en "Save"**
-7. **Espera unos minutos** y tu sitio estará disponible en: `https://nachovn12.github.io/huertohogar-tienda-grupo5/`
 
 ---
 
