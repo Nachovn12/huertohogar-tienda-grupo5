@@ -121,7 +121,23 @@ huertohogar-tienda-grupo5/
 
 ---
 
+## 🌐 Demo en Vivo
+
+### 🚀 **Prueba la aplicación ahora mismo**
+[![Demo en Vivo](https://img.shields.io/badge/🌐-Demo%20en%20Vivo-blue?style=for-the-badge&logo=github)](https://nachovn12.github.io/huertohogar-tienda-grupo5/)
+
+**🔗 [https://nachovn12.github.io/huertohogar-tienda-grupo5/](https://nachovn12.github.io/huertohogar-tienda-grupo5/)**
+
+> 💡 **Compatible con todos los dispositivos**: Móviles, tablets, laptops y escritorio
+
+---
+
 ## 🚀 Instalación y uso
+
+### Opción 1: Usar la Demo (Recomendado)
+Simplemente visita el enlace de arriba para probar la aplicación sin instalación.
+
+### Opción 2: Instalación Local
 
 1. **Clona el repositorio**:
    ```bash
@@ -140,6 +156,20 @@ huertohogar-tienda-grupo5/
 4. **Para desarrollo**:
    - Usa VS Code con Live Server extension
    - O cualquier servidor HTTP local
+
+---
+
+## 📱 Cómo activar GitHub Pages (Para el enlace de demo)
+
+Si el enlace de demo no funciona, sigue estos pasos para activar GitHub Pages:
+
+1. **Ve a tu repositorio en GitHub**: https://github.com/Nachovn12/huertohogar-tienda-grupo5
+2. **Haz clic en "Settings"** (Configuración)
+3. **Desplázate hacia abajo** hasta encontrar "Pages" en el menú lateral
+4. **En "Source"** selecciona "Deploy from a branch"
+5. **Selecciona "main"** como branch y "/ (root)" como folder
+6. **Haz clic en "Save"**
+7. **Espera unos minutos** y tu sitio estará disponible en: `https://nachovn12.github.io/huertohogar-tienda-grupo5/`
 
 ---
 
