@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre Nosotros - HuertoHogar</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon/favicon-512x512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="assets/favicon/site.webmanifest">
     <link rel="stylesheet" href="assets/css/normalize.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,8 +78,456 @@
             border-color: #FFD700;
         }
         
+        /* Estilos para tiendas activas en la lista */
+        .store-item {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .store-item:hover {
+            background-color: #f8f9fa;
+            transform: translateX(5px);
+        }
+        
+        .store-item-active {
+            background: linear-gradient(135deg, #2E8B57, #4CAF50);
+            color: white;
+            transform: translateX(8px);
+            box-shadow: 0 4px 15px rgba(46, 139, 87, 0.3);
+        }
+        
+        .store-item-active i {
+            color: #FFD700;
+        }
+        
+        .store-item-active h4 {
+            color: white;
+        }
+        
+        .store-item-active p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Sección de introducción */
+        .intro-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 60px 0;
+            margin: 40px auto;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            max-width: 1200px;
+        }
+
+        .intro-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%232E8B57" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%234CAF50" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%232E8B57" opacity="0.05"/><circle cx="10" cy="60" r="0.5" fill="%234CAF50" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .intro-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin: 0 auto;
+            max-width: 1000px;
+            padding: 0 20px;
+        }
+
+        .intro-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #2E8B57;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            line-height: 1.2;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 400;
+            margin: 0 auto;
+            opacity: 0.9;
+            line-height: 1.8;
+            max-width: 900px;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        /* Sección about mejorada */
+        .about-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+
+        /* Cards de misión y visión mejoradas */
+        .about-us-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .about-card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: visible;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2E8B57, #4CAF50);
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2E8B57, #4CAF50);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            box-shadow: 0 8px 20px rgba(46, 139, 87, 0.3);
+        }
+
+        .card-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .about-card h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2E8B57;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .about-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #666;
+            text-align: left;
+            margin: 0;
+            flex: 1;
+        }
+
+        /* Estilos para la sección del mapa mejorada */
+        .map-section {
+            margin-top: 60px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2E8B57;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .map-container {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border: 3px solid #e9ecef;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .map-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(46, 139, 87, 0.1), rgba(76, 175, 80, 0.1));
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Estilos para la lista de tiendas mejorada */
+        .stores-info {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stores-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2E8B57, #4CAF50);
+        }
+
+        .stores-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .stores-info h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2E8B57;
+            margin: 0 0 15px 0;
+        }
+
+        .stores-instruction {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .stores-instruction i {
+            color: #2E8B57;
+            font-size: 16px;
+        }
+
+        .stores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Cards de tienda mejoradas */
+        .store-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .store-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #2E8B57, #4CAF50);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .store-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .store-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-color: #2E8B57;
+        }
+
+        .store-item i {
+            font-size: 1.5rem;
+            color: #2E8B57;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .store-item h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 5px 0;
+        }
+
+        .store-item p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .store-item-active {
+            background: linear-gradient(135deg, #2E8B57, #4CAF50);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(46, 139, 87, 0.4);
+            border-color: #FFD700;
+        }
+
+        .store-item-active::before {
+            transform: scaleY(1);
+            background: #FFD700;
+        }
+
+        .store-item-active i {
+            color: #FFD700;
+        }
+
+        .store-item-active h4 {
+            color: white;
+        }
+
+        .store-item-active p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
         /* Responsive para móviles */
         @media (max-width: 768px) {
+            .intro-section {
+                padding: 40px 0;
+                margin: 20px auto;
+            }
+
+            .intro-content {
+                padding: 0 15px;
+            }
+
+            .intro-title {
+                font-size: 2.2rem;
+                line-height: 1.1;
+            }
+
+            .intro-text {
+                font-size: 1rem;
+                line-height: 1.6;
+                text-align: center;
+                padding: 0 10px;
+            }
+
+            .about-section {
+                padding: 30px 15px;
+            }
+
+            .about-us-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .about-card {
+                padding: 25px;
+                min-height: 380px;
+            }
+
+            .card-icon {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 20px;
+            }
+
+            .card-icon i {
+                font-size: 1.5rem;
+            }
+
+            .about-card h3 {
+                font-size: 1.4rem;
+                margin-bottom: 15px;
+            }
+
+            .about-card p {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+
+            .section-header {
+                padding: 0 15px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .section-subtitle {
+                font-size: 0.95rem;
+                line-height: 1.4;
+            }
+
+            .map-container {
+                margin: 0 15px 30px;
+            }
+
+            .stores-info {
+                margin: 0 15px;
+                padding: 25px;
+            }
+
+            .stores-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .store-item {
+                padding: 15px;
+            }
+
+            .store-item h4 {
+                font-size: 1.1rem;
+            }
+
+            .store-item p {
+                font-size: 0.85rem;
+            }
+
             .marker-circle {
                 width: 35px;
                 height: 35px;
@@ -77,6 +535,14 @@
             
             .marker-number {
                 font-size: 14px;
+            }
+            
+            .store-item:hover {
+                transform: translateY(-2px);
+            }
+            
+            .store-item-active {
+                transform: translateY(-3px);
             }
         }
     </style>
@@ -103,7 +569,7 @@
                 <div class="user-profile" id="user-profile" style="display: none;">
                     <span class="user-name" id="user-name"></span>
                     <div class="user-menu">
-                        <a href="cuenta.html" class="user-menu-item">Mi Cuenta</a>
+                        <a href="mi-cuenta.html" class="user-menu-item">Mi Cuenta</a>
                         <button id="logout-btn" class="user-menu-item logout-btn">Cerrar Sesión</button>
                     </div>
                 </div>
@@ -116,85 +582,105 @@
     </header>
 
     <main class="page-container">
-        <div class="content-section">
-            <h1 class="page-title">Conectamos el Campo Chileno Contigo</h1>
+        <section class="intro-section">
+            <div class="intro-content">
+                <h1 class="intro-title">Conectamos el Campo Chileno Contigo</h1>
+                <p class="intro-text">HuertoHogar es una tienda online dedicada a llevar la frescura y calidad de los productos del campo directamente a la puerta de nuestros clientes en Chile. Con más de 6 años de experiencia, operamos en más de 9 puntos a lo largo del país, incluyendo ciudades clave como Santiago, Puerto Montt, Villarrica, Nacimiento, Viña del Mar, Valparaíso, y Concepción. Nuestra misión es conectar a las familias chilenas con el campo, promoviendo un estilo de vida saludable y sostenible.</p>
+            </div>
+        </section>
+
+        <section class="about-section">
             <div class="about-us-grid">
-                <div class="about-text-section">
+                <div class="about-card mission-card">
+                    <div class="card-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
                     <h3>Nuestra Misión</h3>
-                    <p>Proporcionar productos frescos y de calidad directamente desde el campo hasta la puerta de nuestros clientes, garantizando la frescura y el sabor en cada entrega. Nos comprometemos a fomentar una conexión más cercana entre los consumidores y los agricultores locales, apoyando prácticas agrícolas sostenibles y promoviendo una alimentación saludable en todos los hogares chilenos.</p>
+                    <p>Nuestra misión es proporcionar productos frescos y de calidad directamente desde el campo hasta la puerta de nuestros clientes, garantizando la frescura y el sabor en cada entrega. Nos comprometemos a fomentar una conexión más cercana entre los consumidores y los agricultores locales, apoyando prácticas agrícolas sostenibles y promoviendo una alimentación saludable en todos los hogares chilenos.</p>
                 </div>
-                <div class="about-text-section">
+                <div class="about-card vision-card">
+                    <div class="card-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
                     <h3>Nuestra Visión</h3>
-                    <p>Ser la tienda online líder en la distribución de productos frescos y naturales en Chile, reconocida por nuestra calidad excepcional, servicio al cliente y compromiso con la sostenibilidad. Aspiramos a expandir nuestra presencia a nivel nacional e internacional, estableciendo un nuevo estándar en la distribución de productos agrícolas directos del productor al consumidor.</p>
+                    <p>Nuestra visión es ser la tienda online líder en la distribución de productos frescos y naturales en Chile, reconocida por nuestra calidad excepcional, servicio al cliente y compromiso con la sostenibilidad. Aspiramos a expandir nuestra presencia a nivel nacional e internacional, estableciendo un nuevo estándar en la distribución de productos agrícolas directos del productor al consumidor.</p>
                 </div>
             </div>
-        </div>
+        </section>
         <section class="map-section content-section">
-            <h2 class="section-title">Nuestras Tiendas</h2>
-            <p>Operamos en más de 9 puntos a lo largo del país, incluyendo Santiago, Puerto Montt, Villarrica, Nacimiento, Viña del Mar, Valparaíso, y Concepción.</p>
+            <div class="section-header">
+                <h2 class="section-title">Nuestras Tiendas</h2>
+                <p class="section-subtitle">Operamos en más de 9 puntos a lo largo del país, incluyendo Santiago, Puerto Montt, Villarrica, Nacimiento, Viña del Mar, Valparaíso, y Concepción.</p>
+            </div>
             <div class="map-container">
                 <div id="map" style="width: 100%; height: 480px;"></div>
             </div>
             <div class="stores-info">
-                <h3>Ubicaciones de Nuestras Tiendas</h3>
+                <div class="stores-header">
+                    <h3>Ubicaciones de Nuestras Tiendas</h3>
+                    <p class="stores-instruction">
+                        <i class="fas fa-hand-pointer"></i>
+                        Haz clic en cualquier tienda para verla en el mapa
+                    </p>
+                </div>
                 <div class="stores-grid">
-                    <div class="store-item">
+                    <div class="store-item" onclick="navigateToStore(0)" data-store="0">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>Santiago</h4>
                             <p>Av. Providencia 1234, Providencia</p>
                         </div>
                     </div>
-                    <div class="store-item">
+                    <div class="store-item" onclick="navigateToStore(1)" data-store="1">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>Puerto Montt</h4>
                             <p>Av. Diego Portales 567, Puerto Montt</p>
                         </div>
                     </div>
-                    <div class="store-item">
+                    <div class="store-item" onclick="navigateToStore(2)" data-store="2">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>Villarrica</h4>
                             <p>Av. Bernardo O'Higgins 890, Villarrica</p>
                         </div>
                     </div>
-                    <div class="store-item">
+                    <div class="store-item" onclick="navigateToStore(3)" data-store="3">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>Nacimiento</h4>
                             <p>Av. Manuel Rodríguez 234, Nacimiento</p>
                         </div>
                     </div>
-                    <div class="store-item">
+                    <div class="store-item" onclick="navigateToStore(4)" data-store="4">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>Viña del Mar</h4>
                             <p>Av. Libertad 456, Viña del Mar</p>
                         </div>
                     </div>
-                    <div class="store-item">
+                    <div class="store-item" onclick="navigateToStore(5)" data-store="5">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>Valparaíso</h4>
                             <p>Av. Argentina 789, Valparaíso</p>
                         </div>
                     </div>
-                    <div class="store-item">
+                    <div class="store-item" onclick="navigateToStore(6)" data-store="6">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>Concepción</h4>
                             <p>Av. Pedro de Valdivia 321, Concepción</p>
                         </div>
                     </div>
-                    <div class="store-item">
+                    <div class="store-item" onclick="navigateToStore(7)" data-store="7">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>La Serena</h4>
                             <p>Av. Francisco de Aguirre 654, La Serena</p>
                         </div>
                     </div>
-                    <div class="store-item">
+                    <div class="store-item" onclick="navigateToStore(8)" data-store="8">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>Antofagasta</h4>
@@ -320,6 +806,10 @@
             }
         ];
 
+        // Variable global para el mapa
+        let map;
+        let markers = [];
+
         // Función para inicializar el mapa de OpenStreetMap
         function initMap() {
             try {
@@ -331,7 +821,7 @@
                 }
 
                 // Crear el mapa centrado en Chile
-                const map = L.map('map').setView([-35.6751, -71.5430], 6);
+                map = L.map('map').setView([-35.6751, -71.5430], 6);
 
                 // Agregar capa de OpenStreetMap
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -356,6 +846,9 @@
 
                     // Crear marcador con popup
                     const marker = L.marker([store.lat, store.lng], { icon: customIcon }).addTo(map);
+                    
+                    // Almacenar el marcador en el array global
+                    markers.push(marker);
                     
                     // Crear contenido del popup
                     const popupContent = `
@@ -449,6 +942,69 @@
             } catch (error) {
                 console.error('❌ Error al inicializar el mapa:', error);
                 handleMapError();
+            }
+        }
+
+        // Función para navegar a una tienda específica
+        function navigateToStore(storeIndex) {
+            if (!map || !markers[storeIndex]) {
+                console.error('Mapa o marcador no disponible');
+                return;
+            }
+
+            const store = stores[storeIndex];
+            const marker = markers[storeIndex];
+
+            // Scroll suave hacia el mapa
+            const mapContainer = document.querySelector('.map-container');
+            if (mapContainer) {
+                mapContainer.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }
+
+            // Centrar el mapa en la tienda seleccionada con animación
+            map.setView([store.lat, store.lng], 15, {
+                animate: true,
+                duration: 1.5
+            });
+
+            // Abrir el popup del marcador después de la animación
+            setTimeout(() => {
+                marker.openPopup();
+            }, 800);
+
+            // Efecto visual en el marcador
+            const markerElement = marker.getElement();
+            if (markerElement) {
+                const circle = markerElement.querySelector('.marker-circle');
+                if (circle) {
+                    circle.style.transform = 'scale(1.2)';
+                    circle.style.boxShadow = '0 6px 20px rgba(46, 139, 87, 0.6)';
+                    
+                    setTimeout(() => {
+                        circle.style.transform = 'scale(1)';
+                        circle.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                    }, 1000);
+                }
+            }
+
+            // Resaltar la tienda en la lista
+            highlightStoreInList(storeIndex);
+        }
+
+        // Función para resaltar la tienda en la lista
+        function highlightStoreInList(storeIndex) {
+            // Remover resaltado anterior
+            document.querySelectorAll('.store-item').forEach(item => {
+                item.classList.remove('store-item-active');
+            });
+
+            // Resaltar la tienda seleccionada
+            const storeItems = document.querySelectorAll('.store-item');
+            if (storeItems[storeIndex]) {
+                storeItems[storeIndex].classList.add('store-item-active');
             }
         }
 

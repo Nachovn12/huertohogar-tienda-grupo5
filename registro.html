@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Cuenta - HuertoHogar</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon/favicon-512x512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="assets/favicon/site.webmanifest">
     <link rel="stylesheet" href="assets/css/normalize.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +43,7 @@
                 <div class="user-profile" id="user-profile" style="display: none;">
                     <span class="user-name" id="user-name"></span>
                     <div class="user-menu">
-                        <a href="cuenta.html" class="user-menu-item">Mi Cuenta</a>
+                        <a href="mi-cuenta.html" class="user-menu-item">Mi Cuenta</a>
                         <button id="logout-btn" class="user-menu-item logout-btn">Cerrar Sesión</button>
                     </div>
                 </div>
@@ -49,9 +59,15 @@
         <div class="form-container content-section">
             <h1 class="page-title">Crear Cuenta</h1>
             <form data-auth="register" aria-label="Formulario de registro">
-                <div class="form-group">
-                    <label for="name">Nombre Completo</label>
-                    <input type="text" id="name" name="name" autocomplete="name" required aria-required="true" placeholder="Ej: Ana Pérez">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombres">Nombres</label>
+                        <input type="text" id="nombres" name="nombres" autocomplete="given-name" required aria-required="true" placeholder="Ej: Ana María">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" name="apellidos" autocomplete="family-name" required aria-required="true" placeholder="Ej: Pérez González">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="email">Correo Electrónico</label>

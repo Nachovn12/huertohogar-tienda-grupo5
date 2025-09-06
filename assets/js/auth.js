@@ -18,7 +18,7 @@
         loginMaxAttempts: 3,
         loginBlockMs: 5 * 60 * 1000, // 5 minutos
         registerRateMax: 3,
-        registerRateWindowMs: 60 * 1000, // 1 minuto
+        registerRateWindowMs: 30 * 1000, // 30 segundos
         saltPrefix: 'HuertoHogar$S1$',
         saltSuffix: '$S2$Edu2025'
     };
@@ -40,6 +40,23 @@
     };
 
     const trimAndNormalize = (value) => (value || '').toString().trim().replace(/\s+/g, ' ');
+
+    // Función para extraer primer nombre y apellido paterno
+    const extractDisplayName = (fullName) => {
+        if (!fullName || typeof fullName !== 'string') return '';
+        
+        const nameParts = fullName.trim().split(/\s+/).filter(part => part.length > 0);
+        
+        if (nameParts.length === 0) return '';
+        if (nameParts.length === 1) return nameParts[0]; // Solo un nombre
+        if (nameParts.length === 2) return fullName; // Nombre + Apellido Paterno (perfecto)
+        
+        // Para 3+ partes: Primer Nombre + Apellido Paterno (primer apellido)
+        // En Chile: "Juan Carlos Pérez González" -> "Juan Pérez"
+        // El apellido paterno es el penúltimo elemento (antes del apellido materno)
+        const apellidoPaterno = nameParts[nameParts.length - 2];
+        return `${nameParts[0]} ${apellidoPaterno}`;
+    };
 
     const encryptPassword = (plain) => {
         const payload = SECURITY.saltPrefix + plain + SECURITY.saltSuffix;
@@ -188,26 +205,9 @@
             const user = users.find(u => u.id === session.userId);
             
             if (user && user.nombre) {
-                // Formatear nombre: Primer Nombre + Apellido Paterno
-                const fullName = user.nombre || '';
-                const nameParts = fullName.trim().split(' ');
-                let displayName = '';
-                
-                if (nameParts.length >= 3) {
-                    // Tomar primer nombre y apellido paterno (tercer elemento)
-                    displayName = `${nameParts[0]} ${nameParts[2]}`;
-                } else if (nameParts.length === 2) {
-                    // Si solo hay 2 palabras, usar ambas
-                    displayName = `${nameParts[0]} ${nameParts[1]}`;
-                } else if (nameParts.length === 1) {
-                    // Si solo hay un nombre, usarlo completo
-                    displayName = nameParts[0];
-                } else {
-                    // Fallback si no hay nombre
-                    displayName = 'Usuario';
-                }
-                
-                userName.textContent = displayName;
+                // Usar displayName si existe, sino extraer del nombre completo
+                const displayName = user.displayName || extractDisplayName(user.nombre);
+                userName.textContent = displayName || 'Usuario';
             } else {
                 userName.textContent = 'Usuario';
             }
@@ -258,6 +258,41 @@
         return { allowed: true };
     };
 
+    // Función para mostrar contador visual de throttling
+    const showThrottleCounter = (retryInMs, feedbackElement) => {
+        const retryInSeconds = Math.ceil(retryInMs / 1000);
+        let remainingSeconds = retryInSeconds;
+        
+        // Crear o actualizar el mensaje de error con contador
+        const updateCounter = () => {
+            if (remainingSeconds <= 0) {
+                feedbackElement.innerHTML = '<div class="alert alert-info" role="status">Puedes intentar registrarte nuevamente.</div>';
+                return false; // Indica que el contador terminó
+            }
+            
+            feedbackElement.innerHTML = `
+                <div class="alert alert-warning" role="status">
+                    Demasiados registros seguidos. Intenta en <span id="throttle-counter">${remainingSeconds}</span>s.
+                </div>
+            `;
+            remainingSeconds--;
+            return true; // Indica que el contador continúa
+        };
+        
+        // Mostrar contador inicial
+        updateCounter();
+        
+        // Actualizar cada segundo
+        const interval = setInterval(() => {
+            const shouldContinue = updateCounter();
+            if (!shouldContinue) {
+                clearInterval(interval);
+            }
+        }, 1000);
+        
+        return interval;
+    };
+
     // --- Sesión / Auto-logout ---
     const startActivityWatcher = () => {
         const updateActivity = () => {
@@ -282,10 +317,12 @@
     const register = async (payload) => {
         const throttle = throttleRegister();
         if (!throttle.allowed) {
-            return { ok: false, error: `Demasiados registros seguidos. Intenta en ${Math.ceil(throttle.retryIn / 1000)}s.` };
+            return { ok: false, error: `THROTTLE:${throttle.retryIn}` };
         }
 
-        const nombre = trimAndNormalize(payload.nombre);
+        const nombres = trimAndNormalize(payload.nombres);
+        const apellidos = trimAndNormalize(payload.apellidos);
+        const nombre = `${nombres} ${apellidos}`.trim();
         const email = trimAndNormalize(payload.email).toLowerCase();
         const password = payload.password || '';
         const confirmar = payload.confirmar || '';
@@ -294,7 +331,9 @@
         const aceptaTyC = !!payload.aceptaTyC;
         const newsletter = !!payload.newsletter;
 
-        if (!isValidName(nombre)) return { ok: false, error: 'Ingresa tu nombre completo (mínimo 2 palabras).' };
+        if (!nombres || nombres.length < 2) return { ok: false, error: 'Ingresa tu nombre (mínimo 2 caracteres).' };
+        if (!apellidos || apellidos.length < 2) return { ok: false, error: 'Ingresa tu apellido (mínimo 2 caracteres).' };
+        if (!isValidName(nombre)) return { ok: false, error: 'Ingresa un nombre y apellido válidos.' };
         if (!isValidEmail(email)) return { ok: false, error: 'Correo electrónico no válido.' };
         const pw = passwordChecks(password);
         if (pw.score < 100) return { ok: false, error: 'La contraseña no cumple todos los requisitos.' };
@@ -311,6 +350,7 @@
         const user = {
             id: uuid(),
             nombre: sanitize(nombre),
+            displayName: sanitize(extractDisplayName(nombre)), // Nombre para mostrar en header
             email: sanitize(email),
             password: encrypted,
             direccion: sanitize(direccion),
@@ -472,19 +512,54 @@
         const form = qs('#profile-form');
         if (!form) return;
         const inputName = qs('#profile-name');
+        const inputLastname = qs('#profile-lastname');
+        const inputEmail = qs('#profile-email');
         const inputAddress = qs('#profile-address');
         const inputPhone = qs('#profile-phone');
         const inputNews = qs('#profile-newsletter');
         const feedback = qs('#profile-feedback');
-        if (inputName) inputName.value = user.nombre || '';
+        
+        // Separar nombre completo en nombre y apellido
+        if (user.nombre) {
+            const nameParts = user.nombre.split(' ').filter(part => part.length > 0);
+            
+            if (nameParts.length >= 4) {
+                // 4+ partes: primeras 2 son nombres, resto son apellidos
+                if (inputName) inputName.value = nameParts.slice(0, 2).join(' ');
+                if (inputLastname) inputLastname.value = nameParts.slice(2).join(' ');
+            } else if (nameParts.length === 3) {
+                // 3 partes: primera es nombre, resto son apellidos
+                if (inputName) inputName.value = nameParts[0];
+                if (inputLastname) inputLastname.value = nameParts.slice(1).join(' ');
+            } else if (nameParts.length === 2) {
+                // 2 partes: primera es nombre, segunda es apellido
+                if (inputName) inputName.value = nameParts[0];
+                if (inputLastname) inputLastname.value = nameParts[1];
+            } else {
+                // 1 parte: solo nombre
+                if (inputName) inputName.value = user.nombre;
+                if (inputLastname) inputLastname.value = '';
+            }
+        } else {
+            if (inputName) inputName.value = '';
+            if (inputLastname) inputLastname.value = '';
+        }
+        
+        if (inputEmail) inputEmail.value = user.email || '';
         if (inputAddress) inputAddress.value = user.direccion || '';
         if (inputPhone) inputPhone.value = user.telefono || '';
         if (inputNews) inputNews.checked = !!user.newsletter;
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Combinar nombre y apellido
+            const firstName = inputName ? inputName.value.trim() : '';
+            const lastName = inputLastname ? inputLastname.value.trim() : '';
+            const fullName = `${firstName} ${lastName}`.trim();
+            
             const res = updateCurrentUser({
-                nombre: inputName ? inputName.value : undefined,
+                nombre: fullName || undefined,
                 direccion: inputAddress ? inputAddress.value : undefined,
                 telefono: inputPhone ? inputPhone.value : undefined,
                 newsletter: inputNews ? !!inputNews.checked : undefined
@@ -503,7 +578,8 @@
         const form = qs('form[data-auth="register"]') || qs('main form') && window.location.pathname.endsWith('registro.html') ? qs('main form') : null;
         if (!form) return;
         form.setAttribute('data-auth', 'register');
-        const nameInput = qs('#name');
+        const nombresInput = qs('#nombres');
+        const apellidosInput = qs('#apellidos');
         const emailInput = qs('#email');
         const passInput = qs('#password');
         const confirmInput = qs('#confirm-password');
@@ -576,7 +652,8 @@
             e.preventDefault();
             setLoading(button, true);
             const result = await register({
-                nombre: nameInput ? nameInput.value : '',
+                nombres: nombresInput ? nombresInput.value : '',
+                apellidos: apellidosInput ? apellidosInput.value : '',
                 email: emailInput ? emailInput.value : '',
                 password: passInput ? passInput.value : '',
                 confirmar: confirmInput ? confirmInput.value : '',
@@ -586,7 +663,13 @@
                 newsletter: newsletterInput ? newsletterInput.checked : false
             });
             if (!result.ok) {
-                showAlert(feedback, result.error, 'warning');
+                // Verificar si es un error de throttling
+                if (result.error.startsWith('THROTTLE:')) {
+                    const retryInMs = parseInt(result.error.split(':')[1]);
+                    showThrottleCounter(retryInMs, feedback);
+                } else {
+                    showAlert(feedback, result.error, 'warning');
+                }
                 setLoading(button, false);
                 return;
             }
@@ -715,6 +798,30 @@
         if (!feedback.parentElement) form.appendChild(feedback);
         const button = form.querySelector('button[type="submit"]');
 
+        // Medidor de fortaleza
+        let meter = qs('#password-strength');
+        if (!meter && passInput) {
+            meter = document.createElement('div');
+            meter.id = 'password-strength';
+            meter.innerHTML = '<div class="strength-bar"><span></span></div><div class="strength-text">Ingresa una contraseña</div>';
+            passInput.parentElement && passInput.parentElement.appendChild(meter);
+        }
+
+        const updateStrength = () => {
+            if (!meter || !passInput) return;
+            const { score, checks } = passwordChecks(passInput.value);
+            const span = meter.querySelector('.strength-bar span');
+            const text = meter.querySelector('.strength-text');
+            if (span) span.style.width = `${score}%`;
+            let label = 'Débil', type = 'weak';
+            if (score >= 100) { label = 'Fuerte'; type = 'strong'; }
+            else if (score >= 60) { label = 'Media'; type = 'medium'; }
+            meter.className = `strength-${type}`;
+            if (text) text.textContent = `Fortaleza: ${label}`;
+        };
+
+        passInput && passInput.addEventListener('input', updateStrength);
+
         // Fortalecer visual
         passInput && passInput.addEventListener('input', () => {
             const { score } = passwordChecks(passInput.value);
@@ -793,6 +900,38 @@
         if (logoutBtn) logoutBtn.addEventListener('click', (e) => { e.preventDefault(); logout(true); });
     });
 
+    // Función para limpiar todas las cuentas registradas
+    const clearAllAccounts = () => {
+        try {
+            // Limpiar usuarios
+            localStorage.removeItem('huerto_users');
+            
+            // Limpiar sesión actual
+            localStorage.removeItem('huerto_session');
+            
+            // Limpiar datos de throttling
+            localStorage.removeItem('huerto_register_throttle');
+            localStorage.removeItem('huerto_failed_logins');
+            
+            // Limpiar datos de recuperación de contraseña
+            localStorage.removeItem('huerto_password_resets');
+            
+            // Limpiar cualquier dato de usuario individual
+            const keys = Object.keys(localStorage);
+            keys.forEach(key => {
+                if (key.startsWith('huerto_') || key.startsWith('user_')) {
+                    localStorage.removeItem(key);
+                }
+            });
+            
+            console.log('✅ Todas las cuentas y datos han sido eliminados del localStorage');
+            return { ok: true, message: 'Todas las cuentas han sido eliminadas exitosamente' };
+        } catch (error) {
+            console.error('❌ Error al limpiar cuentas:', error);
+            return { ok: false, error: 'Error al limpiar las cuentas: ' + error.message };
+        }
+    };
+
     // Exponer mínimamente para consola/debug educativo
     window.HuertoAuth = {
         register,
@@ -802,6 +941,8 @@
         resetPasswordWithToken,
         getCurrentUser,
         updateCurrentUser,
+        extractDisplayName, // Función para extraer nombre de visualización
+        clearAllAccounts, // Función para limpiar todas las cuentas
         _debug: { getUsers, setUsers, readSession }
     };
 })();

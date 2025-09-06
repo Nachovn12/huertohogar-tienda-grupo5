@@ -1,4 +1,98 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Sistema de Búsqueda Local con localStorage ---
+    const SEARCH_STORAGE_KEY = 'huertohogar_search_history';
+    const PRODUCTS_STORAGE_KEY = 'huertohogar_products';
+    
+    // Función para guardar productos en localStorage
+    const saveProductsToStorage = (products) => {
+        localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
+    };
+    
+    // Función para cargar productos desde localStorage
+    const loadProductsFromStorage = () => {
+        const stored = localStorage.getItem(PRODUCTS_STORAGE_KEY);
+        return stored ? JSON.parse(stored) : null;
+    };
+    
+    // Función para guardar historial de búsquedas
+    const saveSearchHistory = (searchTerm) => {
+        if (!searchTerm.trim()) return;
+        
+        let history = JSON.parse(localStorage.getItem(SEARCH_STORAGE_KEY) || '[]');
+        history = history.filter(term => term !== searchTerm); // Evitar duplicados
+        history.unshift(searchTerm); // Agregar al inicio
+        history = history.slice(0, 10); // Mantener solo 10 búsquedas recientes
+        localStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify(history));
+    };
+    
+    // Función para cargar historial de búsquedas
+    const loadSearchHistory = () => {
+        return JSON.parse(localStorage.getItem(SEARCH_STORAGE_KEY) || '[]');
+    };
+    
+    // Función de búsqueda local
+    const searchProducts = (query, products) => {
+        if (!query.trim()) return products;
+        
+        const searchTerm = query.toLowerCase().trim();
+        return products.filter(product => 
+            product.name.toLowerCase().includes(searchTerm) ||
+            product.category.toLowerCase().includes(searchTerm) ||
+            product.description.toLowerCase().includes(searchTerm) ||
+            product.id.toLowerCase().includes(searchTerm)
+        );
+    };
+    
+    // Mapeo de productos a URLs amigables profesionales
+    window.productUrlMap = {
+        'FR001': 'producto/manzanas-fuji.html',
+        'FR002': 'producto/naranjas-valencia.html',
+        'FR003': 'producto/platanos-cavendish.html',
+        'VR001': 'producto/zanahorias-organicas.html',
+        'VR002': 'producto/espinacas-frescas.html',
+        'VR003': 'producto/pimientos-tricolores.html',
+        'PO001': 'producto/miel-organica.html',
+        'PO003': 'producto/quinua-organica.html',
+        'PL001': 'producto/leche-entera.html'
+    };
+    
+    // Función para mostrar sugerencias de búsqueda
+    const showSearchSuggestions = (input, products) => {
+        const suggestionsContainer = document.getElementById('search-suggestions');
+        if (!suggestionsContainer) return;
+        
+        const query = input.value.toLowerCase().trim();
+        if (query.length < 2) {
+            suggestionsContainer.style.display = 'none';
+            return;
+        }
+        
+        const suggestions = products
+            .filter(product => 
+                product.name.toLowerCase().includes(query) ||
+                product.category.toLowerCase().includes(query)
+            )
+            .slice(0, 5)
+            .map(product => ({
+                text: product.name,
+                category: product.category,
+                id: product.id
+            }));
+        
+        if (suggestions.length > 0) {
+            suggestionsContainer.innerHTML = suggestions
+                .map(suggestion => `
+                    <div class="search-suggestion" data-product-id="${suggestion.id}">
+                        <span class="suggestion-text">${suggestion.text}</span>
+                        <span class="suggestion-category">${suggestion.category}</span>
+                    </div>
+                `).join('');
+            suggestionsContainer.style.display = 'block';
+        } else {
+            suggestionsContainer.style.display = 'none';
+        }
+    };
+    
     // --- Datos Completos de Productos (Basados en el PDF) ---
     const products = [
         { 
@@ -397,7 +491,13 @@ document.addEventListener('DOMContentLoaded', () => {
             removeFromCart(e.target.dataset.id);
         }
         if (e.target.classList.contains('view-details-btn')) {
-            showProductDetails(e.target.dataset.id);
+            const productId = e.target.dataset.id;
+            const productUrl = window.productUrlMap[productId];
+            if (productUrl) {
+                window.location.href = productUrl;
+            } else {
+                showProductDetails(productId);
+            }
         }
     });
 
@@ -580,6 +680,172 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // --- Inicialización del Sistema de Búsqueda ---
+    const initializeSearchSystem = () => {
+        // Guardar productos en localStorage si no existen
+        if (!loadProductsFromStorage()) {
+            saveProductsToStorage(products);
+        }
+        
+        // Obtener elementos de búsqueda
+        const searchInputs = document.querySelectorAll('.search-bar input[type="text"]');
+        const searchButtons = document.querySelectorAll('.search-bar');
+        
+        searchInputs.forEach(input => {
+            // Crear contenedor de sugerencias si no existe
+            if (!document.getElementById('search-suggestions')) {
+                const suggestionsContainer = document.createElement('div');
+                suggestionsContainer.id = 'search-suggestions';
+                suggestionsContainer.className = 'search-suggestions';
+                suggestionsContainer.style.cssText = `
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    right: 0;
+                    background: white;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                    z-index: 1000;
+                    display: none;
+                    max-height: 300px;
+                    overflow-y: auto;
+                `;
+                
+                // Insertar después del input
+                const searchBar = input.closest('.search-bar');
+                if (searchBar) {
+                    searchBar.style.position = 'relative';
+                    searchBar.appendChild(suggestionsContainer);
+                }
+            }
+            
+            // Evento de búsqueda en tiempo real
+            input.addEventListener('input', (e) => {
+                const query = e.target.value;
+                showSearchSuggestions(input, products);
+            });
+            
+            // Evento de búsqueda al presionar Enter
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    window.performSearch(input.value);
+                }
+            });
+            
+            // Evento de click en sugerencias
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.search-suggestion')) {
+                    const suggestion = e.target.closest('.search-suggestion');
+                    const productId = suggestion.dataset.productId;
+                    const product = products.find(p => p.id === productId);
+                    if (product) {
+                        // Ir directamente al producto específico usando URL amigable
+                        const productUrl = window.productUrlMap[product.id];
+                        if (productUrl) {
+                            window.location.href = productUrl;
+                        } else {
+                            window.location.href = `producto-detalle.html?id=${product.id}`;
+                        }
+                    }
+                }
+            });
+            
+            // Ocultar sugerencias al hacer click fuera
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-bar')) {
+                    const suggestions = document.getElementById('search-suggestions');
+                    if (suggestions) {
+                        suggestions.style.display = 'none';
+                    }
+                }
+            });
+        });
+        
+        // Función para realizar búsqueda (global)
+        window.performSearch = (query) => {
+            if (!query.trim()) return;
+            
+            // Guardar en historial
+            saveSearchHistory(query);
+            
+            // Filtrar productos
+            const filteredProducts = searchProducts(query, products);
+            
+            // Mostrar resultados
+            displaySearchResults(filteredProducts, query);
+            
+            // Ocultar sugerencias
+            const suggestions = document.getElementById('search-suggestions');
+            if (suggestions) {
+                suggestions.style.display = 'none';
+            }
+        };
+        
+        // Función para mostrar resultados de búsqueda
+        const displaySearchResults = (filteredProducts, query) => {
+            // Si hay exactamente 1 resultado, ir directamente al producto
+            if (filteredProducts.length === 1) {
+                const product = filteredProducts[0];
+                const productUrl = window.productUrlMap[product.id];
+                if (productUrl) {
+                    window.location.href = productUrl;
+                } else {
+                    window.location.href = `producto-detalle.html?id=${product.id}`;
+                }
+                return;
+            }
+            
+            // Si estamos en la página de productos, filtrar la vista
+            if (window.location.pathname.includes('productos.html')) {
+                const productGrid = document.getElementById('product-list-home');
+                if (productGrid) {
+                    if (filteredProducts.length === 0) {
+                        productGrid.innerHTML = `
+                            <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                                <h3>No se encontraron productos para "${query}"</h3>
+                                <p>Intenta con otros términos de búsqueda</p>
+                            </div>
+                        `;
+                    } else {
+                        renderProducts(filteredProducts, productGrid);
+                    }
+                }
+            } else {
+                // Si estamos en otra página, redirigir a productos con filtro
+                const searchParams = new URLSearchParams();
+                searchParams.set('search', query);
+                window.location.href = `productos.html?${searchParams.toString()}`;
+            }
+        };
+        
+        // Función para renderizar productos
+        const renderProducts = (productsToRender, container) => {
+            container.innerHTML = productsToRender.map(product => `
+                <div class="product-card" data-category="${product.category}">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-details-btn" data-id="${product.id}">
+                                <i class="fas fa-eye"></i> Ver Detalles
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-price">$${product.price.toLocaleString()} CLP</p>
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn" data-id="${product.id}">
+                                <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        };
+    };
+    
     // Inicializar animaciones de categorías
     animateCategories();
     
@@ -590,4 +856,371 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Actualizar contadores de productos por categoría
     updateCategoryProductCounts();
+    
+    // Inicializar sistema de búsqueda
+    initializeSearchSystem();
+    
+    // Manejar búsquedas desde URL
+    const handleURLSearch = () => {
+        if (window.location.pathname.includes('productos.html')) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get('search');
+            
+            if (searchQuery) {
+                // Aplicar búsqueda automáticamente
+                const searchInput = document.querySelector('.search-bar input[type="text"]');
+                if (searchInput) {
+                    searchInput.value = searchQuery;
+                    window.performSearch(searchQuery);
+                }
+            }
+        }
+    };
+    
+    // Ejecutar búsqueda desde URL al cargar la página
+    handleURLSearch();
+    
+    // --- Funcionalidad para página de detalle de producto ---
+    const loadProductDetail = () => {
+        if (window.location.pathname.includes('producto-detalle.html')) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            
+            if (productId) {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    // Cargar datos del producto
+                    document.getElementById('product-image').src = product.image;
+                    document.getElementById('product-image').alt = product.name;
+                    document.getElementById('product-name').textContent = product.name;
+                    document.getElementById('product-price').textContent = `$${product.price.toLocaleString()} CLP`;
+                    document.getElementById('product-description').textContent = product.description;
+                    document.getElementById('product-origin').textContent = 'Valle del Maule, Chile';
+                    document.getElementById('product-stock').textContent = `${product.stock} ${product.unit}`;
+                    
+                    // Actualizar título de la página
+                    document.title = `${product.name} - HuertoHogar`;
+                    
+                    // Configurar botón de agregar al carrito
+                    const addToCartBtn = document.getElementById('add-to-cart-detail');
+                    if (addToCartBtn) {
+                        addToCartBtn.addEventListener('click', () => {
+                            // Aquí puedes agregar la lógica del carrito
+                            alert(`¡${product.name} agregado al carrito!`);
+                        });
+                    }
+                } else {
+                    // Producto no encontrado
+                    document.querySelector('.product-detail-layout').innerHTML = `
+                        <div class="no-results" style="text-align: center; padding: 3rem;">
+                            <h2>Producto no encontrado</h2>
+                            <p>El producto que buscas no existe o ha sido eliminado.</p>
+                            <a href="productos.html" class="btn btn-primary">Ver todos los productos</a>
+                        </div>
+                    `;
+                }
+            } else {
+                // No se proporcionó ID de producto
+                document.querySelector('.product-detail-layout').innerHTML = `
+                    <div class="no-results" style="text-align: center; padding: 3rem;">
+                        <h2>Producto no especificado</h2>
+                        <p>No se ha especificado qué producto mostrar.</p>
+                        <a href="productos.html" class="btn btn-primary">Ver todos los productos</a>
+                    </div>
+                `;
+            }
+        }
+    };
+    
+    // Cargar detalle del producto al cargar la página
+    loadProductDetail();
 });
+
+// Función global para inicializar el carrusel infinito de productos recomendados
+function initializeCarousel(currentProductId) {
+    const carouselWrapper = document.getElementById('carousel-wrapper');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const dotsContainer = document.getElementById('carousel-dots');
+    
+    if (!carouselWrapper || !prevBtn || !nextBtn || !dotsContainer) {
+        return;
+    }
+    
+    // Función para intentar inicializar el carrusel
+    const tryInitializeCarousel = () => {
+        // Obtener productos desde localStorage
+        const storedProducts = localStorage.getItem('huertohogar_products');
+        
+        if (!storedProducts) {
+            // Si no hay productos, esperar un poco y volver a intentar
+            setTimeout(tryInitializeCarousel, 100);
+            return;
+        }
+        
+        const allProducts = JSON.parse(storedProducts);
+        const currentProduct = allProducts.find(p => p.id === currentProductId);
+        
+        if (!currentProduct) {
+            return;
+        }
+        
+        // Continuar con la inicialización del carrusel
+        initializeCarouselWithProducts(allProducts, currentProduct);
+    };
+    
+    // Iniciar el proceso
+    tryInitializeCarousel();
+}
+
+// Función auxiliar para inicializar el carrusel con los productos
+function initializeCarouselWithProducts(allProducts, currentProduct) {
+    const carouselWrapper = document.getElementById('carousel-wrapper');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const dotsContainer = document.getElementById('carousel-dots');
+    
+    // Filtrar productos relacionados (misma categoría o productos similares)
+    const relatedProducts = allProducts.filter(product => 
+        product.id !== currentProduct.id && 
+        (product.category === currentProduct.category || 
+         product.category === 'Productos Orgánicos' || 
+         product.category === 'Frutas Frescas' ||
+         product.category === 'Verduras Orgánicas')
+    ).slice(0, 8); // Aumentar a 8 productos para el loop infinito
+    
+    if (relatedProducts.length === 0) {
+        console.warn('No se encontraron productos relacionados, usando productos de prueba');
+        
+        // Productos de prueba para debuggear
+        const testProducts = [
+            {
+                id: 'TEST001',
+                name: 'Producto de Prueba 1',
+                price: 1000,
+                image: 'https://via.placeholder.com/300x200?text=Producto+1',
+                category: 'frutas'
+            },
+            {
+                id: 'TEST002', 
+                name: 'Producto de Prueba 2',
+                price: 2000,
+                image: 'https://via.placeholder.com/300x200?text=Producto+2',
+                category: 'verduras'
+            },
+            {
+                id: 'TEST003',
+                name: 'Producto de Prueba 3', 
+                price: 3000,
+                image: 'https://via.placeholder.com/300x200?text=Producto+3',
+                category: 'productos-organicos'
+            }
+        ];
+        
+        initializeCarouselWithProducts(testProducts, currentProduct);
+        return;
+    }
+    
+    // Configuración del carrusel infinito
+    let currentIndex = 0;
+    const itemsPerView = window.innerWidth <= 768 ? 2 : 3;
+    const totalItems = relatedProducts.length;
+    
+    // Crear productos duplicados para carrusel CSS infinito
+    const duplicatedProducts = [...relatedProducts, ...relatedProducts];
+    
+    // Función para obtener el nombre de la categoría
+    function getCategoryName(category) {
+        const categoryNames = {
+            'Frutas Frescas': 'Frutas',
+            'Verduras Orgánicas': 'Verduras',
+            'Productos Orgánicos': 'Orgánico',
+            'Productos Lácteos': 'Lácteos'
+        };
+        return categoryNames[category] || 'Producto';
+    }
+    
+    // Función para generar rating aleatorio
+    function generateRating() {
+        const rating = (4.0 + Math.random() * 1.0).toFixed(1);
+        const reviewCount = Math.floor(Math.random() * 50) + 10;
+        return { rating, reviewCount };
+    }
+    
+    // Renderizar productos en el carrusel
+    function renderCarouselItems() {
+        carouselWrapper.innerHTML = duplicatedProducts.map((product, index) => {
+            const rating = generateRating();
+            return `
+                <div class="carousel-item" data-index="${index}" onclick="window.location.href='${window.productUrlMap[product.id] || '#'}'">
+                    <div class="category-badge">${getCategoryName(product.category)}</div>
+                    <img src="${product.image}" alt="${product.name}" loading="lazy">
+                    <div class="carousel-item-content">
+                        <h4>${product.name}</h4>
+                        <div class="rating">
+                            <div class="stars">
+                                ${'★'.repeat(5)}
+                            </div>
+                            <span class="rating-text">(${rating.rating}) · ${rating.reviewCount} reseñas</span>
+                        </div>
+                        <p class="price">${product.price.toLocaleString()} CLP</p>
+                        <button class="view-product-btn" onclick="event.stopPropagation(); window.location.href='${window.productUrlMap[product.id] || '#'}'">
+                            <i class="fas fa-shopping-cart"></i> Ver Producto
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Renderizar puntos de navegación
+    function renderDots() {
+        dotsContainer.innerHTML = '';
+        const totalSlides = Math.ceil(totalItems / itemsPerView);
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('button');
+            dot.className = `carousel-dot ${i === 0 ? 'active' : ''}`;
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsContainer.appendChild(dot);
+        }
+    }
+    
+    // Ir a una slide específica optimizada
+    function goToSlide(index) {
+        currentIndex = index;
+        const translateX = -currentIndex * itemWidth;
+        carouselWrapper.style.transform = `translateX(${translateX}%)`;
+        
+        // Actualizar puntos activos
+        document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+        
+        // Actualizar estado de botones
+        prevBtn.disabled = false;
+        nextBtn.disabled = false;
+    }
+    
+    // Siguiente slide con loop infinito perfecto
+    function nextSlide() {
+        currentIndex++;
+        const translateX = -currentIndex * itemWidth;
+        carouselWrapper.style.transform = `translateX(${translateX}%)`;
+        
+        // Si llegamos al final de la primera copia, saltar al inicio de la segunda copia
+        if (currentIndex >= totalItems) {
+            setTimeout(() => {
+                currentIndex = 0;
+                carouselWrapper.style.transition = 'none';
+                carouselWrapper.style.transform = 'translateX(0%)';
+                carouselWrapper.offsetHeight; // Forzar reflow
+                carouselWrapper.style.transition = 'transform 0.3s ease-out';
+            }, 300);
+        }
+        
+        updateDots();
+    }
+    
+    // Slide anterior con loop infinito perfecto
+    function prevSlide() {
+        currentIndex--;
+        const translateX = -currentIndex * itemWidth;
+        carouselWrapper.style.transform = `translateX(${translateX}%)`;
+        
+        // Si llegamos antes del inicio, saltar al final de la primera copia
+        if (currentIndex < 0) {
+            currentIndex = totalItems - 1;
+            setTimeout(() => {
+                carouselWrapper.style.transition = 'none';
+                carouselWrapper.style.transform = `translateX(-${currentIndex * itemWidth}%)`;
+                carouselWrapper.offsetHeight; // Forzar reflow
+                carouselWrapper.style.transition = 'transform 0.3s ease-out';
+            }, 300);
+        }
+        
+        updateDots();
+    }
+    
+    // Actualizar puntos de navegación
+    function updateDots() {
+        const totalSlides = Math.ceil(totalItems / itemsPerView);
+        const activeDot = currentIndex % totalSlides;
+        
+        document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === activeDot);
+        });
+    }
+    
+    // Event listeners
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+    
+    // Auto-play del carrusel infinito
+    let autoPlayInterval;
+    function startAutoPlay() {
+        autoPlayInterval = setInterval(() => {
+            nextSlide();
+        }, 2500); // Cambiar cada 2.5 segundos
+    }
+    
+    function stopAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+        }
+    }
+    
+    // Pausar auto-play al hacer hover
+    carouselWrapper.addEventListener('mouseenter', stopAutoPlay);
+    carouselWrapper.addEventListener('mouseleave', startAutoPlay);
+    
+    // Touch/swipe support para móviles
+    let startX = 0;
+    let isDragging = false;
+    
+    carouselWrapper.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        stopAutoPlay();
+    });
+    
+    carouselWrapper.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+    });
+    
+    carouselWrapper.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > 50) { // Mínimo swipe de 50px
+            if (diff > 0) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+        }
+        
+        startAutoPlay();
+    });
+    
+    // Inicializar carrusel
+    renderCarouselItems();
+    renderDots();
+    goToSlide(0);
+    startAutoPlay();
+    
+    // Responsive: recalcular en resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            const newItemsPerView = window.innerWidth <= 768 ? 2 : 3;
+            if (newItemsPerView !== itemsPerView) {
+                location.reload(); // Recargar para recalcular
+            }
+        }, 250);
+    });
+}

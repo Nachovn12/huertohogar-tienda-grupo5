@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pimientos Tricolores - Mixtos | HuertoHogar</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/favicon/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="../assets/favicon/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon/favicon-512x512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="../assets/favicon/site.webmanifest">
+    <link rel="stylesheet" href="../assets/css/normalize.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <a href="../index.html" class="logo-container">
+                <img src="../assets/img/Logo Huerto Hogar.jpg" alt="Logo de HuertoHogar" class="logo">
+                <h2>HuertoHogar</h2>
+            </a>
+            <nav class="main-nav">
+                <a href="../index.html">Inicio</a>
+                <a href="../productos.html">Productos</a>
+                <a href="../nosotros.html">Nosotros</a>
+                <a href="../blog.html">Blog</a>
+            </nav>
+            <div class="header-actions">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar...">
+                </div>
+                <a href="../login.html" class="login-link" id="user-login-link">Ingresar</a>
+                <div class="user-profile" id="user-profile" style="display: none;">
+                    <span class="user-name" id="user-name"></span>
+                    <div class="user-menu">
+                        <a href="../mi-cuenta.html" class="user-menu-item">Mi Cuenta</a>
+                        <button id="logout-btn" class="user-menu-item logout-btn">Cerrar Sesión</button>
+                    </div>
+                </div>
+                <button id="open-cart-btn" class="cart-button">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-counter" class="cart-counter">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="page-container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <div class="breadcrumb-content">
+                <a href="../index.html">Inicio</a>
+                <span class="breadcrumb-separator">></span>
+                <a href="../productos.html">Productos</a>
+                <span class="breadcrumb-separator">></span>
+                <a href="../../productos.html?categoria=verduras">Verduras</a>
+                <span class="breadcrumb-separator">></span>
+                <span class="breadcrumb-current">Pimientos Tricolores</span>
+            </div>
+        </nav>
+
+        <!-- Product Detail Section -->
+        <section class="product-detail-section">
+            <div class="product-detail-layout">
+                <div class="product-image-gallery">
+                    <div class="main-image">
+                        <img src="https://png.pngtree.com/png-vector/20241212/ourmid/pngtree-colored-paprica-raw-paprika-fruit-png-image_14613829.png" 
+                             alt="Pimientos tricolores frescos y coloridos" 
+                             id="main-product-image">
+                    </div>
+                    <div class="image-thumbnails">
+                        <button class="thumbnail active" data-image="https://png.pngtree.com/png-vector/20241212/ourmid/pngtree-colored-paprica-raw-paprika-fruit-png-image_14613829.png">
+                            <img src="https://png.pngtree.com/png-vector/20241212/ourmid/pngtree-colored-paprica-raw-paprika-fruit-png-image_14613829.png" alt="Vista 1">
+                        </button>
+                        <button class="thumbnail" data-image="https://png.pngtree.com/png-vector/20241212/ourmid/pngtree-colored-paprica-raw-paprika-fruit-png-image_14613829.png">
+                            <img src="https://png.pngtree.com/png-vector/20241212/ourmid/pngtree-colored-paprica-raw-paprika-fruit-png-image_14613829.png" alt="Vista 2">
+                        </button>
+                        <button class="thumbnail" data-image="https://png.pngtree.com/png-vector/20241212/ourmid/pngtree-colored-paprica-raw-paprika-fruit-png-image_14613829.png">
+                            <img src="https://png.pngtree.com/png-vector/20241212/ourmid/pngtree-colored-paprica-raw-paprika-fruit-png-image_14613829.png" alt="Vista 3">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <div class="product-header">
+                        <h1 class="product-title">Pimientos Tricolores - 1 kg</h1>
+                        <div class="product-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="rating-text">(4.5) · 19 reseñas</span>
+                        </div>
+                    </div>
+
+                    <div class="product-pricing">
+                        <div class="price-main">$1.500 CLP</div>
+                        <div class="price-info">Impuestos incluidos.</div>
+                    </div>
+
+                    <div class="product-description">
+                        <p>Nuestros pimientos tricolores son como un abrazo colorido para tu salud. Cultivados cuidadosamente, llegan a tu mesa llenos de sabor y listos para nutrirte. Pimientos rojos, amarillos y verdes, ideales para salteados y platos coloridos, estos pimientos añaden un toque vibrante y delicioso a cualquier receta.</p>
+                    </div>
+
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span><strong>Origen:</strong> Región de Coquimbo, Chile</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-box"></i>
+                            <span><strong>Stock disponible:</strong> 120 kilos</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-leaf"></i>
+                            <span><strong>Cultivo:</strong> Tradicional</span>
+                        </div>
+                    </div>
+
+                    <div class="product-actions">
+                        <div class="quantity-selector">
+                            <label for="quantity" class="quantity-label">Cantidad</label>
+                            <div class="quantity-controls">
+                                <button type="button" class="quantity-btn" id="quantity-decrease">-</button>
+                                <input type="number" id="quantity" value="1" min="1" max="120" class="quantity-input">
+                                <button type="button" class="quantity-btn" id="quantity-increase">+</button>
+                            </div>
+                        </div>
+                        
+                        <button class="add-to-cart-btn" id="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            Agregar al Carrito
+                        </button>
+                    </div>
+
+                    <div class="product-guarantees">
+                        <div class="guarantee-item">
+                            <i class="fas fa-truck"></i>
+                            <span>Envío gratis en compras sobre $15.000</span>
+                        </div>
+                        <div class="guarantee-item">
+                            <i class="fas fa-undo"></i>
+                            <span>Devolución garantizada</span>
+                        </div>
+                        <div class="guarantee-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Producto fresco garantizado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Details Tabs -->
+        <section class="product-tabs">
+            <div class="tabs-container">
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-tab="description">Descripción</button>
+                    <button class="tab-btn" data-tab="nutrition">Información Nutricional</button>
+                    <button class="tab-btn" data-tab="reviews">Reseñas (19)</button>
+                </div>
+                
+                <div class="tabs-content">
+                    <div class="tab-panel active" id="description">
+                        <h3>Pimientos Tricolores - Color y Sabor</h3>
+                        <p>Los pimientos tricolores son una mezcla perfecta de pimientos rojos, amarillos y verdes que aportan color, sabor y nutrición a tus platos. Cultivados en la Región de Coquimbo, estos pimientos se benefician de un clima soleado que intensifica sus colores y sabores naturales.</p>
+                        
+                        <h4>Características Únicas</h4>
+                        <p>Los pimientos tricolores destacan por su vibrante combinación de colores y su rico contenido de antioxidantes y vitamina C. Su textura crujiente y sabor dulce los convierten en un ingrediente versátil para múltiples preparaciones culinarias.</p>
+                        
+                        <h4>Usos Culinarios Versátiles</h4>
+                        <ul>
+                            <li><strong>Salteados:</strong> Woks, fajitas y platos asiáticos</li>
+                            <li><strong>Ensaladas:</strong> Ensaladas frescas, wraps y bowls</li>
+                            <li><strong>Asados:</strong> Parrilla, horno y plancha</li>
+                            <li><strong>Conservas:</strong> Encurtidos, conservas y deshidratados</li>
+                            <li><strong>Rellenos:</strong> Pimientos rellenos y platos mediterráneos</li>
+                        </ul>
+
+                        <h4>Proceso de Cultivo</h4>
+                        <p>Nuestros pimientos son cultivados siguiendo prácticas agrícolas sostenibles, aprovechando el clima soleado de la región que intensifica sus colores naturales. El proceso de cultivo respeta los ciclos naturales, garantizando pimientos de máxima calidad y sabor auténtico.</p>
+                    </div>
+                    
+                                        <div class="tab-panel" id="nutrition">
+                        <h3>Información Nutricional por 100g</h3>
+                        <div class="nutrition-table">
+                            <div class="nutrition-row">
+                                <span class="nutrition-label">🔥 Calorías</span>
+                                <span class="nutrition-value">31 kcal</span>
+                            </div>
+                            <div class="nutrition-row">
+                                <span class="nutrition-label">💧 Agua</span>
+                                <span class="nutrition-value">92.2 g</span>
+                            </div>
+                            <div class="nutrition-row">
+                                <span class="nutrition-label">🥩 Proteínas</span>
+                                <span class="nutrition-value">1.0 g</span>
+                            </div>
+                            <div class="nutrition-row">
+                                <span class="nutrition-label">🍞 Carbohidratos</span>
+                                <span class="nutrition-value">6.0 g</span>
+                            </div>
+                            <div class="nutrition-row">
+                                <span class="nutrition-label">🌾 Fibra</span>
+                                <span class="nutrition-value">2.1 g</span>
+                            </div>
+                            <div class="nutrition-row">
+                                <span class="nutrition-label">🥑 Grasas</span>
+                                <span class="nutrition-value">0.3 g</span>
+                            </div>
+                            <div class="nutrition-row">
+                                <span class="nutrition-label">🍊 Vitamina C</span>
+                                <span class="nutrition-value">127.7 mg</span>
+                            </div>
+                            <div class="nutrition-row">
+                                <span class="nutrition-label">🥕 Vitamina A</span>
+                                <span class="nutrition-value">157 μg</span>
+                            </div>
+                            <div class="nutrition-row">
+                                <span class="nutrition-label">🍌 Potasio</span>
+                                <span class="nutrition-value">211 mg</span>
+                            </div>
+                            <div class="nutrition-row">
+                                <span class="nutrition-label">🦴 Calcio</span>
+                                <span class="nutrition-value">7 mg</span>
+                            </div>
+                            <div class="nutrition-row">
+                                <span class="nutrition-label">🩸 Hierro</span>
+                                <span class="nutrition-value">0.43 mg</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-panel" id="reviews">
+                        <div class="reviews-summary">
+                            <div class="rating-overview">
+                                <div class="rating-score">4.5</div>
+                                <div class="rating-stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="rating-count">Basado en 19 reseñas</div>
+                            </div>
+                        </div>
+                        
+                        <div class="reviews-list">
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <strong>Isabel Vargas</strong>
+                                        <div class="review-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <span class="review-date">Hace 2 días</span>
+                                </div>
+                                <p class="review-text">¡Excelentes pimientos! Muy coloridos y frescos. Perfectos para mis salteados.</p>
+                            </div>
+                            
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <strong>Fernando Castro</strong>
+                                        <div class="review-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <span class="review-date">Hace 4 días</span>
+                                </div>
+                                <p class="review-text">Muy buenos pimientos, llegaron en perfecto estado. Los colores son increíbles.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommended Products -->
+        <section class="recommended-products">
+            <div class="section-header">
+                <h2>También te recomendamos...</h2>
+            </div>
+            <div class="carousel-container">
+                <div class="carousel-wrapper" id="carousel-wrapper">
+                    <!-- Los productos recomendados se cargarán dinámicamente -->
+                </div>
+                <!-- Controles de carrusel eliminados - no se usan -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p>Del campo a tu hogar</p>
+                <p>contacto@huertohogar.cl</p>
+                <p>+56 9 1234 5678</p>
+            </div>
+            <div class="footer-section">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../productos.html">Productos</a></li>
+                    <li><a href="../nosotros.html">Nosotros</a></li>
+                    <li><a href="../blog.html">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Síguenos</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
+    </footer>
+
+    <div id="cart-overlay" class="hidden"></div>
+    <div id="cart-offcanvas" class="hidden">
+        <div class="cart-header">
+            <h3>Tu Carrito</h3>
+            <button id="close-cart-btn" class="close-btn">×</button>
+        </div>
+        <div id="cart-items" class="cart-body">
+        </div>
+        <div class="cart-footer">
+            <div class="summary-line">
+                <span>Subtotal</span>
+                <span id="cart-total">$0 CLP</span>
+            </div>
+            <button class="btn btn-primary checkout-btn">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <script src="../assets/js/script.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/carousel-css.js"></script>
+    <script>
+        // Product-specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Quantity controls
+            const quantityInput = document.getElementById('quantity');
+            const decreaseBtn = document.getElementById('quantity-decrease');
+            const increaseBtn = document.getElementById('quantity-increase');
+            
+            decreaseBtn.addEventListener('click', () => {
+                const currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+            });
+            
+            increaseBtn.addEventListener('click', () => {
+                const currentValue = parseInt(quantityInput.value);
+                const maxValue = parseInt(quantityInput.max);
+                if (currentValue < maxValue) {
+                    quantityInput.value = currentValue + 1;
+                }
+            });
+            
+            // Image gallery
+            const mainImage = document.getElementById('main-product-image');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            
+            thumbnails.forEach(thumbnail => {
+                thumbnail.addEventListener('click', () => {
+                    const newImage = thumbnail.dataset.image;
+                    mainImage.src = newImage;
+                    
+                    thumbnails.forEach(t => t.classList.remove('active'));
+                    thumbnail.classList.add('active');
+                });
+            });
+            
+            // Tabs functionality
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabPanels = document.querySelectorAll('.tab-panel');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetTab = btn.dataset.tab;
+                    
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabPanels.forEach(p => p.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+            
+            // Add to cart functionality
+            const addToCartBtn = document.getElementById('add-to-cart');
+            addToCartBtn.addEventListener('click', () => {
+                const quantity = parseInt(quantityInput.value);
+                const product = {
+                    id: 'VR003',
+                    name: 'Pimientos Tricolores - 1 kg',
+                    price: 1500,
+                    quantity: quantity,
+                    image: 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=200&h=200&fit=crop'
+                };
+                
+                // Add to cart logic here
+                console.log('Producto agregado al carrito:', product);
+                alert(`¡${quantity} kg de Pimientos Tricolores agregado al carrito!`);
+            });
+
+            // Carrusel de productos recomendados
+            setTimeout(() => {
+                initializeCarousel('VR003');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
+
