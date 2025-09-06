@@ -206,7 +206,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Función para Mostrar Detalles del Producto ---
     const showProductDetails = (productId) => {
-        const product = products.find(p => p.id === productId);
+        // Buscar en productos regulares primero
+        let product = products.find(p => p.id === productId);
+        
+        // Si no se encuentra, buscar en ofertas especiales
+        if (!product) {
+            product = specialOffers.find(o => o.id === productId);
+            if (product) {
+                // Convertir oferta a formato de producto para el modal
+                product = {
+                    ...product,
+                    price: product.offerPrice
+                };
+            }
+        }
+        
         if (!product) return;
 
         // Crear modal si no existe
@@ -344,8 +358,22 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     const addToCart = (productId) => {
-        const productToAdd = products.find(p => p.id === productId);
+        // Buscar en productos regulares primero
+        let productToAdd = products.find(p => p.id === productId);
+        
+        // Si no se encuentra, buscar en ofertas especiales
+        if (!productToAdd) {
+            const offer = specialOffers.find(o => o.id === productId);
+            if (offer) {
+                productToAdd = {
+                    ...offer,
+                    price: offer.offerPrice
+                };
+            }
+        }
+        
         if (!productToAdd) return;
+        
         const existingItem = cart.find(item => item.id === productId);
 
         if (existingItem) {
@@ -355,7 +383,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         renderCart();
-        openCart();
+        
+        // Solo abrir el carrito para productos regulares, no para ofertas
+        if (products.find(p => p.id === productId)) {
+            openCart();
+        }
     };
     
     const removeFromCart = (productId) => {
@@ -934,6 +966,202 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Cargar detalle del producto al cargar la página
     loadProductDetail();
+    
+    // --- Sistema de Ofertas Especiales ---
+    const specialOffers = [
+        {
+            id: 'OF001',
+            name: 'Pack Familiar de Frutas',
+            originalPrice: 5000,
+            offerPrice: 3500,
+            discount: 30,
+            category: 'Ofertas Especiales',
+            image: 'https://th.bing.com/th/id/OIP.-ghvs7P7auN2dITXfZd5DAHaE7?w=306&h=204&c=7&r=0&o=7&pid=1.7&rm=3',
+            stock: 25,
+            unit: 'pack',
+            description: 'Pack especial con manzanas, naranjas y plátanos. Perfecto para toda la familia. Ahorra un 30% en tu compra.',
+            badge: '30% OFF'
+        },
+        {
+            id: 'OF002',
+            name: 'Cesta Orgánica Premium',
+            originalPrice: 8000,
+            offerPrice: 5500,
+            discount: 31,
+            category: 'Ofertas Especiales',
+            image: "https://th.bing.com/th/id/R.4bda382c55d85be8bd155d1e28a4c400?rik=Z0eB0HhaLTY8Iw&riu=http%3a%2f%2f1.bp.blogspot.com%2f-TWenVgDTHzM%2fVFJrG5hhGVI%2fAAAAAAAACIU%2fX1pZWCuHL4U%2fs1600%2fquinoa-espinaca-10.jpg&ehk=iRT%2boMMRJHlmqR2dIzpq8%2bsqCrk9sKa3lZlIalS1zgs%3d&risl=&pid=ImgRaw&r=0",
+            stock: 15,
+            unit: 'cesta',
+            description: 'Selección premium de productos orgánicos: miel, quinua, zanahorias y espinacas. Calidad garantizada.',
+            badge: '31% OFF'
+        },
+        {
+            id: 'OF003',
+            name: 'Combo Desayuno Saludable',
+            originalPrice: 3500,
+            offerPrice: 2500,
+            discount: 29,
+            category: 'Ofertas Especiales',
+            image: 'https://image.freepik.com/foto-gratis/leche-fresca-nutritiva-fruta-sana_23-2148239860.jpg',
+            stock: 30,
+            unit: 'combo',
+            description: 'Todo lo necesario para un desayuno nutritivo: leche, frutas frescas y productos orgánicos.',
+            badge: '29% OFF'
+        },
+        {
+            id: 'OF004',
+            name: 'Kit Verde Completo',
+            originalPrice: 6000,
+            offerPrice: 4200,
+            discount: 30,
+            category: 'Ofertas Especiales',
+            image: 'https://paseandohilos.com/wp-content/uploads/2015/03/PH_espinaca_Roja_01-1024x1024.jpg',
+            stock: 20,
+            unit: 'kit',
+            description: 'Kit completo de verduras orgánicas: zanahorias, espinacas, pimientos y más. Frescura garantizada.',
+            badge: '30% OFF'
+        }
+    ];
+
+    // Función para renderizar ofertas especiales
+    const renderOffers = () => {
+        const offersContainer = document.getElementById('offers-grid');
+        if (!offersContainer) return;
+
+        offersContainer.innerHTML = specialOffers.map((offer, index) => `
+            <div class="offer-card" style="animation-delay: ${index * 0.2}s">
+                <div class="offer-badge">${offer.badge}</div>
+                <img src="${offer.image}" alt="${offer.name}">
+                <div class="offer-content">
+                    <h3 class="offer-title">${offer.name}</h3>
+                    <p class="offer-description">${offer.description}</p>
+                    <div class="offer-pricing">
+                        <span class="offer-price">${formatPrice(offer.offerPrice)}</span>
+                        <span class="offer-original-price">${formatPrice(offer.originalPrice)}</span>
+                        <span class="offer-discount">-${offer.discount}%</span>
+                    </div>
+                    <div class="offer-actions">
+                        <button class="offer-add-btn" data-id="${offer.id}">
+                            <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                        </button>
+                        <button class="offer-view-btn" data-id="${offer.id}">
+                            <i class="fas fa-eye"></i> Ver Detalles
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        // Aplicar animaciones a las ofertas
+        setTimeout(() => {
+            const offerCards = document.querySelectorAll('.offer-card');
+            offerCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            setTimeout(() => {
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
+                            }, Math.random() * 300);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                observer.observe(card);
+            });
+        }, 100);
+    };
+
+    // Función para agregar oferta al carrito
+    const addOfferToCart = (offerId) => {
+        const offer = specialOffers.find(o => o.id === offerId);
+        if (!offer) return;
+
+        // Convertir oferta a formato de producto normal
+        const productToAdd = {
+            ...offer,
+            price: offer.offerPrice
+        };
+        
+        const existingItem = cart.find(item => item.id === offerId);
+        if (existingItem) {
+            existingItem.quantity++;
+        } else {
+            cart.push({ ...productToAdd, quantity: 1 });
+        }
+        
+        renderCart();
+        // No abrir el carrito automáticamente
+        
+        // Mostrar notificación
+        showNotification(`${offer.name} agregado al carrito`, 'success');
+    };
+
+    // Función para mostrar notificaciones
+    const showNotification = (message, type = 'info') => {
+        // Crear notificación si no existe
+        let notification = document.getElementById('notification');
+        if (!notification) {
+            notification = document.createElement('div');
+            notification.id = 'notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                max-width: 300px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            `;
+            document.body.appendChild(notification);
+        }
+
+        // Configurar colores según tipo
+        const colors = {
+            success: '#28a745',
+            error: '#dc3545',
+            warning: '#ffc107',
+            info: '#17a2b8'
+        };
+
+        notification.style.backgroundColor = colors[type] || colors.info;
+        notification.textContent = message;
+        notification.style.transform = 'translateX(0)';
+
+        // Ocultar después de 3 segundos
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+        }, 3000);
+    };
+
+    // Event listeners para ofertas
+    document.body.addEventListener('click', (e) => {
+        // Botones de ofertas
+        if (e.target.classList.contains('offer-add-btn')) {
+            const offerId = e.target.dataset.id;
+            addOfferToCart(offerId);
+        }
+        
+        if (e.target.classList.contains('offer-view-btn')) {
+            const offerId = e.target.dataset.id;
+            const offer = specialOffers.find(o => o.id === offerId);
+            if (offer) {
+                showProductDetails(offerId);
+            }
+        }
+    });
+
+    // Inicializar ofertas
+    renderOffers();
 });
 
 // Función global para inicializar el carrusel infinito de productos recomendados
