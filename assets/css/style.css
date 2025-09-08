@@ -4212,6 +4212,142 @@ body.cart-open { overflow: hidden; }
     width: 100%;
 }
 
+/* Ajustes específicos para alinear botones en la parte inferior de las cards de productos */
+.product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 480px;
+}
+
+.product-card .product-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 1rem;
+}
+
+.product-card .product-actions {
+    margin-top: auto;
+    padding-top: 1rem;
+    margin-bottom: 0;
+}
+
+/* Asegurar que todas las cards tengan la misma altura y alineación */
+.product-grid {
+    align-items: stretch;
+}
+
+.product-grid .product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 500px;
+}
+
+/* Ajustes para el contenido de la card */
+.product-card .product-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+/* Espaciado específico para elementos dentro de product-info */
+.product-card .product-pricing {
+    margin-bottom: 1rem;
+}
+
+.product-card .quality-badges {
+    margin-bottom: 1rem;
+}
+
+/* Asegurar que los botones queden en la parte inferior */
+.product-card .product-actions {
+    margin-top: auto !important;
+    padding-top: 1rem;
+    margin-bottom: 0;
+}
+
+/* Forzar la alineación específica para cards con estilos inline */
+.product-card[data-category="Verduras Orgánicas"] {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 500px !important;
+}
+
+.product-card[data-category="Verduras Orgánicas"] .product-info {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-grow: 1 !important;
+    justify-content: space-between !important;
+    padding: 1rem !important;
+}
+
+.product-card[data-category="Verduras Orgánicas"] .product-actions {
+    margin-top: auto !important;
+    padding-top: 1rem !important;
+    margin-bottom: 0 !important;
+    position: relative !important;
+    bottom: 0 !important;
+}
+
+/* Estilos generales para forzar la alineación en todas las cards de productos */
+.product-grid .product-card {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 500px !important;
+}
+
+.product-grid .product-card .product-info {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-grow: 1 !important;
+    justify-content: space-between !important;
+    padding: 1rem !important;
+}
+
+.product-grid .product-card .product-actions {
+    margin-top: auto !important;
+    padding-top: 1rem !important;
+    margin-bottom: 0 !important;
+    position: relative !important;
+    bottom: 0 !important;
+}
+
+/* Estilos responsivos para mantener la alineación */
+@media (max-width: 768px) {
+    .product-grid .product-card {
+        min-height: 450px !important;
+    }
+    
+    .product-card .product-actions {
+        padding-top: 0.75rem !important;
+    }
+    
+    .product-grid .product-card .product-actions {
+        padding-top: 0.75rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-grid .product-card {
+        min-height: 420px !important;
+    }
+    
+    .product-card .product-actions {
+        padding-top: 0.5rem !important;
+        gap: 0.5rem !important;
+    }
+    
+    .product-grid .product-card .product-actions {
+        padding-top: 0.5rem !important;
+        gap: 0.5rem !important;
+    }
+}
+
 .view-details-btn {
     width: 100%;
     padding: 0.875rem;
