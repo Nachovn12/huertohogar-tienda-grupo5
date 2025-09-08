@@ -1,5 +1,32 @@
 // Carrusel Infinito Solo CSS - Basado en https://blog.logto.io/es/carrusel-de-desplazamiento-infinito-solo-con-css
 
+// Funciones para manejar ofertas (importadas del script principal)
+function getOfferPrice(productId) {
+    if (typeof window.getOfferPrice === 'function') {
+        return window.getOfferPrice(productId);
+    }
+    return null;
+}
+
+function getOriginalPrice(productId) {
+    if (typeof window.getOriginalPrice === 'function') {
+        return window.getOriginalPrice(productId);
+    }
+    return null;
+}
+
+function isProductOnOffer(productId) {
+    if (typeof window.isProductOnOffer === 'function') {
+        return window.isProductOnOffer(productId);
+    }
+    return false;
+}
+
+function formatPrice(price) {
+    // Usar la función local para evitar recursión
+    return `$${price.toLocaleString('es-CL')} CLP`;
+}
+
 // Función global para inicializar el carrusel infinito de productos recomendados
 function initializeCarousel(currentProductId) {
     const carouselWrapper = document.getElementById('carousel-wrapper');
@@ -87,9 +114,17 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
         carouselWrapper.innerHTML = duplicatedProducts.map((product, index) => {
             const rating = generateRating();
             const productUrl = getProductUrl(product.id);
+            const offerPrice = getOfferPrice(product.id);
+            const originalPrice = getOriginalPrice(product.id);
+            const isOnOffer = isProductOnOffer(product.id);
+            
+            const discountPercentage = isOnOffer ? Math.round((1 - offerPrice / originalPrice) * 100) : 0;
+            const savings = isOnOffer ? (originalPrice - offerPrice) : 0;
+            
             return `
                 <div class="carousel-item" data-index="${index}" onclick="window.location.href='${productUrl}'">
                     <div class="category-badge">${getCategoryName(product.category)}</div>
+                    ${isOnOffer ? `<div class="carousel-offer-badge">🔥 ${discountPercentage}% OFF</div>` : ''}
                     <img src="${product.image}" alt="${product.name}" loading="lazy">
                     <div class="carousel-item-content">
                         <h4>${product.name}</h4>
@@ -99,10 +134,11 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
                             </div>
                             <span class="rating-text">(${rating.rating}) · ${rating.reviewCount} reseñas</span>
                         </div>
-                        <p class="price">${product.price.toLocaleString()} CLP</p>
-                        <button class="view-product-btn" onclick="event.stopPropagation(); window.location.href='${productUrl}'">
-                            <i class="fas fa-shopping-cart"></i> Ver Producto
-                        </button>
+                        <div class="carousel-pricing">
+                            <p class="price ${isOnOffer ? 'has-offer' : ''}">${formatPrice(offerPrice || product.price)}</p>
+                            <span class="product-unit">${product.unit || 'por unidad'}</span>
+                            ${isOnOffer ? `<span class="original-price">Antes: ${formatPrice(originalPrice)}</span>` : ''}
+                        </div>
                     </div>
                 </div>
             `;

@@ -3,6 +3,58 @@ document.addEventListener('DOMContentLoaded', () => {
     const SEARCH_STORAGE_KEY = 'huertohogar_search_history';
     const PRODUCTS_STORAGE_KEY = 'huertohogar_products';
     
+    // --- Funcionalidad del Botón Hero ---
+    const initHeroButton = () => {
+        const heroButton = document.querySelector('.hero-section .btn-primary');
+        console.log('Botón hero encontrado:', heroButton);
+        
+        if (heroButton) {
+            // Agregar evento de click
+            heroButton.addEventListener('click', function(e) {
+                console.log('Botón hero clickeado!');
+                e.preventDefault(); // Prevenir comportamiento por defecto
+                
+                // Tracking de analytics (opcional)
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'click', {
+                        'event_category': 'Hero Button',
+                        'event_label': 'Descubre Nuestros Productos'
+                    });
+                }
+                
+                // Verificar si estamos en la página de productos
+                const currentPath = window.location.pathname;
+                const isOnProductsPage = currentPath.includes('productos.html') || currentPath.endsWith('/productos.html');
+                
+                if (isOnProductsPage) {
+                    // Si estamos en productos.html, hacer scroll suave
+                    console.log('Haciendo scroll suave a productos');
+                    const productsSection = document.getElementById('categories') || document.querySelector('.content-section');
+                    if (productsSection) {
+                        productsSection.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                } else {
+                    // Si no estamos en productos.html, navegar normalmente
+                    console.log('Navegando a productos.html');
+                    window.location.href = 'productos.html';
+                }
+            });
+            
+            // Agregar evento de mouseover para debug
+            heroButton.addEventListener('mouseover', function() {
+                console.log('Mouse sobre el botón hero');
+            });
+        } else {
+            console.log('No se encontró el botón hero');
+        }
+    };
+    
+    // Inicializar funcionalidad del botón hero
+    initHeroButton();
+    
     // Función para guardar productos en localStorage
     const saveProductsToStorage = (products) => {
         localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
@@ -93,6 +145,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
+    // --- Sistema de Ofertas Especiales ---
+    // Seleccionar los 4 productos más recomendados para ofertas
+    const getRecommendedProductsForOffers = () => {
+        // Seleccionar los productos más recomendados de diferentes categorías
+        const organicProducts = products.filter(p => p.category === 'Productos Orgánicos');
+        const fujiApples = products.find(p => p.id === 'FR001');
+        const carrots = products.find(p => p.id === 'VR001');
+        
+        const recommendedProducts = [
+            // Productos Orgánicos (2 productos)
+            ...organicProducts,
+            // Agregar 1 producto popular de Frutas Frescas (Manzanas Fuji)
+            fujiApples,
+            // Agregar 1 producto de Verduras Orgánicas (Zanahorias)
+            carrots
+        ].filter(Boolean); // Eliminar valores undefined
+        
+        // Convertir a formato de ofertas con descuentos
+        const offers = recommendedProducts.map((product, index) => {
+            const discounts = [25, 20, 15, 18]; // Descuentos diferentes para cada producto
+            const discount = discounts[index] || 15;
+            const originalPrice = product.price;
+            const offerPrice = Math.round(originalPrice * (1 - discount / 100));
+            
+            return {
+                id: product.id,
+                name: product.name,
+                originalPrice: originalPrice,
+                offerPrice: offerPrice,
+                discount: discount,
+                category: product.category,
+                image: product.image,
+                stock: product.stock,
+                unit: product.unit,
+                description: product.description,
+                badge: `${discount}% OFF`
+            };
+        });
+        
+        return offers;
+    };
+
     // --- Datos Completos de Productos (Basados en el PDF) ---
     const products = [
         { 
@@ -187,6 +281,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
+    // Inicializar ofertas especiales
+    const specialOffers = getRecommendedProductsForOffers();
+
+    // Función para obtener el precio de oferta de un producto
+    const getOfferPrice = (productId) => {
+        const offer = specialOffers.find(o => o.id === productId);
+        return offer ? offer.offerPrice : null;
+    };
+
+    // Función para obtener el precio original de un producto en oferta
+    const getOriginalPrice = (productId) => {
+        const offer = specialOffers.find(o => o.id === productId);
+        return offer ? offer.originalPrice : null;
+    };
+
+    // Función para verificar si un producto está en oferta
+    const isProductOnOffer = (productId) => {
+        return specialOffers.some(o => o.id === productId);
+    };
+
+    // Hacer las funciones de ofertas disponibles globalmente
+    window.getOfferPrice = getOfferPrice;
+    window.getOriginalPrice = getOriginalPrice;
+    window.isProductOnOffer = isProductOnOffer;
+
     let cart = JSON.parse(localStorage.getItem('huertoHogarCart')) || [];
     
     // --- Selectores del DOM ---
@@ -203,97 +322,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- Funciones del Carrito y Productos ---
     const formatPrice = (price) => `$${price.toLocaleString('es-CL')} CLP`;
+    
+    // Hacer formatPrice disponible globalmente
+    window.formatPrice = formatPrice;
 
     // --- Función para Mostrar Detalles del Producto ---
-    const showProductDetails = (productId) => {
-        // Buscar en productos regulares primero
-        let product = products.find(p => p.id === productId);
-        
-        // Si no se encuentra, buscar en ofertas especiales
-        if (!product) {
-            product = specialOffers.find(o => o.id === productId);
-            if (product) {
-                // Convertir oferta a formato de producto para el modal
-                product = {
-                    ...product,
-                    price: product.offerPrice
-                };
-            }
-        }
-        
-        if (!product) return;
-
-        // Crear modal si no existe
-        let modal = document.getElementById('product-details-modal');
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'product-details-modal';
-            modal.className = 'product-details-modal';
-            modal.innerHTML = `
-                <div class="modal-overlay"></div>
-                <div class="modal-content">
-                    <button class="modal-close-btn">&times;</button>
-                    <div class="modal-body">
-                        <div class="product-details-header">
-                            <img src="${product.image}" alt="${product.name}" class="product-details-image">
-                            <div class="product-details-info">
-                                <h2>${product.name}</h2>
-                                <p class="product-code">${product.id}</p>
-                                <p class="product-price">${formatPrice(product.price)} por ${product.unit}</p>
-                            </div>
-                        </div>
-                        <div class="product-details-content">
-                            <div class="detail-section">
-                                <h3><i class="fas fa-boxes"></i> Stock Disponible</h3>
-                                <p class="stock-info">
-                                    <span class="stock-number">${product.stock}</span> ${product.unit}
-                                </p>
-                            </div>
-                            <div class="detail-section">
-                                <h3><i class="fas fa-info-circle"></i> Descripción</h3>
-                                <p class="product-description">${product.description}</p>
-                            </div>
-                            <div class="detail-section">
-                                <h3><i class="fas fa-tags"></i> Categoría</h3>
-                                <p class="product-category">${product.category}</p>
-                            </div>
-                        </div>
-                        <div class="product-details-actions">
-                            <button class="add-to-cart-btn-large" data-id="${product.id}">
-                                <i class="fas fa-shopping-cart"></i> Agregar al Carrito
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-
-            // Event listeners para el modal
-            modal.querySelector('.modal-close-btn').addEventListener('click', () => {
-                modal.classList.remove('active');
-            });
-            modal.querySelector('.modal-overlay').addEventListener('click', () => {
-                modal.classList.remove('active');
-            });
-            modal.querySelector('.add-to-cart-btn-large').addEventListener('click', () => {
-                addToCart(product.id);
-                modal.classList.remove('active');
-            });
+    // --- Función para Redirigir a Detalles del Producto ---
+    const goToProductDetails = (productId) => {
+        const productUrl = window.productUrlMap[productId];
+        if (productUrl) {
+            window.location.href = productUrl;
         } else {
-            // Actualizar contenido del modal existente
-            modal.querySelector('.product-details-image').src = product.image;
-            modal.querySelector('.product-details-image').alt = product.name;
-            modal.querySelector('.product-details-info h2').textContent = product.name;
-            modal.querySelector('.product-code').textContent = product.id;
-            modal.querySelector('.product-price').textContent = `${formatPrice(product.price)} por ${product.unit}`;
-            modal.querySelector('.stock-number').textContent = product.stock;
-            modal.querySelector('.product-description').textContent = product.description;
-            modal.querySelector('.product-category').textContent = product.category;
-            modal.querySelector('.add-to-cart-btn-large').dataset.id = product.id;
+            console.warn(`No se encontró URL para el producto: ${productId}`);
         }
-
-        // Mostrar modal
-        modal.classList.add('active');
     };
 
     const renderProducts = (category = 'all', container, limit = null) => {
@@ -308,23 +349,37 @@ document.addEventListener('DOMContentLoaded', () => {
             container.classList.remove('few-products');
         }
 
-        container.innerHTML = productsToRender.map((product, index) => `
-            <div class="product-card grid-card" style="--delay: ${index * 0.1}s">
-                <img src="${product.image}" alt="${product.name}">
-                <div class="product-info">
-                    <h4>${product.name}</h4>
-                    <p class="price">${formatPrice(product.price)}</p>
-                    <div class="product-actions">
-                        <button class="view-details-btn" data-id="${product.id}">
-                            <i class="fas fa-info-circle"></i> Ver Detalles
-                        </button>
-                        <button class="add-to-cart-btn" data-id="${product.id}">
-                            <i class="fas fa-shopping-cart"></i> Agregar al Carrito
-                        </button>
+        container.innerHTML = productsToRender.map((product, index) => {
+            const offerPrice = getOfferPrice(product.id);
+            const originalPrice = getOriginalPrice(product.id);
+            const isOnOffer = isProductOnOffer(product.id);
+            const discountPercentage = isOnOffer ? Math.round((1 - offerPrice / originalPrice) * 100) : 0;
+            const savings = isOnOffer ? (originalPrice - offerPrice) : 0;
+            
+            return `
+                <div class="product-card grid-card" style="--delay: ${index * 0.1}s">
+                    ${isOnOffer ? `<div class="offer-badge">🔥 ${discountPercentage}% OFF</div>` : (product.popular ? '<div class="new-badge">Popular</div>' : '')}
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <h4>${product.name}</h4>
+                        <div class="product-pricing">
+                            <p class="price ${isOnOffer ? 'has-offer' : ''}">${formatPrice(offerPrice || product.price)}</p>
+                            <span class="product-unit">${product.unit || 'por unidad'}</span>
+                            ${isOnOffer ? `<span class="original-price">Antes: ${formatPrice(originalPrice)}</span>` : ''}
+                            ${isOnOffer ? `<span class="savings-badge">💰 Ahorras $${formatPrice(savings)}</span>` : ''}
+                        </div>
+                        <div class="product-actions">
+                            <button class="view-details-btn" data-id="${product.id}">
+                                <i class="fas fa-info-circle"></i> Ver Detalles
+                            </button>
+                            <button class="add-to-cart-btn" data-id="${product.id}">
+                                <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
         // Aplicar animaciones a los productos recién renderizados
         setTimeout(() => {
@@ -336,16 +391,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const renderCart = () => {
         if (cart.length === 0) {
-            cartItemsList.innerHTML = '<p>Tu carrito está vacío.</p>';
+            cartItemsList.innerHTML = `
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Tu carrito está vacío</p>
+                    <small>Agrega algunos productos para comenzar</small>
+                </div>
+            `;
         } else {
             cartItemsList.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <img src="${item.image}" alt="${item.name}">
-                    <div class="item-details">
-                        <h4>${item.name}</h4>
-                        <span class="price">${formatPrice(item.price)} x ${item.quantity}</span>
+                    <div class="cart-item-image">
+                        <img src="${item.image}" alt="${item.name}">
                     </div>
-                    <button class="remove-btn" data-id="${item.id}">×</button>
+                    <div class="cart-item-details">
+                        <h4 class="cart-item-name">${item.name}</h4>
+                        <div class="cart-item-price">${formatPrice(item.price)}</div>
+                        <div class="cart-item-total">Total: ${formatPrice(item.price * item.quantity)}</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <div class="quantity-controls">
+                            <button class="quantity-btn decrease-btn" data-id="${item.id}">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="quantity-display">${item.quantity}</span>
+                            <button class="quantity-btn increase-btn" data-id="${item.id}">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <button class="remove-btn" data-id="${item.id}" title="Eliminar producto">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -361,8 +438,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // Buscar en productos regulares primero
         let productToAdd = products.find(p => p.id === productId);
         
-        // Si no se encuentra, buscar en ofertas especiales
-        if (!productToAdd) {
+        if (productToAdd) {
+            // Verificar si está en oferta
+            const offerPrice = getOfferPrice(productId);
+            const isOnOffer = isProductOnOffer(productId);
+            
+            if (isOnOffer) {
+                productToAdd = {
+                    ...productToAdd,
+                    price: offerPrice
+                };
+            }
+        } else {
+            // Si no se encuentra, buscar en ofertas especiales
             const offer = specialOffers.find(o => o.id === productId);
             if (offer) {
                 productToAdd = {
@@ -384,6 +472,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         renderCart();
         
+        // Mostrar notificación
+        showNotification(`${productToAdd.name} agregado al carrito`, 'success');
+        
         // Solo abrir el carrito para productos regulares, no para ofertas
         if (products.find(p => p.id === productId)) {
             openCart();
@@ -393,6 +484,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const removeFromCart = (productId) => {
         cart = cart.filter(item => item.id !== productId);
         renderCart();
+    };
+
+    const increaseQuantity = (productId) => {
+        console.log('Aumentando cantidad para producto:', productId);
+        const item = cart.find(item => item.id === productId);
+        if (item) {
+            item.quantity++;
+            renderCart();
+            console.log('Cantidad actualizada:', item.quantity);
+        } else {
+            console.log('Producto no encontrado en el carrito');
+        }
+    };
+
+    const decreaseQuantity = (productId) => {
+        console.log('Disminuyendo cantidad para producto:', productId);
+        const item = cart.find(item => item.id === productId);
+        if (item) {
+            if (item.quantity > 1) {
+                item.quantity--;
+                console.log('Cantidad actualizada:', item.quantity);
+            } else {
+                console.log('Eliminando producto del carrito');
+                removeFromCart(productId);
+            }
+            renderCart();
+        } else {
+            console.log('Producto no encontrado en el carrito');
+        }
     };
     
     const openCart = () => {
@@ -515,21 +635,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Event delegation para todos los botones
     document.body.addEventListener('click', (e) => {
-        if (e.target.classList.contains('add-to-cart-btn')) {
+        // Botón agregar al carrito (productos regulares)
+        if (e.target.classList.contains('add-to-cart-btn') && !e.target.closest('.offer-card')) {
             addToCart(e.target.dataset.id);
         }
+        
+        // Botón eliminar del carrito
         if (e.target.classList.contains('remove-btn')) {
             removeFromCart(e.target.dataset.id);
         }
-        if (e.target.classList.contains('view-details-btn')) {
+        
+        // Botón aumentar cantidad
+        if (e.target.classList.contains('increase-btn')) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Botón + clickeado, ID:', e.target.dataset.id);
+            increaseQuantity(e.target.dataset.id);
+        }
+        
+        // Botón disminuir cantidad
+        if (e.target.classList.contains('decrease-btn')) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Botón - clickeado, ID:', e.target.dataset.id);
+            decreaseQuantity(e.target.dataset.id);
+        }
+        
+        // Botón ver detalles
+        if (e.target.classList.contains('view-details-btn') && !e.target.closest('.offer-card')) {
             const productId = e.target.dataset.id;
-            const productUrl = window.productUrlMap[productId];
-            if (productUrl) {
-                window.location.href = productUrl;
-            } else {
-                showProductDetails(productId);
-            }
+            goToProductDetails(productId);
         }
     });
 
@@ -641,44 +778,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const buttons = document.querySelectorAll('.add-to-cart-btn');
         
         buttons.forEach(button => {
-            // Crear elemento de brillo si no existe
-            if (!button.querySelector('.shine-effect')) {
-                const shine = document.createElement('div');
-                shine.className = 'shine-effect';
-                shine.style.cssText = `
-                    position: absolute;
-                    top: 0;
-                    left: -100%;
-                    width: 100%;
-                    height: 100%;
-                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-                    transition: left 0.6s ease;
-                    pointer-events: none;
-                    z-index: 1;
-                `;
-                button.appendChild(shine);
-            }
-            
             button.addEventListener('mouseenter', () => {
                 button.style.transform = 'translateY(-2px) scale(1.02)';
                 button.style.boxShadow = '0 6px 20px rgba(46, 139, 87, 0.4)';
-                
-                // Activar efecto de brillo
-                const shine = button.querySelector('.shine-effect');
-                if (shine) {
-                    shine.style.left = '100%';
-                }
             });
             
             button.addEventListener('mouseleave', () => {
                 button.style.transform = 'translateY(0) scale(1)';
                 button.style.boxShadow = '0 2px 8px rgba(46, 139, 87, 0.3)';
-                
-                // Resetear efecto de brillo
-                const shine = button.querySelector('.shine-effect');
-                if (shine) {
-                    shine.style.left = '-100%';
-                }
             });
         });
     };
@@ -968,60 +1075,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProductDetail();
     
     // --- Sistema de Ofertas Especiales ---
-    const specialOffers = [
-        {
-            id: 'OF001',
-            name: 'Pack Familiar de Frutas',
-            originalPrice: 5000,
-            offerPrice: 3500,
-            discount: 30,
-            category: 'Ofertas Especiales',
-            image: 'https://th.bing.com/th/id/OIP.-ghvs7P7auN2dITXfZd5DAHaE7?w=306&h=204&c=7&r=0&o=7&pid=1.7&rm=3',
-            stock: 25,
-            unit: 'pack',
-            description: 'Pack especial con manzanas, naranjas y plátanos. Perfecto para toda la familia. Ahorra un 30% en tu compra.',
-            badge: '30% OFF'
-        },
-        {
-            id: 'OF002',
-            name: 'Cesta Orgánica Premium',
-            originalPrice: 8000,
-            offerPrice: 5500,
-            discount: 31,
-            category: 'Ofertas Especiales',
-            image: "https://th.bing.com/th/id/R.4bda382c55d85be8bd155d1e28a4c400?rik=Z0eB0HhaLTY8Iw&riu=http%3a%2f%2f1.bp.blogspot.com%2f-TWenVgDTHzM%2fVFJrG5hhGVI%2fAAAAAAAACIU%2fX1pZWCuHL4U%2fs1600%2fquinoa-espinaca-10.jpg&ehk=iRT%2boMMRJHlmqR2dIzpq8%2bsqCrk9sKa3lZlIalS1zgs%3d&risl=&pid=ImgRaw&r=0",
-            stock: 15,
-            unit: 'cesta',
-            description: 'Selección premium de productos orgánicos: miel, quinua, zanahorias y espinacas. Calidad garantizada.',
-            badge: '31% OFF'
-        },
-        {
-            id: 'OF003',
-            name: 'Combo Desayuno Saludable',
-            originalPrice: 3500,
-            offerPrice: 2500,
-            discount: 29,
-            category: 'Ofertas Especiales',
-            image: 'https://image.freepik.com/foto-gratis/leche-fresca-nutritiva-fruta-sana_23-2148239860.jpg',
-            stock: 30,
-            unit: 'combo',
-            description: 'Todo lo necesario para un desayuno nutritivo: leche, frutas frescas y productos orgánicos.',
-            badge: '29% OFF'
-        },
-        {
-            id: 'OF004',
-            name: 'Kit Verde Completo',
-            originalPrice: 6000,
-            offerPrice: 4200,
-            discount: 30,
-            category: 'Ofertas Especiales',
-            image: 'https://paseandohilos.com/wp-content/uploads/2015/03/PH_espinaca_Roja_01-1024x1024.jpg',
-            stock: 20,
-            unit: 'kit',
-            description: 'Kit completo de verduras orgánicas: zanahorias, espinacas, pimientos y más. Frescura garantizada.',
-            badge: '30% OFF'
-        }
-    ];
 
     // Función para renderizar ofertas especiales
     const renderOffers = () => {
@@ -1029,23 +1082,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!offersContainer) return;
 
         offersContainer.innerHTML = specialOffers.map((offer, index) => `
-            <div class="offer-card" style="animation-delay: ${index * 0.2}s">
+            <div class="offer-card grid-card" style="--delay: ${index * 0.2}s; opacity: 1; transform: translateY(0px) scale(1); transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: var(--shadow-soft); border-color: rgba(0, 0, 0, 0.05);">
                 <div class="offer-badge">${offer.badge}</div>
-                <img src="${offer.image}" alt="${offer.name}">
-                <div class="offer-content">
-                    <h3 class="offer-title">${offer.name}</h3>
-                    <p class="offer-description">${offer.description}</p>
+                <img src="${offer.image}" alt="${offer.name}" style="transform: scale(1); box-shadow: none;">
+                <div class="product-info">
+                    <h4>${offer.name}</h4>
                     <div class="offer-pricing">
-                        <span class="offer-price">${formatPrice(offer.offerPrice)}</span>
+                        <p class="price">${formatPrice(offer.offerPrice)}</p>
                         <span class="offer-original-price">${formatPrice(offer.originalPrice)}</span>
                         <span class="offer-discount">-${offer.discount}%</span>
                     </div>
-                    <div class="offer-actions">
-                        <button class="offer-add-btn" data-id="${offer.id}">
-                            <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                    <div class="product-actions">
+                        <button class="view-details-btn" data-id="${offer.id}">
+                            <i class="fas fa-info-circle"></i> Ver Detalles
                         </button>
-                        <button class="offer-view-btn" data-id="${offer.id}">
-                            <i class="fas fa-eye"></i> Ver Detalles
+                        <button class="add-to-cart-btn" data-id="${offer.id}">
+                            <i class="fas fa-shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
                 </div>
@@ -1089,16 +1141,22 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const existingItem = cart.find(item => item.id === offerId);
         if (existingItem) {
-            existingItem.quantity++;
+            existingItem.quantity += 1;
         } else {
             cart.push({ ...productToAdd, quantity: 1 });
         }
         
         renderCart();
-        // No abrir el carrito automáticamente
+        
+        // Abrir el carrito automáticamente
+        openCart();
         
         // Mostrar notificación
         showNotification(`${offer.name} agregado al carrito`, 'success');
+    };
+
+    const showOfferDetails = (offerId) => {
+        goToProductDetails(offerId);
     };
 
     // Función para mostrar notificaciones
@@ -1121,6 +1179,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 transition: transform 0.3s ease;
                 max-width: 300px;
                 box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+                cursor: pointer;
             `;
             document.body.appendChild(notification);
         }
@@ -1137,6 +1196,13 @@ document.addEventListener('DOMContentLoaded', () => {
         notification.textContent = message;
         notification.style.transform = 'translateX(0)';
 
+        // Agregar funcionalidad de clic para abrir el carrito
+        notification.onclick = () => {
+            openCart();
+            // Ocultar la notificación inmediatamente al hacer clic
+            notification.style.transform = 'translateX(100%)';
+        };
+
         // Ocultar después de 3 segundos
         setTimeout(() => {
             notification.style.transform = 'translateX(100%)';
@@ -1146,17 +1212,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event listeners para ofertas
     document.body.addEventListener('click', (e) => {
         // Botones de ofertas
-        if (e.target.classList.contains('offer-add-btn')) {
+        if (e.target.classList.contains('add-to-cart-btn') && e.target.closest('.offer-card')) {
             const offerId = e.target.dataset.id;
             addOfferToCart(offerId);
+        } else if (e.target.classList.contains('view-details-btn') && e.target.closest('.offer-card')) {
+            const offerId = e.target.dataset.id;
+            showOfferDetails(offerId);
         }
         
         if (e.target.classList.contains('offer-view-btn')) {
             const offerId = e.target.dataset.id;
-            const offer = specialOffers.find(o => o.id === offerId);
-            if (offer) {
-                showProductDetails(offerId);
-            }
+            goToProductDetails(offerId);
         }
     });
 
@@ -1279,9 +1345,17 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
     function renderCarouselItems() {
         carouselWrapper.innerHTML = duplicatedProducts.map((product, index) => {
             const rating = generateRating();
+            const offerPrice = getOfferPrice(product.id);
+            const originalPrice = getOriginalPrice(product.id);
+            const isOnOffer = isProductOnOffer(product.id);
+            
+            const discountPercentage = isOnOffer ? Math.round((1 - offerPrice / originalPrice) * 100) : 0;
+            const savings = isOnOffer ? (originalPrice - offerPrice) : 0;
+            
             return `
                 <div class="carousel-item" data-index="${index}" onclick="window.location.href='${window.productUrlMap[product.id] || '#'}'">
                     <div class="category-badge">${getCategoryName(product.category)}</div>
+                    ${isOnOffer ? `<div class="carousel-offer-badge">🔥 ${discountPercentage}% OFF</div>` : ''}
                     <img src="${product.image}" alt="${product.name}" loading="lazy">
                     <div class="carousel-item-content">
                         <h4>${product.name}</h4>
@@ -1291,7 +1365,12 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
                             </div>
                             <span class="rating-text">(${rating.rating}) · ${rating.reviewCount} reseñas</span>
                         </div>
-                        <p class="price">${product.price.toLocaleString()} CLP</p>
+                        <div class="carousel-pricing">
+                            <p class="price ${isOnOffer ? 'has-offer' : ''}">${formatPrice(offerPrice || product.price)}</p>
+                            ${isOnOffer ? `<span class="original-price">Antes: ${formatPrice(originalPrice)}</span>` : ''}
+                            ${isOnOffer ? `<span class="discount-badge">💥 -${discountPercentage}%</span>` : ''}
+                            ${isOnOffer ? `<span class="savings-badge">💰 Ahorras $${formatPrice(savings)}</span>` : ''}
+                        </div>
                         <button class="view-product-btn" onclick="event.stopPropagation(); window.location.href='${window.productUrlMap[product.id] || '#'}'">
                             <i class="fas fa-shopping-cart"></i> Ver Producto
                         </button>

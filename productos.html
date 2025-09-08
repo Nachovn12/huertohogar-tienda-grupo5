@@ -56,23 +56,61 @@
     </header>
 
     <main class="page-container">
+        <!-- Breadcrumb Navigation -->
+        <div class="breadcrumb">
+            <div class="breadcrumb-content">
+                <a href="index.html">Inicio</a>
+                <span class="breadcrumb-separator">></span>
+                <span class="breadcrumb-current">Productos</span>
+            </div>
+        </div>
+
         <h1 class="page-title">Nuestros Productos</h1>
-        <div id="category-info" class="category-info" style="display: none;">
-            <i class="fas fa-filter"></i>
-            <span id="category-info-text"></span>
-            <button id="clear-filter" class="clear-filter-btn">
-                <i class="fas fa-times"></i> Ver Todos
+        
+
+        <!-- Filtros Rápidos Elegantes -->
+        <div class="filters-wrapper">
+            <button class="elegant-filter-btn active" data-category="all">
+                <i class="fas fa-th-large"></i>
+                <span>Todos</span>
+            </button>
+            <button class="elegant-filter-btn" data-category="Frutas Frescas">
+                <i class="fas fa-apple-alt"></i>
+                <span>Frutas Frescas</span>
+            </button>
+            <button class="elegant-filter-btn" data-category="Verduras Orgánicas">
+                <i class="fas fa-carrot"></i>
+                <span>Verduras Orgánicas</span>
+            </button>
+            <button class="elegant-filter-btn" data-category="Productos Orgánicos">
+                <i class="fas fa-leaf"></i>
+                <span>Productos Orgánicos</span>
+            </button>
+            <button class="elegant-filter-btn" data-category="Productos Lácteos">
+                <i class="fas fa-cheese"></i>
+                <span>Productos Lácteos</span>
             </button>
         </div>
-        <div class="filters-container">
-            <button class="filter-btn active" data-category="all">Todos</button>
-            <button class="filter-btn" data-category="Frutas Frescas">Frutas Frescas</button>
-            <button class="filter-btn" data-category="Verduras Orgánicas">Verduras Orgánicas</button>
-            <button class="filter-btn" data-category="Productos Orgánicos">Productos Orgánicos</button>
-            <button class="filter-btn" data-category="Productos Lácteos">Productos Lácteos</button>
+
+        <!-- Vista de productos -->
+        <div class="products-view-controls">
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button class="view-btn" data-view="list">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+            <div class="results-info">
+                <span id="products-count">Mostrando 0 productos</span>
+                <span id="products-total" class="products-total">de 0 total</span>
+            </div>
         </div>
+
         <div id="product-list-full" class="product-grid content-section">
             </div>
+
     </main>
     
     <footer class="main-footer">
@@ -120,6 +158,7 @@
     </div>
     
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/advanced-filters-fixed.js"></script>
     <script src="assets/js/auth.js"></script>
 </body>
 </html>

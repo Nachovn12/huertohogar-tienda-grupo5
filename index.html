@@ -23,6 +23,20 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+    <!-- Barra de información superior -->
+    <div class="top-info-bar">
+        <div class="top-info-content">
+            <div class="info-left">
+                <span><i class="fas fa-truck"></i> Despacho gratis desde $15.000</span>
+                <span><i class="fas fa-clock"></i> Lunes a Sábado 9:00 - 19:00</span>
+            </div>
+            <div class="info-right">
+                <span><i class="fas fa-phone"></i> +56 9 1234 5678</span>
+                <span><i class="fas fa-envelope"></i> contacto@huertohogar.cl</span>
+            </div>
+        </div>
+    </div>
+    
     <header class="main-header">
         <div class="header-content">
             <a href="index.html" class="logo-container">
@@ -38,7 +52,10 @@
             <div class="header-actions">
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Buscar...">
+                    <input type="text" placeholder="Buscar..." id="search-input" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="off">
+                    <div class="search-dropdown" id="search-dropdown">
+                        <div class="search-suggestions" id="search-suggestions"></div>
+                    </div>
                 </div>
                 <a href="login.html" class="login-link" id="user-login-link">Ingresar</a>
                 <div class="user-profile" id="user-profile" style="display: none;">
@@ -170,8 +187,30 @@
 
         <!-- Sección de Ofertas Especiales -->
         <section id="offers" class="content-section offers-section">
-            <h2 class="section-title">🔥 Ofertas Especiales</h2>
-            <p class="section-subtitle">Aprovecha estos descuentos increíbles por tiempo limitado</p>
+            <!-- Banner Promocional Elegante -->
+            <div class="offers-banner">
+                <div class="banner-content">
+                    <div class="banner-text">
+                        <span class="banner-subtitle">Promociones Especiales</span>
+                        <h2 class="banner-title">Ofertas Exclusivas</h2>
+                        <p class="banner-description">Productos seleccionados con descuentos especiales para nuestros clientes</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Header de la sección -->
+            <div class="offers-header">
+                <div class="offers-title-section">
+                    <h2 class="offers-section-title">Ofertas Especiales</h2>
+                    <p class="offers-subtitle">Descubre nuestros productos con descuentos exclusivos</p>
+                </div>
+                <a href="productos.html" class="offers-view-all-btn">
+                    <i class="fas fa-arrow-right"></i>
+                    Ver todos los productos
+                </a>
+            </div>
+            
+            <!-- Grid de productos en oferta -->
             <div id="offers-grid" class="offers-grid">
                 <!-- Los productos de oferta se cargarán dinámicamente -->
             </div>
@@ -236,7 +275,16 @@
         </div>
     </div>
 
+    <!-- Carrito flotante -->
+    <div class="cart-floating" id="cart-floating">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-floating-text">0 productos</span>
+        <span id="cart-floating-total">$0</span>
+    </div>
+
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/search-simple.js"></script>
+    <script src="assets/js/cart-floating.js"></script>
     <script src="assets/js/auth.js"></script>
 </body>
 </html>
