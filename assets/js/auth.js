@@ -190,6 +190,7 @@
         const loginLink = qs('#user-login-link');
         const userProfile = qs('#user-profile');
         const userName = qs('#user-name');
+        const userMenu = qs('.user-menu');
         
         if (!loginLink || !userProfile || !userName) {
             return;
@@ -211,11 +212,69 @@
             } else {
                 userName.textContent = 'Usuario';
             }
+            
+            // Configurar eventos del dropdown del usuario
+            setupUserDropdown();
         } else {
             // Mostrar enlace de login y ocultar perfil de usuario
             loginLink.style.display = 'block';
             userProfile.style.display = 'none';
         }
+    };
+
+    // --- Configuración del dropdown del usuario ---
+    const setupUserDropdown = () => {
+        const userProfile = qs('#user-profile');
+        const userMenu = qs('.user-menu');
+        
+        if (!userProfile || !userMenu) return;
+        
+        let hoverTimeout;
+        let isDropdownOpen = false;
+        
+        // Función para mostrar el dropdown
+        const showDropdown = () => {
+            clearTimeout(hoverTimeout);
+            userMenu.classList.add('show');
+            isDropdownOpen = true;
+        };
+        
+        // Función para ocultar el dropdown
+        const hideDropdown = () => {
+            hoverTimeout = setTimeout(() => {
+                userMenu.classList.remove('show');
+                isDropdownOpen = false;
+            }, 150); // Pequeño delay para evitar cierre accidental
+        };
+        
+        // Eventos del perfil de usuario
+        userProfile.addEventListener('mouseenter', showDropdown);
+        userProfile.addEventListener('mouseleave', hideDropdown);
+        
+        // Eventos del menú dropdown
+        userMenu.addEventListener('mouseenter', showDropdown);
+        userMenu.addEventListener('mouseleave', hideDropdown);
+        
+        // Click en el nombre de usuario para toggle
+        const userName = qs('#user-name');
+        if (userName) {
+            userName.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isDropdownOpen) {
+                    hideDropdown();
+                } else {
+                    showDropdown();
+                }
+            });
+        }
+        
+        // Cerrar dropdown al hacer click fuera
+        document.addEventListener('click', (e) => {
+            if (!userProfile.contains(e.target) && !userMenu.contains(e.target)) {
+                hideDropdown();
+            }
+        });
     };
 
     // --- Gestión de intentos y rate limit ---
@@ -431,24 +490,13 @@
         return { ok: true };
     };
 
-    // --- Protección de acciones (checkout requiere sesión y dirección) ---
+    // --- Protección de acciones (checkout sin restricciones) ---
     const protectActions = () => {
         qsa('.checkout-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const s = readSession();
-                if (!s || !s.expiresAt || s.expiresAt <= now()) {
-                    e.preventDefault();
-                    alert('Debes iniciar sesión para finalizar la compra.');
-                    window.location.href = 'login.html';
-                    return;
-                }
-                const users = getUsers();
-                const user = users.find(u => u.id === s.userId);
-                if (!user || !user.direccion) {
-                    e.preventDefault();
-                    alert('Agrega una dirección de entrega en Mi Cuenta antes de comprar.');
-                    window.location.href = 'mi-cuenta.html';
-                }
+                e.preventDefault();
+                // Redirigir al checkout
+                window.location.href = 'checkout.html';
             });
         });
     };

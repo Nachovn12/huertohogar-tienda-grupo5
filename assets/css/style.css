@@ -345,7 +345,7 @@ body.cart-open { overflow: hidden; }
 
 .user-menu {
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% + 12px);
     left: 50%;
     transform: translateX(-50%) translateY(-10px);
     background: white;
@@ -360,7 +360,19 @@ body.cart-open { overflow: hidden; }
     border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
+.user-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
 .user-profile:hover .user-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.user-menu:hover {
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
