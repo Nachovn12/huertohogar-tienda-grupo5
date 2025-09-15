@@ -92,19 +92,23 @@
             </button>
         </div>
 
-        <!-- Vista de productos -->
+        <!-- Información de productos -->
         <div class="products-view-controls">
-            <div class="view-toggle">
-                <button class="view-btn active" data-view="grid">
-                    <i class="fas fa-th"></i>
-                </button>
-                <button class="view-btn" data-view="list">
-                    <i class="fas fa-list"></i>
-                </button>
+            <div class="sort-controls">
+                <label for="sort-by">Ordenar:</label>
+                <select id="sort-by" class="sort-select">
+                    <option value="recommended">Recomendados</option>
+                    <option value="best-selling">Más vendido</option>
+                    <option value="best-discount">Mejor descuento</option>
+                    <option value="price-desc">Mayor precio</option>
+                    <option value="price-asc">Menor precio</option>
+                    <option value="name-asc">A-Z</option>
+                    <option value="name-desc">Z-A</option>
+                </select>
             </div>
             <div class="results-info">
-                <span id="products-count">Mostrando 0 productos</span>
-                <span id="products-total" class="products-total">de 0 total</span>
+                <span id="products-count">Mostrando 9 productos</span>
+                <span id="products-total" class="products-total">de 9 total</span>
             </div>
         </div>
 

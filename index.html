@@ -21,6 +21,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/forgot-password-modal.css">
+    <link rel="stylesheet" href="assets/css/verification-modal.css">
 </head>
 <body>
     <!-- Barra de información superior -->
@@ -282,9 +284,455 @@
         <span id="cart-floating-total">$0</span>
     </div>
 
+    <!-- Modal de Autenticación -->
+    <div id="auth-modal" class="auth-modal-overlay" style="display: none;">
+        <div class="auth-modal-container">
+            
+            <!-- 1. HEADER: Solo título y cerrar -->
+            <div class="auth-modal-header">
+                <h2 id="auth-modal-title">Inicia sesión o regístrate</h2>
+                <button class="close-btn" id="auth-modal-close">×</button>
+            </div>
+            
+            <!-- 2. BODY: Todo centrado -->
+            <div class="auth-modal-body">
+                
+                <!-- 2.1 ICONO PRINCIPAL GRANDE -->
+                <div class="main-icon-container">
+                    <div class="main-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z" fill="currentColor"/>
+                            <path d="M9 8V17H11V8H9ZM13 8V17H15V8H13Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- 2.2 TÍTULO PRINCIPAL -->
+                <div class="main-message">
+                    <h3>¿Sin cuenta aún?</h3>
+                    <p>Crea una y accede a beneficios</p>
+                </div>
+                
+                <!-- 2.3 LISTA DE BENEFICIOS -->
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 7H16V6C16 4.9 15.1 4 14 4H10C8.9 4 8 4.9 8 6V7H5C3.9 7 3 7.9 3 9V18C3 19.1 3.9 20 5 20H19C20.1 20 21 19.1 21 18V9C21 7.9 20.1 7 19 7ZM10 6H14V7H10V6ZM19 18H5V9H19V18Z" fill="currentColor"/>
+                                <path d="M12 11C10.9 11 10 11.9 10 13S10.9 15 12 15 14 14.1 14 13 13.1 11 12 11Z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <span class="benefit-text">Productos con despacho gratis</span>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22L6.66 19.7C7.14 19.87 7.64 20 8 20C19 20 22 3 22 3C21 5 14 5.25 9 6.25C4 7.25 2 11.5 2 13.5C2 15.5 3.75 17.25 6 17.25C7.5 17.25 9 16.5 9 16.5L8 18.5C8 18.5 6.5 20 4 20C1.5 20 0 18.5 0 16.5C0 14.5 2 10.5 6 8.5C10 6.5 15 6.5 17 8Z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <span class="benefit-text">Moda sustentable</span>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z" fill="currentColor"/>
+                                <path d="M9 8V17H11V8H9ZM13 8V17H15V8H13Z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <span class="benefit-text">Cupones y descuentos exclusivos</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3. BOTONES: Al final, apilados verticalmente -->
+            <div class="auth-actions">
+                <button class="btn-primary" id="show-register">
+                    Crear cuenta
+                </button>
+                
+                <button class="btn-secondary" id="show-login">
+                    Iniciar sesión
+                </button>
+                
+                <a href="#" class="link-guest" id="guest-checkout">
+                    Continuar como invitado
+                </a>
+            </div>
+
+            <!-- Formularios ocultos (se muestran dinámicamente) -->
+            <div id="auth-register" class="auth-section auth-modal-body" style="display: none;">
+                <div class="auth-welcome">
+                    <h2>Comencemos tu historia con HuertoHogar</h2>
+                    <p>Ingresa tus datos de contacto</p>
+                </div>
+                
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <div class="input-container">
+                            <input type="email" id="register-email" name="email" placeholder=" " required>
+                            <label for="register-email" class="floating-label">Correo electrónico</label>
+                            <div class="input-icon">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M15.0706 4H8.92943C7.57533 3.99997 6.45869 3.99994 5.57494 4.11876C4.64711 4.2435 3.82769 4.51547 3.17158 5.17158C2.51547 5.82769 2.2435 6.64711 2.11876 7.57494C1.99994 8.45869 1.99997 9.57529 2 10.9294V13.0706C1.99997 14.4247 1.99994 15.5413 2.11876 16.4251C2.2435 17.3529 2.51547 18.1723 3.17158 18.8284C3.82769 19.4845 4.64711 19.7565 5.57494 19.8813C6.45868 20.0001 7.57527 20 8.92935 20H15.0706C16.4247 20 17.5413 20.0001 18.4251 19.8813C19.3529 19.7565 20.1723 19.4845 20.8284 18.8284C21.4845 18.1723 21.7565 17.3529 21.8813 16.4251C22.0001 15.5413 22 14.4247 22 13.0706V10.9295C22 9.57534 22.0001 8.4587 21.8813 7.57494C21.7565 6.64711 21.4845 5.82769 20.8284 5.17158C20.1723 4.51547 19.3529 4.2435 18.4251 4.11876C17.5413 3.99994 16.4247 3.99997 15.0706 4ZM5.02775 6.29738C5.22617 6.21497 5.48569 6.14875 5.84144 6.10092C6.57626 6.00213 7.55752 6 9 6H15C16.4425 6 17.4238 6.00213 18.1586 6.10092C18.5144 6.14876 18.774 6.215 18.9724 6.29743L12.5434 10.4574C12.2128 10.6713 11.7875 10.6713 11.4569 10.4574L5.02775 6.29738ZM4.07476 8.06291C4.00173 8.77139 4 9.69774 4 11V13C4 14.4425 4.00213 15.4238 4.10092 16.1586C4.19585 16.8646 4.36322 17.1916 4.58579 17.4142C4.80836 17.6368 5.13538 17.8042 5.84144 17.8991C6.57626 17.9979 7.55752 18 9 18H15C16.4425 18 17.4238 17.9979 18.1586 17.8991C18.8646 17.8042 19.1916 17.6368 19.4142 17.4142C19.6368 17.1916 19.8042 16.8646 19.8991 16.1586C19.9979 15.4238 20 14.4425 20 13V11C20 9.69783 19.9983 8.77151 19.9253 8.06305L13.6299 12.1365C12.6381 12.7783 11.3621 12.7783 10.3704 12.1365L4.07476 8.06291Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="input-helper">Ejemplo: correo@ejemplo.com</div>
+                        <span class="error-message" id="register-email-error"></span>
+                    </div>
+                    
+                    <div class="form-group phone-group">
+                        <div class="phone-input-row">
+                            <div class="country-code-container">
+                                <div class="input-container">
+                                    <input readonly disabled role="combobox" aria-expanded="false" id="register-country-code" name="countryCode" value="+569" placeholder=" " class="country-code-input">
+                                    <div class="dropdown-icon">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                                            <path fill="#b4c2cb" fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.5196 16.8946 12.2652 17 12 17C11.7348 17 11.4804 16.8946 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="phone-number-container">
+                                <div class="input-container">
+                                    <input type="tel" id="register-phone" name="phone" placeholder=" " required>
+                                    <label for="register-phone" class="floating-label">Teléfono</label>
+                                    <div class="input-icon">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                                            <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M5.79003 4C4.62999 4 3.87328 4.9112 4.02764 5.81917C5.24576 12.9841 11.016 18.7543 18.1809 19.9724C19.0888 20.1267 20 19.37 20 18.21V17.2674C20 16.8086 19.6877 16.4086 19.2426 16.2973L17.0123 15.7397L16.3454 16.2908L16.3436 16.2924L15.2841 17.1679C14.9846 17.4154 14.5689 17.467 14.218 17.3003C10.9274 15.7371 8.26286 13.0726 6.69967 9.78203C6.53297 9.43111 6.5846 9.01539 6.83209 8.71592L8.26029 6.9877L7.70273 4.75746C7.59144 4.3123 7.19145 4 6.73259 4H5.79003ZM2.05594 6.15438C1.6549 3.79552 3.63635 2 5.79003 2H6.73259C8.10919 2 9.30914 2.93689 9.64301 4.27239L10.3231 6.99276C10.4002 7.30096 10.3262 7.62743 10.1238 7.87232L8.7896 9.4868C10.0837 11.9173 12.0828 13.9163 14.5132 15.2104L15.0664 14.7533L15.0683 14.7517L16.1277 13.8762C16.3726 13.6738 16.6991 13.5999 17.0073 13.6769L19.7276 14.357C21.0631 14.6909 22 15.8908 22 17.2674V18.21C22 20.3637 20.2045 22.3451 17.8456 21.9441C9.84297 20.5835 3.41649 14.157 2.05594 6.15438Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="error-message" id="register-phone-error"></span>
+                    </div>
+                    
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Usaremos estos datos para verificar tu identidad y enviar información sobre tus compras.</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h3 class="section-title">¿Cuál es tu RUT?</h3>
+                        <div class="input-container">
+                            <input type="text" id="register-rut" name="rut" placeholder=" " required>
+                            <label for="register-rut" class="floating-label">RUT</label>
+                            <div class="input-icon">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M8.92943 4H15.0706C16.4247 3.99997 17.5413 3.99994 18.4251 4.11875C19.3529 4.2435 20.1723 4.51547 20.8284 5.17158C21.4845 5.82768 21.7565 6.64711 21.8813 7.57494C22.0001 8.4587 22 9.57533 22 10.9295V13.0705C22 14.4247 22.0001 15.5413 21.8813 16.4251C21.7565 17.3529 21.4845 18.1723 20.8284 18.8284C20.1723 19.4845 19.3529 19.7565 18.4251 19.8813C17.5413 20.0001 16.4247 20 15.0706 20H8.92943C7.57531 20 6.4587 20.0001 5.57494 19.8813C4.64711 19.7565 3.82768 19.4845 3.17158 18.8284C2.51547 18.1723 2.2435 17.3529 2.11875 16.4251C1.99994 15.5413 1.99997 14.4247 2 13.0706V10.9294C1.99997 9.57531 1.99994 8.4587 2.11875 7.57494C2.2435 6.64711 2.51547 5.82768 3.17158 5.17158C3.82768 4.51547 4.64711 4.2435 5.57494 4.11875C6.4587 3.99994 7.57531 3.99997 8.92943 4ZM5.84143 6.10092C5.13538 6.19585 4.80836 6.36322 4.58579 6.58579C4.36322 6.80836 4.19585 7.13538 4.10092 7.84143C4.00213 8.57625 4 9.55752 4 11V13C4 14.4425 4.00213 15.4238 4.10092 16.1586C4.19585 16.8646 4.36322 17.1916 4.58579 17.4142C4.80836 17.6368 5.13538 17.8042 5.84143 17.8991C6.57625 17.9979 7.55752 18 9 18H15C16.4425 18 17.4237 17.9979 18.1586 17.8991C18.8646 17.8042 19.1916 17.6368 19.4142 17.4142C19.6368 17.1916 19.8042 16.8646 19.8991 16.1586C19.9979 15.4238 20 14.4425 20 13V11C20 9.55752 19.9979 8.57625 19.8991 7.84143C19.8042 7.13538 19.6368 6.80836 19.4142 6.58579C19.1916 6.36322 18.8646 6.19585 18.1586 6.10092C17.4238 6.00213 16.4425 6 15 6H9C7.55752 6 6.57625 6.00213 5.84143 6.10092Z"></path>
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12.25 13C12.25 12.5858 12.5858 12.25 13 12.25H17C17.4142 12.25 17.75 12.5858 17.75 13C17.75 13.4142 17.4142 13.75 17 13.75H13C12.5858 13.75 12.25 13.4142 12.25 13Z"></path>
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12.25 11C12.25 10.5858 12.5858 10.25 13 10.25H18C18.4142 10.25 18.75 10.5858 18.75 11C18.75 11.4142 18.4142 11.75 18 11.75H13C12.5858 11.75 12.25 11.4142 12.25 11Z"></path>
+                                    <path fill="#485760" d="M6.375 10C6.375 9.10254 7.10254 8.375 8 8.375C8.89746 8.375 9.625 9.10254 9.625 10C9.625 10.8975 8.89746 11.625 8 11.625C7.10254 11.625 6.375 10.8975 6.375 10Z"></path>
+                                    <path fill="#485760" d="M6.15948 12.8999C6.58052 12.5915 7.17714 12.375 8 12.375C8.82286 12.375 9.41948 12.5915 9.84052 12.8999C10.2565 13.2047 10.4552 13.5654 10.5437 13.7841C10.6148 13.9599 10.625 14.1261 10.625 14.2375C10.625 14.8657 10.1157 15.375 9.48751 15.375H6.51249C5.88427 15.375 5.375 14.8657 5.375 14.2375C5.375 14.1261 5.38517 13.9599 5.4563 13.7841C5.5448 13.5654 5.74351 13.2047 6.15948 12.8999Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="error-message" id="register-rut-error"></span>
+                    </div>
+                    
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Verifica que el RUT sea el tuyo y que tus datos coincidan con el documento.</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h3 class="section-title">Ahora, crea tu contraseña</h3>
+                        <div class="input-container">
+                            <input type="password" id="register-password" name="password" placeholder=" " required>
+                            <label for="register-password" class="floating-label">Contraseña</label>
+                            <div class="input-icon password-toggle" id="register-password-toggle">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12Z"></path>
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 4C8.68793 4 6.31245 5.39172 4.71551 7.05809C3.14259 8.6994 2.31647 10.611 2.02986 11.7575C1.99005 11.9167 1.99005 12.0833 2.02986 12.2425C2.31647 13.389 3.14259 15.3006 4.71551 16.9419C6.31245 18.6083 8.68793 20 12 20C15.3121 20 17.6875 18.6083 19.2845 16.9419C20.8574 15.3006 21.6835 13.389 21.9701 12.2425C22.01 12.0833 22.01 11.9167 21.9701 11.7575C21.6835 10.611 20.8574 8.6994 19.2845 7.05809C17.6875 5.39172 15.3121 4 12 4ZM6.15949 15.5581C4.97234 14.3193 4.30739 12.8896 4.03753 12C4.30739 11.1104 4.97234 9.68067 6.15949 8.44191C7.43755 7.10828 9.31207 6 12 6C14.6879 6 16.5625 7.10828 17.8405 8.44191C19.0277 9.68067 19.6926 11.1104 19.9625 12C19.6926 12.8896 19.0277 14.3193 17.8405 15.5581C16.5625 16.8917 14.6879 18 12 18C9.31207 18 7.43755 16.8917 6.15949 15.5581Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="error-message" id="register-password-error"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-container">
+                            <input type="password" id="register-confirm-password" name="confirmPassword" placeholder=" " required>
+                            <label for="register-confirm-password" class="floating-label">Confirma la contraseña</label>
+                            <div class="input-icon password-toggle" id="register-confirm-password-toggle">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12Z"></path>
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 4C8.68793 4 6.31245 5.39172 4.71551 7.05809C3.14259 8.6994 2.31647 10.611 2.02986 11.7575C1.99005 11.9167 1.99005 12.0833 2.02986 12.2425C2.31647 13.389 3.14259 15.3006 4.71551 16.9419C6.31245 18.6083 8.68793 20 12 20C15.3121 20 17.6875 18.6083 19.2845 16.9419C20.8574 15.3006 21.6835 13.389 21.9701 12.2425C22.01 12.0833 22.01 11.9167 21.9701 11.7575C21.6835 10.611 20.8574 8.6994 19.2845 7.05809C17.6875 5.39172 15.3121 4 12 4ZM6.15949 15.5581C4.97234 14.3193 4.30739 12.8896 4.03753 12C4.30739 11.1104 4.97234 9.68067 6.15949 8.44191C7.43755 7.10828 9.31207 6 12 6C14.6879 6 16.5625 7.10828 17.8405 8.44191C19.0277 9.68067 19.6926 11.1104 19.9625 12C19.6926 12.8896 19.0277 14.3193 17.8405 15.5581C16.5625 16.8917 14.6879 18 12 18C9.31207 18 7.43755 16.8917 6.15949 15.5581Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="error-message" id="register-confirm-password-error"></span>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="register-terms" name="terms" required>
+                            <span class="checkmark"></span>
+                            <span class="terms-text">
+                                Al crear tu cuenta estás aceptando 
+                                <a href="#" class="terms-link">Términos y Condiciones de HuertoHogar</a>, 
+                                <a href="#" class="terms-link">Términos y Condiciones de Marketplace</a> 
+                                y las 
+                                <a href="#" class="terms-link">Políticas de Privacidad de Datos</a>.
+                            </span>
+                        </label>
+                        <span class="error-message" id="register-terms-error"></span>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-submit" id="register-submit">
+                        <span class="btn-text">Crear cuenta</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Creando cuenta...
+                        </span>
+                    </button>
+                    
+                    <div class="auth-switch">
+                        <span>¿Tienes cuenta?</span>
+                        <a href="#" id="switch-to-login">Inicia sesión</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Paso 1: Ingreso de email -->
+            <div id="auth-login-step1" class="auth-section" style="display: none;">
+                <div class="login-logo-container">
+                    <div class="login-logo">
+                        <img src="assets/img/Logo Huerto Hogar.jpg" alt="HuertoHogar" class="logo-image">
+                        <span class="logo-text">HuertoHogar</span>
+                    </div>
+                </div>
+                
+                <div class="login-welcome">
+                    <h2>Te damos la bienvenida a</h2>
+                    <h2 class="brand-name">HuertoHogar</h2>
+                </div>
+                
+                <form id="login-email-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Correo electrónico</label>
+                        <div class="input-container">
+                            <input type="email" id="login-email" name="email" placeholder="Ejemplo: correo@ejemplo.com" required>
+                            <div class="input-icon">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M15.0706 4H8.92943C7.57533 3.99997 6.45869 3.99994 5.57494 4.11876C4.64711 4.2435 3.82769 4.51547 3.17158 5.17158C2.51547 5.82769 2.2435 6.64711 2.11876 7.57494C1.99994 8.45869 1.99997 9.57529 2 10.9294V13.0706C1.99997 14.4247 1.99994 15.5413 2.11876 16.4251C2.2435 17.3529 2.51547 18.1723 3.17158 18.8284C3.82769 19.4845 4.64711 19.7565 5.57494 19.8813C6.45868 20.0001 7.57527 20 8.92935 20H15.0706C16.4247 20 17.5413 20.0001 18.4251 19.8813C19.3529 19.7565 20.1723 19.4845 20.8284 18.8284C21.4845 18.1723 21.7565 17.3529 21.8813 16.4251C22.0001 15.5413 22 14.4247 22 13.0706V10.9295C22 9.57534 22.0001 8.4587 21.8813 7.57494C21.7565 6.64711 21.4845 5.82769 20.8284 5.17158C20.1723 4.51547 19.3529 4.2435 18.4251 4.11876C17.5413 3.99994 16.4247 3.99997 15.0706 4ZM5.02775 6.29738C5.22617 6.21497 5.48569 6.14875 5.84144 6.10092C6.57626 6.00213 7.55752 6 9 6H15C16.4425 6 17.4238 6.00213 18.1586 6.10092C18.5144 6.14876 18.774 6.215 18.9724 6.29743L12.5434 10.4574C12.2128 10.6713 11.7875 10.6713 11.4569 10.4574L5.02775 6.29738ZM4.07476 8.06291C4.00173 8.77139 4 9.69774 4 11V13C4 14.4425 4.00213 15.4238 4.10092 16.1586C4.19585 16.8646 4.36322 17.1916 4.58579 17.4142C4.80836 17.6368 5.13538 17.8042 5.84144 17.8991C6.57626 17.9979 7.55752 18 9 18H15C16.4425 18 17.4238 17.9979 18.1586 17.8991C18.8646 17.8042 19.1916 17.6368 19.4142 17.4142C19.6368 17.1916 19.8042 16.8646 19.8991 16.1586C19.9979 15.4238 20 14.4425 20 13V11C20 9.69783 19.9983 8.77151 19.9253 8.06305L13.6299 12.1365C12.6381 12.7783 11.3621 12.7783 10.3704 12.1365L4.07476 8.06291Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="error-message" id="login-email-error"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <a href="#" class="help-link">¿Necesitas ayuda para ingresar?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-continue" id="login-continue">
+                        <span class="btn-text">Continuar</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Verificando...
+                        </span>
+                    </button>
+                    
+                    <div class="auth-switch">
+                        <span>¿No tienes cuenta?</span>
+                        <a href="#" id="switch-to-register">Crear cuenta</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Paso 2: Ingreso de contraseña -->
+            <div id="auth-login-step2" class="auth-section" style="display: none;">
+                <div class="login-logo-container">
+                    <div class="login-logo">
+                        <img src="assets/img/Logo Huerto Hogar.jpg" alt="HuertoHogar" class="logo-image">
+                        <span class="logo-text">HuertoHogar</span>
+                    </div>
+                </div>
+                
+                <div class="login-welcome">
+                    <h2 id="login-welcome-message">Es un gusto tenerte de vuelta</h2>
+                </div>
+                
+                <form id="login-password-form" class="auth-form">
+                    <div class="form-group">
+                        <a href="#" class="change-email-link" id="change-email-link">
+                            <i class="fas fa-arrow-left"></i>
+                            Cambiar correo
+                        </a>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-email-display">Correo electrónico</label>
+                        <div class="input-container">
+                            <input type="email" id="login-email-display" name="email" readonly>
+                            <div class="input-icon">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M15.0706 4H8.92943C7.57533 3.99997 6.45869 3.99994 5.57494 4.11876C4.64711 4.2435 3.82769 4.51547 3.17158 5.17158C2.51547 5.82769 2.2435 6.64711 2.11876 7.57494C1.99994 8.45869 1.99997 9.57529 2 10.9294V13.0706C1.99997 14.4247 1.99994 15.5413 2.11876 16.4251C2.2435 17.3529 2.51547 18.1723 3.17158 18.8284C3.82769 19.4845 4.64711 19.7565 5.57494 19.8813C6.45868 20.0001 7.57527 20 8.92935 20H15.0706C16.4247 20 17.5413 20.0001 18.4251 19.8813C19.3529 19.7565 20.1723 19.4845 20.8284 18.8284C21.4845 18.1723 21.7565 17.3529 21.8813 16.4251C22.0001 15.5413 22 14.4247 22 13.0706V10.9295C22 9.57534 22.0001 8.4587 21.8813 7.57494C21.7565 6.64711 21.4845 5.82769 20.8284 5.17158C20.1723 4.51547 19.3529 4.2435 18.4251 4.11876C17.5413 3.99994 16.4247 3.99997 15.0706 4ZM5.02775 6.29738C5.22617 6.21497 5.48569 6.14875 5.84144 6.10092C6.57626 6.00213 7.55752 6 9 6H15C16.4425 6 17.4238 6.00213 18.1586 6.10092C18.5144 6.14876 18.774 6.215 18.9724 6.29743L12.5434 10.4574C12.2128 10.6713 11.7875 10.6713 11.4569 10.4574L5.02775 6.29738ZM4.07476 8.06291C4.00173 8.77139 4 9.69774 4 11V13C4 14.4425 4.00213 15.4238 4.10092 16.1586C4.19585 16.8646 4.36322 17.1916 4.58579 17.4142C4.80836 17.6368 5.13538 17.8042 5.84144 17.8991C6.57626 17.9979 7.55752 18 9 18H15C16.4425 18 17.4238 17.9979 18.1586 17.8991C18.8646 17.8042 19.1916 17.6368 19.4142 17.4142C19.6368 17.1916 19.8042 16.8646 19.8991 16.1586C19.9979 15.4238 20 14.4425 20 13V11C20 9.69783 19.9983 8.77151 19.9253 8.06305L13.6299 12.1365C12.6381 12.7783 11.3621 12.7783 10.3704 12.1365L4.07476 8.06291Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">Contraseña</label>
+                        <div class="input-container">
+                            <input type="password" id="login-password" name="password" placeholder=" " required>
+                            <div class="input-icon password-toggle" id="login-password-toggle">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12Z"></path>
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 4C8.68793 4 6.31245 5.39172 4.71551 7.05809C3.14259 8.6994 2.31647 10.611 2.02986 11.7575C1.99005 11.9167 1.99005 12.0833 2.02986 12.2425C2.31647 13.389 3.14259 15.3006 4.71551 16.9419C6.31245 18.6083 8.68793 20 12 20C15.3121 20 17.6875 18.6083 19.2845 16.9419C20.8574 15.3006 21.6835 13.389 21.9701 12.2425C22.01 12.0833 22.01 11.9167 21.9701 11.7575C21.6835 10.611 20.8574 8.6994 19.2845 7.05809C17.6875 5.39172 15.3121 4 12 4ZM6.15949 15.5581C4.97234 14.3193 4.30739 12.8896 4.03753 12C4.30739 11.1104 4.97234 9.68067 6.15949 8.44191C7.43755 7.10828 9.31207 6 12 6C14.6879 6 16.5625 7.10828 17.8405 8.44191C19.0277 9.68067 19.6926 11.1104 19.9625 12C19.6926 12.8896 19.0277 14.3193 17.8405 15.5581C16.5625 16.8917 14.6879 18 12 18C9.31207 18 7.43755 16.8917 6.15949 15.5581Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="error-message" id="login-password-error"></span>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-submit" id="login-submit">
+                        <span class="btn-text">Iniciar sesión</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Iniciando sesión...
+                        </span>
+                    </button>
+                    
+                    <div class="form-group">
+                        <a href="#" class="forgot-password-link" onclick="openForgotPasswordModal(); return false;">Olvidé mi contraseña</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Verificación de Cuenta -->
+    <div id="verification-modal" class="verification-modal-overlay" style="display: none;">
+        <div class="verification-modal-container">
+            <!-- Header del modal -->
+            <div class="verification-modal-header">
+                <h2>Verifica tu cuenta</h2>
+                <button class="close-btn" id="verification-modal-close">×</button>
+            </div>
+            
+            <!-- Contenido del modal -->
+            <div class="verification-modal-body">
+                <!-- Icono principal -->
+                <div class="verification-icon-container">
+                    <div class="verification-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="currentColor"/>
+                        </svg>
+                        <div class="notification-badge">1</div>
+                    </div>
+                </div>
+                
+                <!-- Título principal -->
+                <div class="verification-title">
+                    <h3>Verifica tu cuenta</h3>
+                </div>
+                
+                <!-- Instrucciones -->
+                <div class="verification-instructions">
+                    <p>Ingresa el código que te enviamos a: <strong id="verification-email">usuario@ejemplo.com</strong> para continuar.</p>
+                </div>
+                
+                <!-- Formulario de código -->
+                <form id="verification-form" class="verification-form">
+                    <div class="code-inputs-container">
+                        <input type="text" class="code-input" maxlength="1" data-index="0" required>
+                        <input type="text" class="code-input" maxlength="1" data-index="1" required>
+                        <input type="text" class="code-input" maxlength="1" data-index="2" required>
+                        <input type="text" class="code-input" maxlength="1" data-index="3" required>
+                        <input type="text" class="code-input" maxlength="1" data-index="4" required>
+                        <input type="text" class="code-input" maxlength="1" data-index="5" required>
+                    </div>
+                    
+                    <!-- Timer de reenvío -->
+                    <div class="resend-timer">
+                        <p>Podrás solicitar otro código en: <strong id="countdown-timer">5:00</strong></p>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-validate" id="validate-code-submit">
+                        <span class="btn-text">Validar</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Validando...
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Olvidé mi contraseña -->
+    <div id="forgot-password-modal" class="forgot-password-modal-overlay" style="display: none;">
+        <div class="forgot-password-modal-container">
+            <!-- Header del modal -->
+            <div class="forgot-password-modal-header">
+                <h2>Olvidé mi contraseña</h2>
+                <button class="close-btn" id="forgot-password-modal-close">×</button>
+            </div>
+            
+            <!-- Contenido del modal -->
+            <div class="forgot-password-modal-body">
+                <!-- Icono principal -->
+                <div class="forgot-password-icon-container">
+                    <div class="forgot-password-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1ZM12 7C13.1 7 14 7.9 14 9S13.1 11 12 11 10 10.1 10 9 10.9 7 12 7ZM18 18.5C16.75 16.81 14.5 15.5 12 15.5S7.25 16.81 6 18.5V12.5C6 10.29 7.79 8.5 10 8.5H14C16.21 8.5 18 10.29 18 12.5V18.5Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Título principal -->
+                <div class="forgot-password-title">
+                    <h3>Crea tu nueva contraseña</h3>
+                </div>
+                
+                <!-- Formulario -->
+                <form id="forgot-password-form" class="forgot-password-form">
+                    <div class="form-group">
+                        <label for="new-password">Contraseña</label>
+                        <div class="input-container">
+                            <input type="password" id="new-password" name="new-password" placeholder=" " required>
+                            <div class="input-icon password-toggle" id="new-password-toggle">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="20" width="20">
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12Z"></path>
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 4C8.68793 4 6.31245 5.39172 4.71551 7.05809C3.14259 8.6994 2.31647 10.611 2.02986 11.7575C1.99005 11.9167 1.99005 12.0833 2.02986 12.2425C2.31647 13.389 3.14259 15.3006 4.71551 16.9419C6.31245 18.6083 8.68793 20 12 20C15.3121 20 17.6875 18.6083 19.2845 16.9419C20.8574 15.3006 21.6835 13.389 21.9701 12.2425C22.01 12.0833 22.01 11.9167 21.9701 11.7575C21.6835 10.611 20.8574 8.6994 19.2845 7.05809C17.6875 5.39172 15.3121 4 12 4ZM6.15949 15.5581C4.97234 14.3193 4.30739 12.8896 4.03753 12C4.30739 11.1104 4.97234 9.68067 6.15949 8.44191C7.43755 7.10828 9.31207 6 12 6C14.6879 6 16.5625 7.10828 17.8405 8.44191C19.0277 9.68067 19.6926 11.1104 19.9625 12C19.6926 12.8896 19.0277 14.3193 17.8405 15.5581C16.5625 16.8917 14.6879 18 12 18C9.31207 18 7.43755 16.8917 6.15949 15.5581Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="error-message" id="new-password-error"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Confirma la contraseña</label>
+                        <div class="input-container">
+                            <input type="password" id="confirm-password" name="confirm-password" placeholder=" " required>
+                            <div class="input-icon password-toggle" id="confirm-password-toggle">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="20" width="20">
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12Z"></path>
+                                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 4C8.68793 4 6.31245 5.39172 4.71551 7.05809C3.14259 8.6994 2.31647 10.611 2.02986 11.7575C1.99005 11.9167 1.99005 12.0833 2.02986 12.2425C2.31647 13.389 3.14259 15.3006 4.71551 16.9419C6.31245 18.6083 8.68793 20 12 20C15.3121 20 17.6875 18.6083 19.2845 16.9419C20.8574 15.3006 21.6835 13.389 21.9701 12.2425C22.01 12.0833 22.01 11.9167 21.9701 11.7575C21.6835 10.611 20.8574 8.6994 19.2845 7.05809C17.6875 5.39172 15.3121 4 12 4ZM6.15949 15.5581C4.97234 14.3193 4.30739 12.8896 4.03753 12C4.30739 11.1104 4.97234 9.68067 6.15949 8.44191C7.43755 7.10828 9.31207 6 12 6C14.6879 6 16.5625 7.10828 17.8405 8.44191C19.0277 9.68067 19.6926 11.1104 19.9625 12C19.6926 12.8896 19.0277 14.3193 17.8405 15.5581C16.5625 16.8917 14.6879 18 12 18C9.31207 18 7.43755 16.8917 6.15949 15.5581Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="error-message" id="confirm-password-error"></span>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-create-password" id="create-password-submit">
+                        <span class="btn-text">Crear nueva contraseña</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Creando contraseña...
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="assets/js/script.js"></script>
-    <script src="assets/js/search-simple.js"></script>
-    <script src="assets/js/cart-floating.js"></script>
-    <script src="assets/js/auth.js"></script>
 </body>
 </html>

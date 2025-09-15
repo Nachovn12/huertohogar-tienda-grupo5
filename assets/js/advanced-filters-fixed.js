@@ -4,15 +4,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Elementos del DOM
     const quickFilters = document.querySelectorAll('.elegant-filter-btn');
-    const viewButtons = document.querySelectorAll('.view-btn');
     const productGrid = document.getElementById('product-list-full');
     const productsCount = document.getElementById('products-count');
     const productsTotal = document.getElementById('products-total');
+    const sortSelect = document.getElementById('sort-by');
     
     // Estado de los filtros
     let currentFilters = {
         category: '',
-        view: 'grid'
+        sort: 'recommended'
     };
     
     // Productos según la rúbrica del proyecto - Ordenados alfabéticamente
@@ -29,7 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
             origin: 'Región de O\'Higgins',
             description: 'Espinacas frescas y nutritivas, perfectas para ensaladas y batidos verdes. Cultivadas bajo prácticas orgánicas que garantizan su calidad y valor nutricional.',
             image: 'https://pngimg.com/uploads/spinach/spinach_PNG45.png',
-            detailUrl: 'producto/espinacas-frescas.html'
+            detailUrl: 'producto/espinacas-frescas.html',
+            rating: 4.8,
+            reviewCount: 127
         },
         { 
             id: 'FR001', 
@@ -43,7 +45,9 @@ document.addEventListener('DOMContentLoaded', function() {
             origin: 'Región del Maule',
             description: 'Manzanas Fuji crujientes y dulces, perfectas para comer frescas o en postres.',
             image: 'https://santaisabel.vtexassets.com/arquivos/ids/174684-900-900?width=900&height=900&aspect=true',
-            detailUrl: 'producto/manzanas-fuji.html'
+            detailUrl: 'producto/manzanas-fuji.html',
+            rating: 4.9,
+            reviewCount: 203
         },
         { 
             id: 'OR001', 
@@ -57,7 +61,9 @@ document.addEventListener('DOMContentLoaded', function() {
             origin: 'Región de Los Lagos',
             description: 'Miel orgánica pura de abejas, endulzante natural perfecto para tu mesa.',
             image: 'https://png.pngtree.com/png-clipart/20240720/original/pngtree-family-apiary-organic-honey-food-production-png-image_15597696.png',
-            detailUrl: 'producto/miel-organica.html'
+            detailUrl: 'producto/miel-organica.html',
+            rating: 4.7,
+            reviewCount: 89
         },
         { 
             id: 'FR002', 
@@ -71,7 +77,9 @@ document.addEventListener('DOMContentLoaded', function() {
             origin: 'Región de Valparaíso',
             description: 'Naranjas Valencia jugosas y ricas en vitamina C, ideales para jugos naturales.',
             image: 'https://static.vecteezy.com/system/resources/previews/022/825/544/non_2x/orange-fruit-orange-on-transparent-background-free-png.png',
-            detailUrl: 'producto/naranjas-valencia.html'
+            detailUrl: 'producto/naranjas-valencia.html',
+            rating: 4.3,
+            reviewCount: 156
         },
         { 
             id: 'VR001', 
@@ -85,7 +93,9 @@ document.addEventListener('DOMContentLoaded', function() {
             origin: 'Región Metropolitana',
             description: 'Pimientos rojos, amarillos y verdes, perfectos para ensaladas y guisos.',
             image: 'https://png.pngtree.com/png-vector/20241212/ourmid/pngtree-colored-paprica-raw-paprika-fruit-png-image_14613829.png',
-            detailUrl: 'producto/pimientos-tricolores.html'
+            detailUrl: 'producto/pimientos-tricolores.html',
+            rating: 4.1,
+            reviewCount: 73
         },
         { 
             id: 'FR003', 
@@ -99,7 +109,9 @@ document.addEventListener('DOMContentLoaded', function() {
             origin: 'Región de Coquimbo',
             description: 'Plátanos Cavendish dulces y cremosos, perfectos para el desayuno.',
             image: 'https://png.pngtree.com/png-vector/20240128/ourmid/pngtree-ripe-cavendish-banana-png-image_11508971.png',
-            detailUrl: 'producto/platanos-cavendish.html'
+            detailUrl: 'producto/platanos-cavendish.html',
+            rating: 4.6,
+            reviewCount: 142
         },
         { 
             id: 'OR002', 
@@ -113,7 +125,9 @@ document.addEventListener('DOMContentLoaded', function() {
             origin: 'Región de Arica y Parinacota',
             description: 'Quinua orgánica, superalimento rico en proteínas y nutrientes.',
             image: 'https://manare.cl/wp-content/uploads/2023/09/Manare_QuinoaOrganica400g.png',
-            detailUrl: 'producto/quinua-organica.html'
+            detailUrl: 'producto/quinua-organica.html',
+            rating: 4.9,
+            reviewCount: 198
         },
         { 
             id: 'LA001', 
@@ -127,7 +141,9 @@ document.addEventListener('DOMContentLoaded', function() {
             origin: 'Producción local',
             description: 'Leche entera fresca y nutritiva, ideal para el desayuno y la preparación de diversos platos.',
             image: 'https://www.soprole.cl/public/storage/imagenes/banners/202304180943Soprole-Lecheentera-litro.png',
-            detailUrl: 'producto/leche-entera.html'
+            detailUrl: 'producto/leche-entera.html',
+            rating: 4.5,
+            reviewCount: 164
         },
         { 
             id: 'VR003', 
@@ -141,7 +157,9 @@ document.addEventListener('DOMContentLoaded', function() {
             origin: 'Región de O\'Higgins',
             description: 'Zanahorias orgánicas crujientes y dulces, ricas en betacaroteno y vitamina A.',
             image: 'https://png.pngtree.com/png-vector/20241225/ourmid/pngtree-fresh-organic-carrots-in-a-neat-stack-png-image_14812590.png',
-            detailUrl: 'producto/zanahorias-organicas.html'
+            detailUrl: 'producto/zanahorias-organicas.html',
+            rating: 4.4,
+            reviewCount: 91
         }
     ];
 
@@ -178,12 +196,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
-        // Aplicar estilos según la vista actual
-        if (currentFilters.view === 'list') {
-            applyListViewStyles();
-        } else {
-            applyGridViewStyles();
-        }
+        // Aplicar estilos de vista de grid (única vista disponible)
+        applyGridViewStyles();
         
         // Actualizar contador de productos
         updateResultsInfo(products.length);
@@ -210,8 +224,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p class="product-category">${product.category}</p>
                     <p class="product-origin">🌱 ${product.origin}</p>
                     <div class="product-rating">
-                        <div class="stars">★★★★☆</div>
-                        <span class="rating-text">(4.2) · 47 reseñas</span>
+                        <div class="stars">
+                            ${'★'.repeat(Math.floor(product.rating || 0))}${'☆'.repeat(5 - Math.floor(product.rating || 0))}
+                        </div>
+                        <span class="rating-text">(${product.rating || 0}) · ${product.reviewCount || 0} reseñas</span>
                     </div>
                     <div class="product-pricing">
                         <span class="price ${isOnOffer ? 'has-offer' : ''}">${formatPrice(offerPrice || product.price)}</span>
@@ -273,6 +289,77 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Función para ordenar productos
+    function sortProducts(products, sortBy) {
+        const sortedProducts = [...products];
+        
+        switch (sortBy) {
+            case 'recommended':
+                // Ordenar por recomendación (puntuación alta + muchas reseñas)
+                return sortedProducts.sort((a, b) => {
+                    // Calcular score de recomendación: (rating * 0.7) + (reviewCount/100 * 0.3)
+                    const scoreA = (a.rating * 0.7) + ((a.reviewCount || 0) / 100 * 0.3);
+                    const scoreB = (b.rating * 0.7) + ((b.reviewCount || 0) / 100 * 0.3);
+                    return scoreB - scoreA;
+                });
+                
+            case 'best-selling':
+                // Ordenar por popularidad (productos populares primero)
+                return sortedProducts.sort((a, b) => {
+                    if (a.popular && !b.popular) return -1;
+                    if (!a.popular && b.popular) return 1;
+                    return a.name.localeCompare(b.name, 'es', { sensitivity: 'base' });
+                });
+                
+            case 'best-discount':
+                // Ordenar por descuento (mayor descuento primero)
+                return sortedProducts.sort((a, b) => {
+                    const discountA = getDiscountPercentage(a.id);
+                    const discountB = getDiscountPercentage(b.id);
+                    if (discountA > discountB) return -1;
+                    if (discountA < discountB) return 1;
+                    return a.name.localeCompare(b.name, 'es', { sensitivity: 'base' });
+                });
+                
+            case 'price-desc':
+                // Ordenar por precio descendente
+                return sortedProducts.sort((a, b) => {
+                    const priceA = getOfferPrice(a.id) || a.price;
+                    const priceB = getOfferPrice(b.id) || b.price;
+                    return priceB - priceA;
+                });
+                
+            case 'price-asc':
+                // Ordenar por precio ascendente
+                return sortedProducts.sort((a, b) => {
+                    const priceA = getOfferPrice(a.id) || a.price;
+                    const priceB = getOfferPrice(b.id) || b.price;
+                    return priceA - priceB;
+                });
+                
+            case 'name-asc':
+                // Ordenar alfabéticamente A-Z
+                return sortedProducts.sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
+                
+            case 'name-desc':
+                // Ordenar alfabéticamente Z-A
+                return sortedProducts.sort((a, b) => b.name.localeCompare(a.name, 'es', { sensitivity: 'base' }));
+                
+            default:
+                return sortedProducts;
+        }
+    }
+    
+    // Función para obtener el porcentaje de descuento
+    function getDiscountPercentage(productId) {
+        const offerPrice = getOfferPrice(productId);
+        const originalPrice = getOriginalPrice(productId);
+        if (offerPrice && originalPrice) {
+            return Math.round((1 - offerPrice / originalPrice) * 100);
+        }
+        return 0;
+    }
+
     // Función para aplicar filtros
     function applyFilters() {
         let filteredProducts = allProducts;
@@ -283,33 +370,14 @@ document.addEventListener('DOMContentLoaded', function() {
             );
         }
         
+        // Aplicar ordenamiento
+        filteredProducts = sortProducts(filteredProducts, currentFilters.sort);
+        
+        console.log(`Productos filtrados y ordenados por ${currentFilters.sort}:`, filteredProducts.map(p => p.name));
+        
         renderProducts(filteredProducts);
     }
 
-    // Función para manejar cambio de vista
-    function handleViewChange(view) {
-        currentFilters.view = view;
-        
-        // Actualizar botones de vista
-        viewButtons.forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.view === view) {
-                btn.classList.add('active');
-            }
-        });
-        
-        // Aplicar clase de vista al contenedor
-        if (productGrid) {
-            productGrid.className = `product-grid content-section ${view}-view`;
-        }
-        
-        // Aplicar estilos específicos
-        if (view === 'list') {
-            applyListViewStyles();
-        } else {
-            applyGridViewStyles();
-        }
-    }
 
     // Función para manejar filtros rápidos
     function handleQuickFilter(category) {
@@ -338,16 +406,17 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
-        // Vista de productos
-        viewButtons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const view = this.dataset.view;
-                console.log('Cambiando vista a:', view);
-                handleViewChange(view);
+        // Configurar dropdown de ordenamiento
+        if (sortSelect) {
+            sortSelect.addEventListener('change', function(e) {
+                const sortBy = this.value;
+                console.log('Ordenamiento seleccionado:', sortBy);
+                currentFilters.sort = sortBy;
+                applyFilters();
             });
-        });
+        }
+        
+        // Vista de productos
     }
 
     // Función para aplicar estilos de vista de grid
@@ -364,64 +433,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Estilos de vista de grid aplicados correctamente');
     }
 
-    // Función para aplicar estilos de vista de lista
-    function applyListViewStyles() {
-        if (!productGrid) return;
-        
-        const cards = productGrid.querySelectorAll('.product-card');
-        cards.forEach(card => {
-            card.style.display = 'flex';
-            card.style.width = '100%';
-            card.style.maxWidth = '100%';
-            card.style.alignItems = 'center';
-            card.style.gap = '1.5rem';
-            card.style.padding = '1rem';
-            card.style.marginBottom = '1rem';
-            
-            const img = card.querySelector('img');
-            if (img) {
-                img.style.width = '120px';
-                img.style.height = '120px';
-                img.style.objectFit = 'cover';
-                img.style.borderRadius = '8px';
-                img.style.flexShrink = '0';
-            }
-            
-            const productInfo = card.querySelector('.product-info');
-            if (productInfo) {
-                productInfo.style.flex = '1';
-                productInfo.style.display = 'flex';
-                productInfo.style.flexDirection = 'column';
-                productInfo.style.gap = '0.5rem';
-            }
-            
-            const viewBtn = card.querySelector('.view-details-btn');
-            if (viewBtn) {
-                viewBtn.style.display = 'flex';
-                viewBtn.style.alignItems = 'center';
-                viewBtn.style.justifyContent = 'center';
-                viewBtn.style.gap = '0.375rem';
-                viewBtn.style.flex = '1';
-                viewBtn.style.padding = '0.625rem 1rem';
-                viewBtn.style.opacity = '1';
-                viewBtn.style.visibility = 'visible';
-            }
-            
-            const addBtn = card.querySelector('.add-to-cart-btn');
-            if (addBtn) {
-                addBtn.style.display = 'flex';
-                addBtn.style.alignItems = 'center';
-                addBtn.style.justifyContent = 'center';
-                addBtn.style.gap = '0.375rem';
-                addBtn.style.flex = '1';
-                addBtn.style.padding = '0.625rem 1rem';
-                addBtn.style.opacity = '1';
-                addBtn.style.visibility = 'visible';
-            }
-        });
-        
-        console.log('Estilos de vista de lista aplicados correctamente');
-    }
 
     // Inicializar todo
     console.log('Inicializando filtros avanzados...');
