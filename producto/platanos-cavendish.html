@@ -360,6 +360,7 @@
         </div>
     </div>
 
+    <script src="../assets/js/cart-utils.js"></script>
     <script src="../assets/js/script.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/carousel-css.js"></script>
@@ -428,9 +429,8 @@
                     image: 'https://png.pngtree.com/png-vector/20240128/ourmid/pngtree-ripe-cavendish-banana-png-image_11508971.png'
                 };
                 
-                // Add to cart logic here
-                console.log('Producto agregado al carrito:', product);
-                alert(`¡${quantity} kg de Plátanos Cavendish agregado al carrito!`);
+                // Usar la función unificada del carrito
+                addToCart(product);
             });
 
             // Carrusel de productos recomendados

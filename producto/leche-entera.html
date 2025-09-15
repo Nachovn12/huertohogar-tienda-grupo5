@@ -343,6 +343,7 @@
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
 
+    <script src="../assets/js/cart-utils.js"></script>
     <script src="../assets/js/script.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/carousel-css.js"></script>
@@ -428,9 +429,8 @@
                     image: 'https://www.soprole.cl/public/storage/imagenes/banners/202304180943Soprole-Lecheentera-litro.png'
                 };
                 
-                // Add to cart logic here
-                console.log('Producto agregado al carrito:', product);
-                alert(`¡${quantity} litro(s) de Leche Entera agregado al carrito!`);
+                // Usar la función unificada del carrito
+                addToCart(product);
             });
 
             // Carrusel de productos recomendados

@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
             reviewCount: 203
         },
         { 
-            id: 'OR001', 
+            id: 'PO001', 
             name: 'Miel Orgánica', 
             category: 'Productos Orgánicos', 
             price: 5000, 
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
             reviewCount: 156
         },
         { 
-            id: 'VR001', 
+            id: 'VR003', 
             name: 'Pimientos Tricolores', 
             category: 'Verduras Orgánicas', 
             price: 1500, 
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
             reviewCount: 142
         },
         { 
-            id: 'OR002', 
+            id: 'PO003', 
             name: 'Quinua Orgánica', 
             category: 'Productos Orgánicos', 
             price: 3000, 
@@ -130,10 +130,10 @@ document.addEventListener('DOMContentLoaded', function() {
             reviewCount: 198
         },
         { 
-            id: 'LA001', 
+            id: 'PL001', 
             name: 'Leche Entera', 
             category: 'Productos Lácteos', 
-            price: 1200, 
+            price: 1800, 
             stock: 'in-stock', 
             seasonal: false, 
             popular: true,
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
             reviewCount: 164
         },
         { 
-            id: 'VR003', 
+            id: 'VR001', 
             name: 'Zanahorias Orgánicas', 
             category: 'Verduras Orgánicas', 
             price: 900, 

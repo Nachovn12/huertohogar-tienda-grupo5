@@ -360,6 +360,7 @@
         </div>
     </div>
 
+    <script src="../assets/js/cart-utils.js"></script>
     <script src="../assets/js/script.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/carousel-css.js"></script>
@@ -428,9 +429,8 @@
                     image: 'https://pngimg.com/uploads/spinach/spinach_PNG45.png'
                 };
                 
-                // Add to cart logic here
-                console.log('Producto agregado al carrito:', product);
-                alert(`¡${quantity} bolsa(s) de Espinacas Frescas agregado al carrito!`);
+                // Usar la función unificada del carrito
+                addToCart(product);
             });
 
             // Carrusel de productos recomendados

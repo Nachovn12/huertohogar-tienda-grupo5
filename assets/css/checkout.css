@@ -548,11 +548,73 @@
     font-weight: 600;
     border-radius: 8px;
     transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.checkout-navigation .btn i {
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
 }
 
 .checkout-navigation .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.checkout-navigation .btn:hover i {
+    transform: translateX(2px);
+}
+
+/* Estilos específicos para botones con iconos */
+#next-step i.fa-arrow-right {
+    margin-left: 0.25rem;
+}
+
+#prev-step i.fa-arrow-left {
+    margin-right: 0.25rem;
+}
+
+#place-order i.fa-check {
+    margin-left: 0.25rem;
+}
+
+/* Animación para el botón siguiente */
+#next-step:hover i.fa-arrow-right {
+    animation: slideRight 0.6s ease-in-out;
+}
+
+/* Animación para el botón anterior */
+#prev-step:hover i.fa-arrow-left {
+    animation: slideLeft 0.6s ease-in-out;
+}
+
+/* Animación para el botón finalizar */
+#place-order:hover i.fa-check {
+    animation: bounce 0.6s ease-in-out;
+}
+
+/* Keyframes para animaciones */
+@keyframes slideRight {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(4px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes slideLeft {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(-4px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-3px); }
+    60% { transform: translateY(-2px); }
 }
 
 /* Resumen de Confirmación */
@@ -561,6 +623,136 @@
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 2rem;
+}
+
+/* Estilos para el resumen de confirmación */
+.confirmation-details {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+}
+
+/* Estilos para descuentos en el resumen */
+.discount-info {
+    color: #2E8B57;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 0.25rem 0;
+}
+
+.discount-amount {
+    color: #2E8B57;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+#discount {
+    color: #2E8B57;
+    font-weight: 600;
+}
+
+#discount:not(:empty) {
+    display: block !important;
+}
+
+.confirmation-details p {
+    margin: 0.5rem 0;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.confirmation-details p:last-child {
+    border-bottom: none;
+}
+
+.confirmation-details strong {
+    color: #374151;
+    font-weight: 600;
+}
+
+/* Estilos para productos en confirmación */
+.confirmation-products {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+}
+
+.product-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.product-item:last-child {
+    border-bottom: none;
+}
+
+.product-image {
+    width: 60px;
+    height: 60px;
+    margin-right: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f9fafb;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-info {
+    flex: 1;
+}
+
+.product-info h4 {
+    margin: 0 0 0.5rem 0;
+    color: #374151;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-label {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.detail-value {
+    color: #374151;
+    font-weight: 500;
+}
+
+.total-row {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e5e7eb;
+    font-weight: 600;
+}
+
+.total-row .detail-label {
+    color: #374151;
+}
+
+.total-row .detail-value {
+    color: #059669;
+    font-size: 1rem;
 }
 
 .summary-section {
@@ -618,6 +810,7 @@
     transition: all 0.3s ease;
     flex-shrink: 0;
     margin-top: 0.1rem;
+    position: relative;
 }
 
 .checkbox-label input:checked + .checkmark {
@@ -625,10 +818,15 @@
     color: white;
 }
 
-.checkbox-label input:checked + .checkmark::before {
+.checkbox-label input:checked + .checkmark::after {
     content: '✓';
     font-size: 0.8rem;
     font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
 }
 
 .checkbox-label a {
@@ -1024,6 +1222,12 @@
     
     .checkout-navigation .btn {
         width: 100%;
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .checkout-navigation .btn i {
+        font-size: 0.8rem;
     }
     
     .confirmation-actions {
@@ -1051,5 +1255,68 @@
     
     .summary-card {
         padding: 1rem;
+    }
+    
+    .checkout-navigation .btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.85rem;
+        min-width: 120px;
+    }
+    
+    .checkout-navigation .btn i {
+        font-size: 0.75rem;
+    }
+}
+
+/* ===== INPUT DE TELÉFONO CON PREFIJO FIJO ===== */
+.phone-input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+
+.phone-input-container:focus-within {
+    border-color: #2e8b57;
+    box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.1);
+}
+
+.phone-prefix {
+    background: #f8f9fa;
+    color: #666;
+    padding: 0.75rem 1rem;
+    border-right: 1px solid #ddd;
+    font-weight: 500;
+    font-size: 1rem;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.phone-input-container input {
+    border: none;
+    outline: none;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    flex: 1;
+    background: transparent;
+}
+
+.phone-input-container input::placeholder {
+    color: #999;
+}
+
+/* Responsive para input de teléfono */
+@media (max-width: 768px) {
+    .phone-prefix {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .phone-input-container input {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
     }
 }

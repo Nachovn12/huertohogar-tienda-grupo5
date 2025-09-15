@@ -1296,7 +1296,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Función para corregir un botón específico
         const fixButton = (button, type) => {
-            if (!button.dataset.id || button.dataset.id === 'VR001') {
+            if (!button.dataset.id) {
                 // Buscar el producto por contexto
                 const cartItem = button.closest('.cart-item');
                 if (cartItem) {
@@ -1370,8 +1370,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     const addToCartBtn = document.getElementById('add-to-cart-detail');
                     if (addToCartBtn) {
                         addToCartBtn.addEventListener('click', () => {
-                            // Aquí puedes agregar la lógica del carrito
-                            alert(`¡${product.name} agregado al carrito!`);
+                            // Usar la función unificada del carrito
+                            if (typeof addToCart === 'function') {
+                                addToCart(product);
+                            } else {
+                                // Fallback si la función no está disponible
+                                alert(`¡${product.name} agregado al carrito!`);
+                            }
                         });
                     }
                 } else {
@@ -1522,55 +1527,47 @@ document.addEventListener('DOMContentLoaded', () => {
         goToProductDetails(offerId);
     };
 
-    // Función para mostrar notificaciones
+    // Función para mostrar notificaciones mejorada
     const showNotification = (message, type = 'info') => {
-        // Crear notificación si no existe
-        let notification = document.getElementById('notification');
-        if (!notification) {
-            notification = document.createElement('div');
-            notification.id = 'notification';
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 1rem 1.5rem;
-                border-radius: 8px;
-                color: white;
-                font-weight: 600;
-                z-index: 10000;
-                transform: translateX(100%);
-                transition: transform 0.3s ease;
-                max-width: 300px;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-                cursor: pointer;
-            `;
-            document.body.appendChild(notification);
-        }
-
-        // Configurar colores según tipo
-        const colors = {
-            success: '#28a745',
-            error: '#dc3545',
-            warning: '#ffc107',
-            info: '#17a2b8'
-        };
-
-        notification.style.backgroundColor = colors[type] || colors.info;
-        notification.textContent = message;
-        notification.style.transform = 'translateX(0)';
-
-        // Agregar funcionalidad de clic para abrir el carrito
-        notification.onclick = () => {
-            openCart();
-            // Ocultar la notificación inmediatamente al hacer clic
-            notification.style.transform = 'translateX(100%)';
-        };
-
-        // Ocultar después de 3 segundos
+        // Crear elemento de notificación
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${getNotificationIcon(type)}"></i>
+            <span>${message}</span>
+        `;
+        
+        // Agregar al DOM
+        document.body.appendChild(notification);
+        
+        // Mostrar con animación
         setTimeout(() => {
-            notification.style.transform = 'translateX(100%)';
-        }, 3000);
+            notification.classList.add('show');
+        }, 100);
+        
+        // Remover después de 4 segundos (más tiempo para leer)
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 4000);
     };
+
+    function getNotificationIcon(type) {
+        const icons = {
+            success: 'check-circle',
+            error: 'exclamation-circle',
+            warning: 'exclamation-triangle',
+            info: 'info-circle'
+        };
+        return icons[type] || 'info-circle';
+    }
+
+    // Hacer showNotification disponible globalmente
+    window.showNotification = showNotification;
 
     // Event listeners para ofertas
     document.body.addEventListener('click', (e) => {
@@ -1589,8 +1586,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Variable para controlar si ya se inicializaron las ofertas
+    let offersInitialized = false;
+    
     // Función de inicialización de ofertas
     const initializeOffers = () => {
+        // Evitar múltiples inicializaciones
+        if (offersInitialized) {
+            return;
+        }
+        
         console.log('🎯 Inicializando sistema de ofertas...');
         console.log('Ofertas disponibles:', specialOffers);
         console.log('Contenedor offers-grid existe:', !!document.getElementById('offers-grid'));
@@ -1598,40 +1603,26 @@ document.addEventListener('DOMContentLoaded', () => {
         // Verificar que el contenedor existe antes de proceder
         const offersContainer = document.getElementById('offers-grid');
         if (!offersContainer) {
-            console.log('⏳ Contenedor no encontrado, reintentando en 50ms...');
-            setTimeout(initializeOffers, 50);
+            console.log('⏳ Contenedor no encontrado, reintentando en 100ms...');
+            setTimeout(initializeOffers, 100);
             return;
         }
         
         if (specialOffers && specialOffers.length > 0) {
             renderOffers();
+            offersInitialized = true;
+            console.log('✅ Ofertas inicializadas correctamente');
         } else {
             console.log('❌ No se pudieron generar ofertas especiales');
         }
     };
     
-    // Múltiples puntos de inicialización para asegurar que funcione
-    setTimeout(initializeOffers, 100);
-    setTimeout(initializeOffers, 500);
-    setTimeout(initializeOffers, 1000);
-    
-    // También intentar renderizar cuando la página esté completamente cargada
-    window.addEventListener('load', () => {
-        console.log('🎯 Página completamente cargada, renderizando ofertas...');
+    // Inicializar ofertas cuando el DOM esté listo
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeOffers);
+    } else {
         initializeOffers();
-    });
-    
-    // Función de respaldo para renderizar ofertas
-    const ensureOffersRendered = () => {
-        const offersContainer = document.getElementById('offers-grid');
-        if (offersContainer && offersContainer.children.length === 0) {
-            console.log('🎯 Reintentando renderizar ofertas...');
-            initializeOffers();
-        }
-    };
-    
-    // Verificar periódicamente si las ofertas se renderizaron
-    setInterval(ensureOffersRendered, 3000);
+    }
     
     // También intentar cuando se detecten cambios en el DOM
     const offersObserver = new MutationObserver((mutations) => {
@@ -1641,8 +1632,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 shouldCheck = true;
             }
         });
-        if (shouldCheck) {
-            setTimeout(ensureOffersRendered, 500);
+        if (shouldCheck && !offersInitialized) {
+            setTimeout(initializeOffers, 500);
         }
     });
     
@@ -2696,6 +2687,13 @@ class AuthModal {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Inicializando modal de autenticación...');
     
+    // No inicializar el modal de autenticación en la página de checkout
+    // ya que tiene su propio sistema de autenticación
+    if (window.location.pathname.includes('checkout.html')) {
+        console.log('📋 Página de checkout detectada, omitiendo inicialización del modal de autenticación');
+        return;
+    }
+    
     // Verificar que el modal existe antes de inicializarlo
     const modalElement = document.getElementById('auth-modal');
     if (modalElement) {
@@ -3521,8 +3519,20 @@ class PasswordToggleManager {
     getInputIdFromToggle(toggle) {
         console.log('🔍 Buscando input para toggle:', toggle);
         
-        // Buscar el input asociado al toggle
-        const inputContainer = toggle.closest('.input-container');
+        // Método 1: Buscar por data-target
+        if (toggle.dataset && toggle.dataset.target) {
+            const inputId = toggle.dataset.target;
+            const input = document.getElementById(inputId);
+            console.log('🔍 Data-target encontrado:', inputId);
+            console.log('🔍 Input encontrado por data-target:', input);
+            
+            if (input) {
+                return inputId;
+            }
+        }
+        
+        // Método 2: Buscar el input asociado al toggle en el contenedor
+        const inputContainer = toggle.closest('.input-container, .password-input-container');
         console.log('🔍 Input container encontrado:', inputContainer);
         
         if (inputContainer) {
@@ -3535,7 +3545,7 @@ class PasswordToggleManager {
             }
         }
         
-        // Método alternativo: buscar por ID del toggle
+        // Método 3: Buscar por ID del toggle
         const toggleId = toggle.id;
         if (toggleId && toggleId.includes('-toggle')) {
             const inputId = toggleId.replace('-toggle', '');
@@ -3573,24 +3583,538 @@ class PasswordToggleManager {
 
     updateToggleIcon(toggle, state) {
         if (state === 'visible') {
+            // Mostrar icono de ojo tachado (contraseña visible)
             toggle.innerHTML = `
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="20" width="20">
-                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path>
-                </svg>
+                <i class="fas fa-eye-slash"></i>
             `;
+            toggle.classList.add('active');
         } else {
+            // Mostrar icono de ojo normal (contraseña oculta)
             toggle.innerHTML = `
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="20" width="20">
-                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12Z"></path>
-                    <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 4C8.68793 4 6.31245 5.39172 4.71551 7.05809C3.14259 8.6994 2.31647 10.611 2.02986 11.7575C1.99005 11.9167 1.99005 12.0833 2.02986 12.2425C2.31647 13.389 3.14259 15.3006 4.71551 16.9419C6.31245 18.6083 8.68793 20 12 20C15.3121 20 17.6875 18.6083 19.2845 16.9419C20.8574 15.3006 21.6835 13.389 21.9701 12.2425C22.01 12.0833 22.01 11.9167 21.9701 11.7575C21.6835 10.611 20.8574 8.6994 19.2845 7.05809C17.6875 5.39172 15.3121 4 12 4ZM6.15949 15.5581C4.97234 14.3193 4.30739 12.8896 4.03753 12C4.30739 11.1104 4.97234 9.68067 6.15949 8.44191C7.43755 7.10828 9.31207 6 12 6C14.6879 6 16.5625 7.10828 17.8405 8.44191C19.0277 9.68067 19.6926 11.1104 19.9625 12C19.6926 12.8896 19.0277 14.3193 17.8405 15.5581C16.5625 16.8917 14.6879 18 12 18C9.31207 18 7.43755 16.8917 6.15949 15.5581Z"></path>
-                </svg>
+                <i class="fas fa-eye"></i>
             `;
+            toggle.classList.remove('active');
         }
     }
 }
 
 // Inicializar el sistema unificado
 window.passwordToggleManager = new PasswordToggleManager();
+
+// Función simple para inicializar toggles de contraseña
+function initializePasswordToggles() {
+    console.log('🔧 Inicializando toggles de contraseña...');
+    
+    // Buscar todos los botones de toggle de contraseña
+    const toggles = document.querySelectorAll('.password-toggle');
+    console.log(`🔍 Encontrados ${toggles.length} toggles de contraseña`);
+    
+    toggles.forEach((toggle, index) => {
+        console.log(`🔧 Configurando toggle ${index + 1}:`, toggle);
+        
+        // Remover listeners existentes
+        const newToggle = toggle.cloneNode(true);
+        toggle.parentNode.replaceChild(newToggle, toggle);
+        
+        // Agregar event listener
+        newToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('🖱️ Toggle clickeado:', this);
+            
+            // Obtener el input asociado
+            let inputId = null;
+            
+            // Método 1: data-target
+            if (this.dataset && this.dataset.target) {
+                inputId = this.dataset.target;
+            }
+            // Método 2: buscar en el contenedor
+            else {
+                const container = this.closest('.input-container, .password-input-container');
+                if (container) {
+                    const input = container.querySelector('input[type="password"], input[type="text"]');
+                    if (input) {
+                        inputId = input.id;
+                    }
+                }
+            }
+            
+            if (inputId) {
+                console.log('🎯 Input encontrado:', inputId);
+                const input = document.getElementById(inputId);
+                
+                if (input) {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                        this.classList.add('active');
+                        console.log('👁️ Contraseña visible');
+                    } else {
+                        input.type = 'password';
+                        this.innerHTML = '<i class="fas fa-eye"></i>';
+                        this.classList.remove('active');
+                        console.log('🔒 Contraseña oculta');
+                    }
+                } else {
+                    console.error('❌ Input no encontrado:', inputId);
+                }
+            } else {
+                console.error('❌ No se pudo determinar el input asociado');
+            }
+        });
+        
+        console.log('✅ Toggle configurado correctamente');
+    });
+    
+    console.log('✅ Todos los toggles de contraseña inicializados');
+}
+
+// Inicializar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializePasswordToggles);
+} else {
+    initializePasswordToggles();
+}
+
+// Función para inicializar la validación de contraseña
+function initializePasswordStrength() {
+    console.log('🔧 Inicializando validación de fortaleza de contraseña...');
+    
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const strengthIndicator = document.getElementById('password-strength');
+    
+    if (passwordInput && strengthIndicator) {
+        console.log('✅ Input de contraseña y indicador encontrados');
+        
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            updatePasswordStrength(password, strengthIndicator);
+            
+            // Si hay campo de confirmación, validar también
+            if (confirmPasswordInput) {
+                validatePasswordMatch();
+            }
+        });
+        
+        // Validación inicial
+        updatePasswordStrength(passwordInput.value, strengthIndicator);
+    } else {
+        console.log('❌ No se encontraron elementos de validación de contraseña');
+    }
+    
+    // Validar confirmación de contraseña si existe
+    if (confirmPasswordInput) {
+        confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+    }
+}
+
+// Función para validar que las contraseñas coincidan
+function validatePasswordMatch() {
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    
+    if (!passwordInput || !confirmPasswordInput) return;
+    
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+    
+    if (confirmPassword.length > 0) {
+        if (password === confirmPassword) {
+            confirmPasswordInput.setCustomValidity('');
+            confirmPasswordInput.style.borderColor = '#10b981';
+        } else {
+            confirmPasswordInput.setCustomValidity('Las contraseñas no coinciden');
+            confirmPasswordInput.style.borderColor = '#ef4444';
+        }
+    } else {
+        confirmPasswordInput.setCustomValidity('');
+        confirmPasswordInput.style.borderColor = '';
+    }
+}
+
+// Función para actualizar la fortaleza de la contraseña
+function updatePasswordStrength(password, indicator) {
+    const strengthBar = indicator.querySelector('.strength-bar span');
+    const strengthText = indicator.querySelector('.strength-text');
+    
+    if (!strengthBar || !strengthText) {
+        console.error('❌ Elementos de la barra de fortaleza no encontrados');
+        return;
+    }
+    
+    const strength = calculatePasswordStrength(password);
+    
+    // Remover clases anteriores
+    indicator.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
+    
+    // Actualizar barra y texto
+    strengthBar.style.width = strength.percentage + '%';
+    strengthText.textContent = strength.text;
+    
+    // Agregar clase de fortaleza
+    if (strength.level > 0) {
+        indicator.classList.add(strength.class);
+    }
+    
+    console.log(`🔒 Fortaleza de contraseña: ${strength.level} (${strength.percentage}%) - ${strength.text}`);
+}
+
+// Función para calcular la fortaleza de la contraseña
+function calculatePasswordStrength(password) {
+    if (!password || password.length === 0) {
+        return {
+            level: 0,
+            percentage: 0,
+            text: 'Ingresa una contraseña',
+            class: ''
+        };
+    }
+    
+    let score = 0;
+    let feedback = [];
+    
+    // Longitud mínima (8 caracteres)
+    if (password.length >= 8) {
+        score += 2; // Peso mayor para longitud
+    } else {
+        feedback.push('Mínimo 8 caracteres');
+    }
+    
+    // Longitud óptima (10+ caracteres)
+    if (password.length >= 10) {
+        score += 1;
+    }
+    
+    // Contiene letras mayúsculas
+    if (/[A-Z]/.test(password)) {
+        score += 1;
+    } else {
+        feedback.push('Incluye mayúsculas');
+    }
+    
+    // Contiene letras minúsculas
+    if (/[a-z]/.test(password)) {
+        score += 1;
+    } else {
+        feedback.push('Incluye minúsculas');
+    }
+    
+    // Contiene números
+    if (/[0-9]/.test(password)) {
+        score += 1;
+    } else {
+        feedback.push('Incluye números');
+    }
+    
+    // Contiene caracteres especiales (opcional, no obligatorio)
+    if (/[^A-Za-z0-9]/.test(password)) {
+        score += 1;
+    }
+    
+    // Determinar nivel de fortaleza (criterios más flexibles)
+    let level, percentage, text, className;
+    
+    if (score <= 3) {
+        level = 1;
+        percentage = 30;
+        text = 'Débil - ' + feedback.join(', ');
+        className = 'strength-weak';
+    } else if (score <= 5) {
+        level = 2;
+        percentage = 70;
+        text = 'Media - ' + (feedback.length > 0 ? feedback.join(', ') : 'Buena contraseña');
+        className = 'strength-medium';
+    } else {
+        level = 3;
+        percentage = 100;
+        text = 'Fuerte - ¡Excelente contraseña!';
+        className = 'strength-strong';
+    }
+    
+    return {
+        level: level,
+        percentage: percentage,
+        text: text,
+        class: className
+    };
+}
+
+// Inicializar validación de contraseña cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializePasswordStrength);
+} else {
+    initializePasswordStrength();
+}
+
+// Función de prueba para verificar la validación
+window.testPasswordStrength = function(password = 'Nachovn114') {
+    console.log('🧪 Probando validación de contraseña con:', password);
+    const result = calculatePasswordStrength(password);
+    console.log('📊 Resultado:', result);
+    return result;
+};
+
+// ===== SISTEMA DE AUTENTICACIÓN SOCIAL =====
+function initializeSocialAuth() {
+    console.log('🔐 Inicializando autenticación social...');
+    
+    // Botones de autenticación social
+    const googleBtn = document.querySelector('.google-btn');
+    const facebookBtn = document.querySelector('.facebook-btn');
+    
+    if (googleBtn) {
+        googleBtn.addEventListener('click', handleGoogleAuth);
+        console.log('✅ Botón de Google configurado');
+    }
+    
+    if (facebookBtn) {
+        facebookBtn.addEventListener('click', handleFacebookAuth);
+        console.log('✅ Botón de Facebook configurado');
+    }
+}
+
+function handleGoogleAuth() {
+    console.log('🔵 Iniciando autenticación con Google...');
+    
+    // Simular autenticación con Google
+    showNotification('Redirigiendo a Google...', 'info');
+    
+    // En una implementación real, aquí se integraría con Google OAuth
+    setTimeout(() => {
+        // Simular éxito de autenticación
+        const userData = {
+            name: 'Usuario Google',
+            email: 'usuario@gmail.com',
+            provider: 'google'
+        };
+        
+        handleSocialAuthSuccess(userData);
+    }, 2000);
+}
+
+function handleFacebookAuth() {
+    console.log('🔵 Iniciando autenticación con Facebook...');
+    
+    // Simular autenticación con Facebook
+    showNotification('Redirigiendo a Facebook...', 'info');
+    
+    // En una implementación real, aquí se integraría con Facebook OAuth
+    setTimeout(() => {
+        // Simular éxito de autenticación
+        const userData = {
+            name: 'Usuario Facebook',
+            email: 'usuario@facebook.com',
+            provider: 'facebook'
+        };
+        
+        handleSocialAuthSuccess(userData);
+    }, 2000);
+}
+
+function handleSocialAuthSuccess(userData) {
+    console.log('✅ Autenticación social exitosa:', userData);
+    
+    // Guardar datos del usuario
+    localStorage.setItem('huertoHogarUser', JSON.stringify(userData));
+    
+    // Mostrar notificación de éxito
+    showNotification(`¡Bienvenido ${userData.name}!`, 'success');
+    
+    // Redirigir al inicio
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 1500);
+}
+
+// ===== SISTEMA DE REGISTRO Y LOGIN =====
+function initializeAuthForms() {
+    console.log('🔐 Inicializando formularios de autenticación...');
+    
+    // Formulario de registro
+    const registerForm = document.querySelector('form[data-auth="register"]');
+    if (registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
+        console.log('✅ Formulario de registro configurado');
+    }
+    
+    // Formulario de login
+    const loginForm = document.querySelector('form[data-auth="login"]');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+        console.log('✅ Formulario de login configurado');
+    }
+    
+    // Verificar si hay email en URL para prellenar
+    checkEmailFromURL();
+}
+
+function handleRegister(event) {
+    event.preventDefault();
+    console.log('📝 Procesando registro...');
+    
+    const formData = new FormData(event.target);
+    const userData = {
+        nombres: formData.get('nombres'),
+        apellidos: formData.get('apellidos'),
+        email: formData.get('email'),
+        password: formData.get('password'),
+        confirmPassword: formData.get('confirm-password'),
+        terms: formData.get('terms'),
+        newsletter: formData.get('newsletter')
+    };
+    
+    // Validar datos
+    if (!validateRegisterData(userData)) {
+        return;
+    }
+    
+    // Simular proceso de registro
+    showNotification('Creando tu cuenta...', 'info');
+    
+    setTimeout(() => {
+        // Guardar datos del usuario
+        const user = {
+            name: `${userData.nombres} ${userData.apellidos}`,
+            email: userData.email,
+            provider: 'email',
+            createdAt: new Date().toISOString()
+        };
+        
+        localStorage.setItem('huertoHogarUser', JSON.stringify(user));
+        
+        // Mostrar notificación de éxito
+        showNotification('¡Cuenta creada exitosamente!', 'success');
+        
+        // Redirigir al login con el email prellenado
+        setTimeout(() => {
+            const loginURL = `login.html?email=${encodeURIComponent(userData.email)}`;
+            window.location.href = loginURL;
+        }, 2000);
+        
+    }, 1500);
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+    console.log('🔑 Procesando login...');
+    
+    const formData = new FormData(event.target);
+    const loginData = {
+        email: formData.get('email'),
+        password: formData.get('password'),
+        remember: formData.get('remember')
+    };
+    
+    // Validar datos
+    if (!validateLoginData(loginData)) {
+        return;
+    }
+    
+    // Simular proceso de login
+    showNotification('Iniciando sesión...', 'info');
+    
+    setTimeout(() => {
+        // Cargar datos del usuario
+        const user = JSON.parse(localStorage.getItem('huertoHogarUser') || '{}');
+        
+        if (user.email === loginData.email) {
+            // Login exitoso
+            showNotification(`¡Bienvenido ${user.name}!`, 'success');
+            
+            // Redirigir al inicio
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        } else {
+            showNotification('Credenciales incorrectas', 'error');
+        }
+    }, 1000);
+}
+
+function validateRegisterData(data) {
+    // Validar nombres
+    if (!data.nombres || data.nombres.trim().length < 2) {
+        showNotification('Los nombres deben tener al menos 2 caracteres', 'error');
+        return false;
+    }
+    
+    // Validar apellidos
+    if (!data.apellidos || data.apellidos.trim().length < 2) {
+        showNotification('Los apellidos deben tener al menos 2 caracteres', 'error');
+        return false;
+    }
+    
+    // Validar email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!data.email || !emailRegex.test(data.email)) {
+        showNotification('Ingresa un email válido', 'error');
+        return false;
+    }
+    
+    // Validar contraseña
+    if (!data.password || data.password.length < 8) {
+        showNotification('La contraseña debe tener al menos 8 caracteres', 'error');
+        return false;
+    }
+    
+    // Validar confirmación de contraseña
+    if (data.password !== data.confirmPassword) {
+        showNotification('Las contraseñas no coinciden', 'error');
+        return false;
+    }
+    
+    // Validar términos y condiciones
+    if (!data.terms) {
+        showNotification('Debes aceptar los términos y condiciones', 'error');
+        return false;
+    }
+    
+    return true;
+}
+
+function validateLoginData(data) {
+    // Validar email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!data.email || !emailRegex.test(data.email)) {
+        showNotification('Ingresa un email válido', 'error');
+        return false;
+    }
+    
+    // Validar contraseña
+    if (!data.password || data.password.length < 6) {
+        showNotification('La contraseña debe tener al menos 6 caracteres', 'error');
+        return false;
+    }
+    
+    return true;
+}
+
+function checkEmailFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+    
+    if (email) {
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            emailInput.value = email;
+            console.log('✅ Email prellenado:', email);
+        }
+    }
+}
+
+// Inicializar autenticación social cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeSocialAuth();
+        initializeAuthForms();
+    });
+} else {
+    initializeSocialAuth();
+    initializeAuthForms();
+}
 
 // Función específica para probar el modal de olvidé mi contraseña
 window.testForgotPasswordToggle = function() {

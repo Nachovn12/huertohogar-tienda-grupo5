@@ -360,6 +360,7 @@
         </div>
     </div>
 
+    <script src="../assets/js/cart-utils.js"></script>
     <script src="../assets/js/script.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/carousel-css.js"></script>
@@ -429,9 +430,8 @@
                     image: 'https://santaisabel.vtexassets.com/arquivos/ids/174684-900-900?width=200&height=200&aspect=true'
                 };
                 
-                // Add to cart logic here
-                console.log('Producto agregado al carrito:', product);
-                alert(`¡${quantity} kg de Manzanas Fuji agregado al carrito!`);
+                // Usar la función unificada del carrito
+                addToCart(product);
             });
 
             // Carrusel de productos recomendados

@@ -26,6 +26,7 @@
     function startCheckout() {
         console.log('📋 Configurando checkout...');
         
+        
         // Configurar botones con múltiples métodos
         setupButtons();
         
@@ -43,7 +44,133 @@
         setupPaymentOptions();
         setupDatePicker();
         
+        // Configurar input de teléfono con prefijo fijo
+        setupPhoneInput();
+        
+        // Configurar date picker de entrega
+        setupDeliveryDatePicker();
+        
         console.log('✅ Checkout configurado correctamente');
+    }
+
+
+
+
+    function showNotification(message, type = 'info') {
+        // Crear notificación temporal
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background: ${type === 'success' ? '#2e8b57' : type === 'error' ? '#dc3545' : '#007bff'};
+            color: white;
+            border-radius: 8px;
+            z-index: 10000;
+            font-weight: 500;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    function setupPhoneInput() {
+        console.log('📞 Configurando input de teléfono con prefijo fijo...');
+        
+        const phoneInput = document.getElementById('phone');
+        if (!phoneInput) {
+            console.log('❌ Input de teléfono no encontrado');
+            return;
+        }
+        
+        // Función para formatear el número de teléfono
+        function formatPhoneNumber(value) {
+            // Remover todos los caracteres no numéricos
+            const numbers = value.replace(/\D/g, '');
+            
+            // Limitar a 8 dígitos (formato chileno)
+            const limitedNumbers = numbers.slice(0, 8);
+            
+            // Formatear como XXXX XXXX
+            if (limitedNumbers.length >= 4) {
+                return limitedNumbers.slice(0, 4) + ' ' + limitedNumbers.slice(4);
+            }
+            return limitedNumbers;
+        }
+        
+        // Función para actualizar el valor completo del input
+        function updatePhoneValue() {
+            const currentValue = phoneInput.value;
+            const formattedValue = formatPhoneNumber(currentValue);
+            phoneInput.value = formattedValue;
+            
+            // Actualizar el valor del input hidden para el formulario
+            const fullPhoneNumber = '+56 9 ' + formattedValue;
+            phoneInput.setAttribute('data-full-phone', fullPhoneNumber);
+        }
+        
+        // Event listeners
+        phoneInput.addEventListener('input', updatePhoneValue);
+        phoneInput.addEventListener('paste', (e) => {
+            // Permitir que se pegue el valor y luego formatearlo
+            setTimeout(updatePhoneValue, 10);
+        });
+        
+        // Prevenir que se escriban caracteres no numéricos
+        phoneInput.addEventListener('keypress', (e) => {
+            const char = String.fromCharCode(e.which);
+            if (!/[0-9]/.test(char)) {
+                e.preventDefault();
+            }
+        });
+        
+        // Configurar el placeholder
+        phoneInput.placeholder = '1234 5678';
+        
+        // Inicializar el valor si ya hay uno
+        if (phoneInput.value) {
+            updatePhoneValue();
+        }
+        
+        console.log('✅ Input de teléfono configurado correctamente');
+    }
+
+    function setupDeliveryDatePicker() {
+        console.log('📅 Configurando date picker de entrega...');
+        
+        const deliveryDateInput = document.getElementById('delivery-date');
+        if (!deliveryDateInput) {
+            console.log('❌ Input de fecha de entrega no encontrado');
+            return;
+        }
+        
+        // Establecer fecha mínima (mañana)
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const minDate = tomorrow.toISOString().split('T')[0];
+        deliveryDateInput.min = minDate;
+        
+        // Establecer fecha máxima (30 días desde hoy)
+        const maxDate = new Date();
+        maxDate.setDate(maxDate.getDate() + 30);
+        const maxDateString = maxDate.toISOString().split('T')[0];
+        deliveryDateInput.max = maxDateString;
+        
+        // Configurar placeholder
+        deliveryDateInput.placeholder = 'Selecciona una fecha';
+        
+        // Event listener para cuando cambie la fecha
+        deliveryDateInput.addEventListener('change', function() {
+            console.log('📅 Fecha de entrega seleccionada:', this.value);
+        });
+        
+        console.log('✅ Date picker de entrega configurado correctamente');
     }
 
     function setupButtons() {
@@ -104,13 +231,15 @@
         console.log('Paso actual:', currentStep);
         
         if (validateCurrentStep()) {
+            // Guardar datos del paso actual antes de avanzar
+            saveCurrentStepData();
+            
             if (currentStep < 4) {
                 currentStep++;
                 console.log('Nuevo paso:', currentStep);
                 showStep(currentStep);
                 updateProgress();
                 updateNavigationButtons();
-                saveCurrentStepData();
             }
         } else {
             console.log('❌ Validación falló');
@@ -202,12 +331,12 @@
         // Campos requeridos según el tipo de usuario
         const requiredFields = isLoggedIn 
             ? ['phone', 'address', 'city'] // Para usuarios logueados, solo estos campos son obligatorios
-            : ['firstName', 'lastName', 'email', 'phone', 'address', 'city']; // Para invitados, todos los campos
+            : ['first-name', 'last-name', 'email', 'phone', 'address', 'city']; // Para invitados, todos los campos
         
         let isValid = true;
 
         // Limpiar errores previos
-        ['firstName', 'lastName', 'email', 'phone', 'address', 'city'].forEach(fieldName => {
+        ['first-name', 'last-name', 'email', 'phone', 'address', 'city'].forEach(fieldName => {
             const field = document.getElementById(fieldName);
             if (field) clearFieldError(field);
         });
@@ -215,10 +344,19 @@
         // Validar campos requeridos
         requiredFields.forEach(fieldName => {
             const field = document.getElementById(fieldName);
+            console.log(`🔍 Validando campo ${fieldName}:`, {
+                field: field,
+                value: field ? field.value : 'undefined',
+                trimmed: field ? field.value.trim() : 'undefined',
+                isEmpty: !field || !field.value.trim()
+            });
+            
             if (!field || !field.value.trim()) {
                 console.log('❌ Campo vacío:', fieldName);
                 showFieldError(field, 'Este campo es obligatorio');
                 isValid = false;
+            } else {
+                console.log('✅ Campo válido:', fieldName);
             }
         });
 
@@ -231,9 +369,16 @@
 
         // Validar teléfono solo si está presente
         const phone = document.getElementById('phone');
-        if (phone && phone.value && !isValidPhone(phone.value)) {
-            showFieldError(phone, 'Ingresa un teléfono válido');
-            isValid = false;
+        if (phone && phone.value) {
+            console.log('📞 Validando teléfono:', phone.value);
+            console.log('📞 Valor completo:', phone.getAttribute('data-full-phone'));
+            if (!isValidPhoneNew(phone.value)) {
+                console.log('❌ Teléfono inválido:', phone.value);
+                showFieldError(phone, 'Ingresa un teléfono válido');
+                isValid = false;
+            } else {
+                console.log('✅ Teléfono válido:', phone.value);
+            }
         }
 
         if (!isValid) {
@@ -254,6 +399,33 @@
             showNotification('Selecciona un método de entrega', 'error');
             return false;
         }
+        
+        // Solo validar fecha y horario si no es retiro en tienda
+        if (deliveryMethod.value !== 'pickup') {
+            const deliveryDate = document.getElementById('delivery-date');
+            const timeSlot = document.querySelector('input[name="timeSlot"]:checked');
+            
+            if (!deliveryDate || !deliveryDate.value) {
+                showNotification('Selecciona una fecha de entrega', 'error');
+                return false;
+            }
+            
+            if (!timeSlot) {
+                showNotification('Selecciona un horario de entrega', 'error');
+                return false;
+            }
+            
+            // Validar que la fecha no sea en el pasado
+            const selectedDate = new Date(deliveryDate.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            if (selectedDate < today) {
+                showNotification('La fecha de entrega no puede ser en el pasado', 'error');
+                return false;
+            }
+        }
+        
         return true;
     }
 
@@ -464,10 +636,22 @@
 
     function calculateTotals() {
         let subtotal = 0;
+        let totalDiscount = 0;
+        
         orderData.products.forEach(item => {
-            subtotal += item.price * item.quantity;
+            // Verificar si el producto está en oferta
+            const isOnOffer = window.isProductOnOffer ? window.isProductOnOffer(item.id) : false;
+            const originalPrice = window.getOriginalPrice ? window.getOriginalPrice(item.id) : item.price;
+            const offerPrice = window.getOfferPrice ? window.getOfferPrice(item.id) : item.price;
+            const currentPrice = isOnOffer ? offerPrice : item.price;
+            const discount = isOnOffer ? (originalPrice - offerPrice) * item.quantity : 0;
+            
+            subtotal += currentPrice * item.quantity;
+            totalDiscount += discount;
         });
+        
         orderData.totals.subtotal = subtotal;
+        orderData.totals.discount = totalDiscount;
         orderData.totals.shipping = 3000; // Envío estándar
         orderData.totals.total = subtotal + orderData.totals.shipping;
     }
@@ -475,25 +659,47 @@
     function updateSummary() {
         const summaryItems = document.getElementById('summary-items');
         const subtotal = document.getElementById('subtotal');
+        const discount = document.getElementById('discount');
         const shipping = document.getElementById('shipping');
         const total = document.getElementById('total');
 
         if (summaryItems) {
-            summaryItems.innerHTML = orderData.products.map(item => `
-                <div class="summary-item">
-                    <div class="item-info">
-                        <img src="${item.image}" alt="${item.name}" class="item-image">
-                        <div class="item-details">
-                            <h4>${item.name}</h4>
-                            <p>Cantidad: ${item.quantity}</p>
+            summaryItems.innerHTML = orderData.products.map(item => {
+                // Verificar si el producto está en oferta
+                const isOnOffer = window.isProductOnOffer ? window.isProductOnOffer(item.id) : false;
+                const originalPrice = window.getOriginalPrice ? window.getOriginalPrice(item.id) : item.price;
+                const offerPrice = window.getOfferPrice ? window.getOfferPrice(item.id) : item.price;
+                const currentPrice = isOnOffer ? offerPrice : item.price;
+                const discountAmount = isOnOffer ? (originalPrice - offerPrice) * item.quantity : 0;
+                
+                return `
+                    <div class="summary-item">
+                        <div class="item-info">
+                            <img src="${item.image}" alt="${item.name}" class="item-image">
+                            <div class="item-details">
+                                <h4>${item.name}</h4>
+                                <p>Cantidad: ${item.quantity}</p>
+                                ${isOnOffer ? `<p class="discount-info">🔥 En oferta: $${formatPrice(currentPrice)} (Antes: $${formatPrice(originalPrice)})</p>` : ''}
+                            </div>
+                        </div>
+                        <div class="item-price">
+                            <div>$${formatPrice(currentPrice * item.quantity)}</div>
+                            ${discountAmount > 0 ? `<div class="discount-amount">-$${formatPrice(discountAmount)}</div>` : ''}
                         </div>
                     </div>
-                    <div class="item-price">$${formatPrice(item.price * item.quantity)}</div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         if (subtotal) subtotal.textContent = `$${formatPrice(orderData.totals.subtotal)}`;
+        if (discount) {
+            if (orderData.totals.discount > 0) {
+                discount.textContent = `-$${formatPrice(orderData.totals.discount)}`;
+                discount.style.display = 'block';
+            } else {
+                discount.style.display = 'none';
+            }
+        }
         if (shipping) shipping.textContent = `$${formatPrice(orderData.totals.shipping)}`;
         if (total) total.textContent = `$${formatPrice(orderData.totals.total)}`;
     }
@@ -506,7 +712,8 @@
             const firstName = document.getElementById('first-name')?.value || '';
             const lastName = document.getElementById('last-name')?.value || '';
             const email = document.getElementById('email')?.value || '';
-            const phone = document.getElementById('phone')?.value || '';
+            const phoneInput = document.getElementById('phone');
+            const phone = phoneInput ? (phoneInput.getAttribute('data-full-phone') || phoneInput.value) : '';
             const address = document.getElementById('address')?.value || '';
             const city = document.getElementById('city')?.value || '';
             const postalCode = document.getElementById('postal-code')?.value || '';
@@ -565,8 +772,24 @@
         console.log('🎉 Finalizando pedido...');
         const orderNumber = 'HH' + Date.now().toString().slice(-6);
         
-        // Limpiar datos del checkout después de completar el pedido
-        localStorage.removeItem('huertoHogarCheckoutData');
+        // Guardar datos del paso actual antes de finalizar
+        saveCurrentStepData();
+        
+        // Asegurar que los totales estén calculados
+        calculateTotals();
+        
+        // Obtener el número de teléfono completo con prefijo
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            const fullPhoneNumber = phoneInput.getAttribute('data-full-phone') || phoneInput.value;
+            console.log('📞 Número de teléfono completo:', fullPhoneNumber);
+        }
+        
+        console.log('📋 Datos del pedido antes de confirmar:', {
+            delivery: orderData.delivery,
+            totals: orderData.totals,
+            products: orderData.products
+        });
         
         // Simular procesamiento
         showLoading(true);
@@ -574,6 +797,9 @@
         setTimeout(() => {
             showLoading(false);
             showOrderConfirmation(orderNumber);
+            
+            // Limpiar datos del checkout después de completar el pedido
+            localStorage.removeItem('huertoHogarCheckoutData');
             localStorage.removeItem('huertoHogarCart');
         }, 2000);
     }
@@ -581,10 +807,264 @@
     function showOrderConfirmation(orderNumber) {
         const modal = document.getElementById('order-confirmation-modal');
         const orderNumberSpan = document.getElementById('order-number');
+        const deliveryDateSpan = document.getElementById('delivery-date-confirm');
+        const totalSpan = document.getElementById('total-confirm');
         
+        // Mostrar número de pedido
         if (orderNumberSpan) orderNumberSpan.textContent = orderNumber;
+        
+        // Mostrar fecha de entrega
+        if (deliveryDateSpan) {
+            const deliveryData = orderData.delivery || {};
+            if (deliveryData.date) {
+                // Formatear la fecha para mostrar
+                const deliveryDate = new Date(deliveryData.date);
+                const formattedDate = deliveryDate.toLocaleDateString('es-CL', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                deliveryDateSpan.textContent = formattedDate;
+            } else if (deliveryData.method === 'pickup') {
+                deliveryDateSpan.textContent = 'Retiro en tienda';
+            } else {
+                deliveryDateSpan.textContent = 'No especificada';
+            }
+        }
+        
+        // Mostrar total
+        if (totalSpan) {
+            const total = orderData.totals?.total || 0;
+            totalSpan.textContent = `$${total.toLocaleString('es-CL')} CLP`;
+        }
+        
         if (modal) modal.classList.remove('hidden');
     }
+
+    // Función para generar comprobante PDF profesional
+    function generateReceipt() {
+        console.log('📄 Generando comprobante PDF...');
+        
+        // Verificar que jsPDF esté disponible
+        if (typeof window.jspdf === 'undefined') {
+            console.error('❌ jsPDF no está disponible');
+            showNotification('Error: No se puede generar el comprobante', 'error');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Obtener datos del pedido
+        const orderNumber = document.getElementById('order-number')?.textContent || 'N/A';
+        const deliveryDate = document.getElementById('delivery-date-confirm')?.textContent || 'No especificada';
+        const total = document.getElementById('total-confirm')?.textContent || '$0 CLP';
+        
+        // Datos de la empresa
+        const companyName = 'HuertoHogar';
+        const companyAddress = 'Av. Principal 123, Santiago, Chile';
+        const companyPhone = '+56 9 1234 5678';
+        const companyEmail = 'ventas@huertohogar.cl';
+        const companyRUT = '12.345.678-9';
+        
+        // Fecha actual
+        const currentDate = new Date().toLocaleDateString('es-CL', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        // Configuración de colores
+        const primaryColor = [46, 139, 87]; // Verde
+        const secondaryColor = [107, 114, 128]; // Gris
+        const textColor = [31, 41, 55]; // Gris oscuro
+        
+        // === ENCABEZADO ===
+        doc.setFontSize(24);
+        doc.setTextColor(...primaryColor);
+        doc.setFont('helvetica', 'bold');
+        doc.text(companyName, 20, 30);
+        
+        // Línea decorativa
+        doc.setDrawColor(...primaryColor);
+        doc.setLineWidth(0.5);
+        doc.line(20, 35, 190, 35);
+        
+        // Información de la empresa
+        doc.setFontSize(10);
+        doc.setTextColor(...secondaryColor);
+        doc.setFont('helvetica', 'normal');
+        doc.text(companyAddress, 20, 45);
+        doc.text(`Tel: ${companyPhone} | Email: ${companyEmail}`, 20, 50);
+        doc.text(`RUT: ${companyRUT}`, 20, 55);
+        
+        // === INFORMACIÓN DEL COMPROBANTE ===
+        doc.setFontSize(16);
+        doc.setTextColor(...textColor);
+        doc.setFont('helvetica', 'bold');
+        doc.text('COMPROBANTE DE PEDIDO', 20, 75);
+        
+        // Datos del comprobante
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Número de Pedido: ${orderNumber}`, 20, 90);
+        doc.text(`Fecha de Emisión: ${currentDate}`, 20, 100);
+        doc.text(`Fecha de Entrega: ${deliveryDate}`, 20, 110);
+        
+        // === INFORMACIÓN DEL CLIENTE ===
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('INFORMACIÓN DEL CLIENTE', 20, 130);
+        
+        const customerData = orderData.customer || {};
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Nombre: ${customerData.firstName || ''} ${customerData.lastName || ''}`, 20, 145);
+        doc.text(`Email: ${customerData.email || ''}`, 20, 155);
+        doc.text(`Teléfono: ${customerData.phone || ''}`, 20, 165);
+        doc.text(`Dirección: ${customerData.address || ''}`, 20, 175);
+        doc.text(`Ciudad: ${customerData.city || ''}`, 20, 185);
+        
+        // === PRODUCTOS ===
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('PRODUCTOS', 20, 205);
+        
+        // Encabezados de la tabla
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Producto', 20, 220);
+        doc.text('Cantidad', 100, 220);
+        doc.text('Precio Unit.', 130, 220);
+        doc.text('Subtotal', 160, 220);
+        
+        // Línea separadora
+        doc.setDrawColor(...secondaryColor);
+        doc.line(20, 225, 190, 225);
+        
+        // Productos
+        let yPosition = 235;
+        const products = orderData.products || [];
+        let subtotal = 0;
+        let totalDiscount = 0;
+        
+        products.forEach((product, index) => {
+            if (yPosition > 250) {
+                doc.addPage();
+                yPosition = 30;
+            }
+            
+            // Verificar si el producto está en oferta
+            const isOnOffer = window.isProductOnOffer ? window.isProductOnOffer(product.id) : false;
+            const originalPrice = window.getOriginalPrice ? window.getOriginalPrice(product.id) : product.price;
+            const offerPrice = window.getOfferPrice ? window.getOfferPrice(product.id) : product.price;
+            const currentPrice = isOnOffer ? offerPrice : product.price;
+            const discount = isOnOffer ? (originalPrice - offerPrice) * product.quantity : 0;
+            
+            const productSubtotal = currentPrice * product.quantity;
+            subtotal += productSubtotal;
+            totalDiscount += discount;
+            
+            doc.setFont('helvetica', 'normal');
+            doc.text(product.name, 20, yPosition);
+            doc.text(product.quantity.toString(), 100, yPosition);
+            
+            // Mostrar precio con descuento si aplica
+            if (isOnOffer) {
+                doc.text(`$${currentPrice.toLocaleString('es-CL')}`, 130, yPosition);
+                doc.text(`$${productSubtotal.toLocaleString('es-CL')}`, 160, yPosition);
+                
+                // Mostrar precio original tachado en la siguiente línea
+                yPosition += 8;
+                doc.setFontSize(8);
+                doc.setTextColor(...secondaryColor);
+                doc.text(`Precio original: $${originalPrice.toLocaleString('es-CL')}`, 20, yPosition);
+                doc.text(`Descuento: -$${discount.toLocaleString('es-CL')}`, 130, yPosition);
+                doc.setFontSize(10);
+                doc.setTextColor(...textColor);
+                yPosition += 2;
+            } else {
+                doc.text(`$${currentPrice.toLocaleString('es-CL')}`, 130, yPosition);
+                doc.text(`$${productSubtotal.toLocaleString('es-CL')}`, 160, yPosition);
+            }
+            
+            yPosition += 10;
+        });
+        
+        // === TOTALES ===
+        const shipping = orderData.totals?.shipping || 3000;
+        const totalAmount = orderData.totals?.total || 0;
+        
+        // Línea separadora
+        doc.setDrawColor(...secondaryColor);
+        doc.line(120, yPosition + 5, 190, yPosition + 5);
+        
+        yPosition += 15;
+        
+        doc.setFont('helvetica', 'bold');
+        doc.text('Subtotal:', 130, yPosition);
+        doc.text(`$${subtotal.toLocaleString('es-CL')}`, 160, yPosition);
+        
+        yPosition += 10;
+        
+        // Mostrar descuento si hay alguno
+        if (totalDiscount > 0) {
+            doc.setTextColor(...primaryColor);
+            doc.text('Descuento:', 130, yPosition);
+            doc.text(`-$${totalDiscount.toLocaleString('es-CL')}`, 160, yPosition);
+            yPosition += 10;
+        }
+        
+        doc.setTextColor(...textColor);
+        doc.text('Envío:', 130, yPosition);
+        doc.text(`$${shipping.toLocaleString('es-CL')}`, 160, yPosition);
+        
+        yPosition += 10;
+        doc.setFontSize(12);
+        doc.setTextColor(...primaryColor);
+        doc.text('TOTAL:', 130, yPosition);
+        doc.text(`$${totalAmount.toLocaleString('es-CL')} CLP`, 160, yPosition);
+        
+        // === MÉTODO DE ENTREGA ===
+        yPosition += 20;
+        doc.setFontSize(12);
+        doc.setTextColor(...textColor);
+        doc.setFont('helvetica', 'bold');
+        doc.text('MÉTODO DE ENTREGA', 20, yPosition);
+        
+        yPosition += 10;
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        const deliveryMethod = orderData.delivery?.method || 'No especificado';
+        const deliveryMethodText = deliveryMethod === 'delivery' ? 'Entrega a domicilio' : 
+                                 deliveryMethod === 'pickup' ? 'Retiro en tienda' : 
+                                 deliveryMethod;
+        doc.text(deliveryMethodText, 20, yPosition);
+        
+        // === PIE DE PÁGINA ===
+        const pageHeight = doc.internal.pageSize.height;
+        yPosition = pageHeight - 40;
+        
+        doc.setFontSize(8);
+        doc.setTextColor(...secondaryColor);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Gracias por su compra en HuertoHogar', 20, yPosition);
+        doc.text('Productos frescos y orgánicos para su hogar', 20, yPosition + 8);
+        doc.text('www.huertohogar.cl', 20, yPosition + 16);
+        
+        // === GUARDAR PDF ===
+        const fileName = `Comprobante_${orderNumber}_${new Date().toISOString().split('T')[0]}.pdf`;
+        doc.save(fileName);
+        
+        console.log('✅ Comprobante PDF generado exitosamente');
+        showNotification('Comprobante generado exitosamente', 'success');
+    }
+
+    // Hacer la función disponible globalmente
+    window.generateReceipt = generateReceipt;
 
     function setupDeliveryOptions() {
         const deliveryOptions = document.querySelectorAll('.delivery-option');
@@ -716,9 +1196,36 @@
         return /^\+56\s?9\d{8}$/.test(phone) || /^\+56\s?[2-9]\d{7,8}$/.test(phone);
     }
 
+    function isValidPhoneNew(phone) {
+        // Validar el formato del input con prefijo fijo
+        // El input ahora solo contiene la parte editable (ej: "4812 3767")
+        // Remover espacios y validar que sean exactamente 8 dígitos
+        const cleanPhone = phone.replace(/\s/g, '');
+        
+        console.log('🔍 Validando teléfono:', {
+            original: phone,
+            clean: cleanPhone,
+            length: cleanPhone.length,
+            isNumeric: /^\d+$/.test(cleanPhone),
+            isValid: /^\d{8}$/.test(cleanPhone)
+        });
+        
+        // Debe tener exactamente 8 dígitos (números chilenos)
+        // Acepta cualquier número de 8 dígitos ya que el prefijo +56 9 está fijo
+        return /^\d{8}$/.test(cleanPhone);
+    }
+
     function formatPrice(price) {
         return price.toLocaleString('es-CL');
     }
+
+    // Función de prueba para validar teléfonos (disponible en consola)
+    window.testPhoneValidation = function(phoneNumber) {
+        console.log('🧪 Probando validación de teléfono:', phoneNumber);
+        const result = isValidPhoneNew(phoneNumber);
+        console.log('Resultado:', result ? '✅ Válido' : '❌ Inválido');
+        return result;
+    };
 
     // Inicializar
     init();
@@ -735,6 +1242,7 @@
 
     function loadConfirmationData() {
         console.log('📋 Cargando datos de confirmación...');
+        console.log('📋 orderData completo:', orderData);
         
         // Cargar información del cliente
         loadCustomerSummary();
@@ -758,48 +1266,85 @@
         const customer = orderData.customer || {};
         console.log('📋 Datos del cliente disponibles:', customer);
         
+        // Si no hay datos del cliente, intentar obtenerlos directamente de los campos
+        if (!customer.firstName && !customer.lastName && !customer.email) {
+            console.log('🔄 No hay datos guardados, obteniendo directamente de los campos...');
+            const firstName = document.getElementById('first-name')?.value || '';
+            const lastName = document.getElementById('last-name')?.value || '';
+            const email = document.getElementById('email')?.value || '';
+            const phoneInput = document.getElementById('phone');
+            const phone = phoneInput ? (phoneInput.getAttribute('data-full-phone') || phoneInput.value) : '';
+            const address = document.getElementById('address')?.value || '';
+            const city = document.getElementById('city')?.value || '';
+            const postalCode = document.getElementById('postal-code')?.value || '';
+            const notes = document.getElementById('notes')?.value || '';
+            
+            // Actualizar orderData con los datos obtenidos
+            orderData.customer = {
+                firstName,
+                lastName,
+                email,
+                phone,
+                address,
+                city,
+                postalCode,
+                notes
+            };
+            
+            console.log('📋 Datos del cliente actualizados:', orderData.customer);
+        }
+        
         let html = '<div class="confirmation-details">';
         
+        // Usar los datos actualizados
+        const currentCustomer = orderData.customer || {};
+        
         // Mostrar nombre completo
-        if (customer.firstName || customer.lastName) {
-            const fullName = `${customer.firstName || ''} ${customer.lastName || ''}`.trim();
+        if (currentCustomer.firstName || currentCustomer.lastName) {
+            const fullName = `${currentCustomer.firstName || ''} ${currentCustomer.lastName || ''}`.trim();
             html += `<p><strong>Nombre:</strong> ${fullName}</p>`;
+        } else {
+            html += `<p><strong>Nombre:</strong> <span style="color: #6c757d; font-style: italic;">No proporcionado</span></p>`;
         }
         
         // Mostrar email
-        if (customer.email) {
-            html += `<p><strong>Email:</strong> ${customer.email}</p>`;
+        if (currentCustomer.email) {
+            html += `<p><strong>Email:</strong> ${currentCustomer.email}</p>`;
+        } else {
+            html += `<p><strong>Email:</strong> <span style="color: #6c757d; font-style: italic;">No proporcionado</span></p>`;
         }
         
-        // Mostrar teléfono
-        if (customer.phone) {
-            html += `<p><strong>Teléfono:</strong> ${customer.phone}</p>`;
+        // Mostrar teléfono (usar el valor completo con prefijo)
+        if (currentCustomer.phone) {
+            const phoneInput = document.getElementById('phone');
+            const fullPhone = phoneInput ? phoneInput.getAttribute('data-full-phone') : currentCustomer.phone;
+            html += `<p><strong>Teléfono:</strong> ${fullPhone || currentCustomer.phone}</p>`;
         } else {
             html += `<p><strong>Teléfono:</strong> <span style="color: #6c757d; font-style: italic;">No proporcionado</span></p>`;
         }
         
         // Mostrar dirección
-        if (customer.address) {
-            html += `<p><strong>Dirección:</strong> ${customer.address}</p>`;
+        if (currentCustomer.address) {
+            html += `<p><strong>Dirección:</strong> ${currentCustomer.address}</p>`;
         } else {
             html += `<p><strong>Dirección:</strong> <span style="color: #6c757d; font-style: italic;">No proporcionada</span></p>`;
         }
         
         // Mostrar ciudad
-        if (customer.city) {
-            html += `<p><strong>Ciudad:</strong> ${customer.city}</p>`;
+        if (currentCustomer.city) {
+            html += `<p><strong>Ciudad:</strong> ${currentCustomer.city}</p>`;
         } else {
             html += `<p><strong>Ciudad:</strong> <span style="color: #6c757d; font-style: italic;">No proporcionada</span></p>`;
         }
         
         // Mostrar código postal si existe
-        if (customer.postalCode) {
-            html += `<p><strong>Código Postal:</strong> ${customer.postalCode}</p>`;
+        if (currentCustomer.postalCode) {
+            html += `<p><strong>Código Postal:</strong> ${currentCustomer.postalCode}</p>`;
         }
         
         // Mostrar notas si existen
-        if (customer.notes) {
-            html += `<p><strong>Notas:</strong> ${customer.notes}</p>`;
+        if (currentCustomer.notes) {
+            html += `<p><strong>Notas:</strong> ${currentCustomer.notes}</p>`;
         }
         
         html += '</div>';
@@ -815,15 +1360,40 @@
         const delivery = orderData.delivery || {};
         console.log('📋 Datos de entrega disponibles:', delivery);
         
+        // Si no hay datos de entrega, intentar obtenerlos directamente de los campos
+        if (!delivery.method && !delivery.date && !delivery.timeSlot) {
+            console.log('🔄 No hay datos de entrega guardados, obteniendo directamente de los campos...');
+            const deliveryMethod = document.querySelector('input[name="delivery"]:checked');
+            const deliveryDate = document.getElementById('delivery-date')?.value || '';
+            const timeSlot = document.querySelector('input[name="timeSlot"]:checked');
+            
+            // Actualizar orderData con los datos obtenidos
+            orderData.delivery = {
+                method: deliveryMethod?.value || '',
+                date: deliveryDate,
+                timeSlot: timeSlot?.value || '',
+                cost: deliveryMethod?.value === 'delivery' ? orderData.totals.shipping : 0
+            };
+            
+            console.log('📋 Datos de entrega actualizados:', orderData.delivery);
+        }
+        
+        // Usar los datos actualizados
+        const currentDelivery = orderData.delivery || {};
+        
         let html = '<div class="confirmation-details">';
         
         // Mostrar método de entrega
-        if (delivery.method) {
-            if (delivery.method === 'delivery') {
+        if (currentDelivery.method) {
+            if (currentDelivery.method === 'delivery') {
                 html += '<p><strong>Método:</strong> Entrega a Domicilio</p>';
-                html += `<p><strong>Costo:</strong> $${formatPrice(delivery.cost || orderData.totals.shipping)}</p>`;
+                html += `<p><strong>Costo:</strong> $${formatPrice(currentDelivery.cost || orderData.totals.shipping)}</p>`;
                 html += '<p><strong>Dirección de entrega:</strong> La dirección proporcionada en la información del cliente</p>';
-            } else if (delivery.method === 'pickup') {
+            } else if (currentDelivery.method === 'express') {
+                html += '<p><strong>Método:</strong> Entrega Express</p>';
+                html += `<p><strong>Costo:</strong> $${formatPrice(currentDelivery.cost || orderData.totals.shipping)}</p>`;
+                html += '<p><strong>Dirección de entrega:</strong> La dirección proporcionada en la información del cliente</p>';
+            } else if (currentDelivery.method === 'pickup') {
                 html += '<p><strong>Método:</strong> Retiro en Tienda</p>';
                 html += '<p><strong>Costo:</strong> Gratis</p>';
                 html += '<p><strong>Dirección de la tienda:</strong> Av. Principal 123, Santiago</p>';
@@ -833,36 +1403,38 @@
             html += '<p><strong>Método:</strong> <span style="color: #6c757d; font-style: italic;">No seleccionado</span></p>';
         }
         
-        // Mostrar fecha de entrega
-        if (delivery.date) {
-            const date = new Date(delivery.date);
-            const formattedDate = date.toLocaleDateString('es-CL', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            html += `<p><strong>Fecha de entrega:</strong> ${formattedDate}</p>`;
-        } else {
-            html += '<p><strong>Fecha de entrega:</strong> <span style="color: #6c757d; font-style: italic;">No seleccionada</span></p>';
-        }
-        
-        // Mostrar horario de entrega
-        if (delivery.timeSlot) {
-            const timeLabels = {
-                'morning': 'Mañana (9:00 - 12:00)',
-                'afternoon': 'Tarde (12:00 - 18:00)',
-                'evening': 'Noche (18:00 - 20:00)'
-            };
-            html += `<p><strong>Horario de entrega:</strong> ${timeLabels[delivery.timeSlot] || delivery.timeSlot}</p>`;
-        } else {
-            html += '<p><strong>Horario de entrega:</strong> <span style="color: #6c757d; font-style: italic;">No seleccionado</span></p>';
+        // Mostrar fecha de entrega (solo si no es retiro en tienda)
+        if (currentDelivery.method !== 'pickup') {
+            if (currentDelivery.date) {
+                const date = new Date(currentDelivery.date);
+                const formattedDate = date.toLocaleDateString('es-CL', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                html += `<p><strong>Fecha de entrega:</strong> ${formattedDate}</p>`;
+            } else {
+                html += '<p><strong>Fecha de entrega:</strong> <span style="color: #6c757d; font-style: italic;">No seleccionada</span></p>';
+            }
+            
+            // Mostrar horario de entrega
+            if (currentDelivery.timeSlot) {
+                const timeLabels = {
+                    'morning': 'Mañana (9:00 - 12:00)',
+                    'afternoon': 'Tarde (12:00 - 18:00)',
+                    'evening': 'Noche (18:00 - 20:00)'
+                };
+                html += `<p><strong>Horario de entrega:</strong> ${timeLabels[currentDelivery.timeSlot] || currentDelivery.timeSlot}</p>`;
+            } else {
+                html += '<p><strong>Horario de entrega:</strong> <span style="color: #6c757d; font-style: italic;">No seleccionado</span></p>';
+            }
         }
         
         // Mostrar información adicional
-        if (delivery.method === 'delivery') {
+        if (currentDelivery.method === 'delivery' || currentDelivery.method === 'express') {
             html += '<p><strong>Nota:</strong> El pedido será entregado en la dirección proporcionada</p>';
-        } else if (delivery.method === 'pickup') {
+        } else if (currentDelivery.method === 'pickup') {
             html += '<p><strong>Nota:</strong> Debe presentar identificación al retirar</p>';
         }
         

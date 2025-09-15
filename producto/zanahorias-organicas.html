@@ -360,6 +360,7 @@
         </div>
     </div>
 
+    <script src="../assets/js/cart-utils.js"></script>
     <script src="../assets/js/script.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/carousel-css.js"></script>
@@ -429,9 +430,8 @@
                     image: 'https://png.pngtree.com/png-vector/20241225/ourmid/pngtree-fresh-organic-carrots-in-a-neat-stack-png-image_14812590.png'
                 };
                 
-                // Add to cart logic here
-                console.log('Producto agregado al carrito:', product);
-                alert(`¡${quantity} kg de Zanahorias Orgánicas agregado al carrito!`);
+                // Usar la función unificada del carrito
+                addToCart(product);
             });
 
             // Carrusel de productos recomendados

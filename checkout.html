@@ -127,10 +127,13 @@
                                 <input type="email" id="email" name="email" required>
                             </div>
                             
-                            <div class="form-group">
-                                <label for="phone">Teléfono *</label>
-                                <input type="tel" id="phone" name="phone" placeholder="+56 9 1234 5678" required>
+                        <div class="form-group">
+                            <label for="phone">Teléfono *</label>
+                            <div class="phone-input-container">
+                                <span class="phone-prefix">+56 9</span>
+                                <input type="tel" id="phone" name="phone" placeholder="1234 5678" required>
                             </div>
+                        </div>
                             
                             <div class="form-group">
                                 <label for="address">Dirección de Entrega *</label>
@@ -430,6 +433,7 @@
         </div>
     </main>
 
+
     <!-- Modal de Confirmación -->
     <div id="order-confirmation-modal" class="modal hidden">
         <div class="modal-content">
@@ -449,7 +453,7 @@
                         <button class="btn btn-primary" onclick="window.location.href='index.html'">
                             <i class="fas fa-home"></i> Volver al Inicio
                         </button>
-                        <button class="btn btn-secondary" onclick="window.print()">
+                        <button class="btn btn-secondary" onclick="generateReceipt()">
                             <i class="fas fa-print"></i> Imprimir Comprobante
                         </button>
                     </div>
@@ -485,6 +489,9 @@
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
 
+    <!-- Librería jsPDF para generar comprobantes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
     <script src="assets/js/script.js"></script>
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/checkout-simple.js"></script>

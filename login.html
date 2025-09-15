@@ -56,35 +56,60 @@
     </header>
 
     <main class="page-container">
-        <div class="form-container content-section">
-            <h1 class="page-title">Iniciar Sesión</h1>
-            <form data-auth="login" aria-label="Formulario de inicio de sesión">
-                <div class="form-group">
-                    <label for="email">Correo Electrónico</label>
-                    <input type="email" id="email" name="email" autocomplete="email" required aria-required="true">
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>Iniciar Sesión</h1>
+                    <p>Accede a tu cuenta de HuertoHogar</p>
                 </div>
-                <div class="form-group">
-                    <label for="password">Contraseña</label>
-                    <div class="password-input-container">
-                        <input type="password" id="password" name="password" required aria-required="true">
-                        <button type="button" class="password-toggle" data-target="password" aria-label="Mostrar contraseña">
-                            <i class="fas fa-eye"></i>
-                            <i class="fas fa-eye-slash"></i>
-                        </button>
+                
+                <form data-auth="login" class="auth-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="tu@email.com" required>
                     </div>
-                    <div style="text-align: right; margin-top: 0.5rem;">
-                        <a href="recuperar.html" class="read-more-link">¿Olvidaste tu contraseña?</a>
+                    
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <div class="password-field">
+                            <input type="password" id="password" name="password" placeholder="Tu contraseña" required>
+                            <button type="button" class="password-toggle" data-target="password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <a href="recuperar.html" class="forgot-link">¿Olvidaste tu contraseña?</a>
                     </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember" name="remember">
+                            <span class="checkmark"></span>
+                            Recordar sesión
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Iniciar Sesión</button>
+                </form>
+                
+                <div class="divider">
+                    <span>o continúa con</span>
                 </div>
-                <div class="form-group" style="margin-top: 1rem;">
-                    <div class="form-check">
-                        <input type="checkbox" id="remember" name="remember">
-                        <span>Recordar sesión</span>
-                    </div>
+                
+                <div class="social-auth">
+                    <button type="button" class="social-btn google-btn">
+                        <i class="fab fa-google"></i>
+                        Google
+                    </button>
+                    <button type="button" class="social-btn facebook-btn">
+                        <i class="fab fa-facebook-f"></i>
+                        Facebook
+                    </button>
                 </div>
-                <button type="submit" class="btn btn-primary form-btn">Ingresar</button>
-                <p class="form-switch">¿No tienes una cuenta? <a href="registro.html">Regístrate aquí</a></p>
-            </form>
+                
+                <div class="auth-footer">
+                    <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -133,6 +158,5 @@
     </div>
     
     <script src="assets/js/script.js"></script>
-    <script src="assets/js/auth.js"></script>
 </body>
 </html>
