@@ -608,21 +608,33 @@ class AuthEnhanced {
         
         // Validar credenciales INMEDIATAMENTE
         if (!userData) {
-            console.log('❌ Usuario no encontrado - ERROR INMEDIATO');
-            this.showErrorMessage('Email o contraseña incorrectos.');
-            return;
-        }
-        
-        // Verificar contraseña INMEDIATAMENTE
-        console.log('🔍 Comparando contraseñas:');
-        console.log('  - Contraseña ingresada:', loginData.password);
-        console.log('  - Contraseña guardada:', userData.password);
-        console.log('  - ¿Coinciden?:', userData.password === loginData.password);
-        
-        if (userData.password !== loginData.password) {
-            console.log('❌ Contraseña incorrecta - ERROR INMEDIATO');
-            this.showErrorMessage('Email o contraseña incorrectos.');
-            return;
+            // Verificar si es el usuario admin especial
+            if (loginData.email === 'admin' && loginData.password === 'admin') {
+                console.log('✅ Usuario admin detectado - ACCESO DIRECTO');
+                userData = {
+                    id: 'admin',
+                    name: 'Administrador',
+                    email: 'admin',
+                    role: 'admin',
+                    isAdmin: true
+                };
+            } else {
+                console.log('❌ Usuario no encontrado - ERROR INMEDIATO');
+                this.showErrorMessage('Email o contraseña incorrectos.');
+                return;
+            }
+        } else {
+            // Verificar contraseña INMEDIATAMENTE para usuarios normales
+            console.log('🔍 Comparando contraseñas:');
+            console.log('  - Contraseña ingresada:', loginData.password);
+            console.log('  - Contraseña guardada:', userData.password);
+            console.log('  - ¿Coinciden?:', userData.password === loginData.password);
+            
+            if (userData.password !== loginData.password) {
+                console.log('❌ Contraseña incorrecta - ERROR INMEDIATO');
+                this.showErrorMessage('Email o contraseña incorrectos.');
+                return;
+            }
         }
         
         console.log('✅ Credenciales válidas, procediendo con login');
@@ -697,6 +709,13 @@ class AuthEnhanced {
             localStorage.setItem('huertoHogarAuth', JSON.stringify(sessionData));
         } else {
             sessionStorage.setItem('huertoHogarAuth', JSON.stringify(sessionData));
+        }
+        
+        // Guardar permisos de administrador si corresponde
+        if (userData.role === 'admin' || userData.isAdmin) {
+            localStorage.setItem('huertohogar_is_admin', 'true');
+            localStorage.setItem('huertohogar_user_role', 'admin');
+            console.log('✅ Permisos de administrador guardados');
         }
         
         // Guardar datos del usuario en la lista de usuarios
@@ -844,6 +863,12 @@ class AuthEnhanced {
             try {
                 const auth = JSON.parse(sessionData);
                 if (auth.isAuthenticated && auth.user) {
+                    // Verificar si es administrador y guardar permisos
+                    if (auth.user.role === 'admin' || auth.user.isAdmin) {
+                        localStorage.setItem('huertohogar_is_admin', 'true');
+                        localStorage.setItem('huertohogar_user_role', 'admin');
+                        console.log('✅ Permisos de administrador restaurados');
+                    }
                     this.updateHeaderUI(auth.user);
                     return true;
                 }

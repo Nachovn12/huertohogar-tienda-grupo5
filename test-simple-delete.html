@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Simple Delete - HuertoHogar</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .product-item { 
+            padding: 15px; 
+            border: 1px solid #ddd; 
+            margin: 10px 0; 
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .btn { 
+            padding: 8px 15px; 
+            margin: 5px; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content { 
+            background: white; 
+            margin: 15% auto; 
+            padding: 20px; 
+            width: 400px; 
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        .close-btn:hover {
+            color: #333;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .status-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .debug-info {
+            background: #e9ecef;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Simple de Eliminación - HuertoHogar</h1>
+    
+    <div class="debug-info">
+        <strong>Debug Info:</strong><br>
+        Productos activos: <span id="active-count">0</span><br>
+        Productos en papelera: <span id="trash-count">0</span><br>
+        Estado: <span id="status">Inicializando...</span>
+    </div>
+    
+    <div id="status-message"></div>
+    
+    <h2>Productos Activos</h2>
+    <div id="active-products">
+        <!-- Los productos activos se mostrarán aquí -->
+    </div>
+    
+    <h2>Papelera</h2>
+    <div id="trash-products">
+        <!-- Los productos eliminados se mostrarán aquí -->
+    </div>
+    
+    <!-- Modal de Confirmación -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Eliminación</h3>
+                <button class="close-btn" onclick="closeDeleteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar este producto?</p>
+                <p><strong id="product-to-delete"></strong></p>
+                <p style="color: #dc3545; font-size: 14px;">Esta acción moverá el producto a la papelera.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de prueba
+        let products = [
+            { id: 1, name: "Manzanas Fuji", price: 2500, category: "Frutas Frescas", stock: 50 },
+            { id: 2, name: "Espinacas Orgánicas", price: 1800, category: "Verduras Orgánicas", stock: 30 },
+            { id: 3, name: "Miel Orgánica", price: 4500, category: "Productos Orgánicos", stock: 20 },
+            { id: 4, name: "Zanahorias", price: 1200, category: "Verduras Orgánicas", stock: 40 },
+            { id: 5, name: "Plátanos", price: 1500, category: "Frutas Frescas", stock: 25 }
+        ];
+        
+        let trashProducts = [];
+        let productToDelete = null;
+        
+        // Elementos del DOM
+        const activeProductsDiv = document.getElementById('active-products');
+        const trashProductsDiv = document.getElementById('trash-products');
+        const deleteModal = document.getElementById('delete-modal');
+        const productToDeleteSpan = document.getElementById('product-to-delete');
+        const statusMessageDiv = document.getElementById('status-message');
+        
+        // Función para mostrar mensajes de estado
+        function showStatus(message, type = 'success') {
+            statusMessageDiv.innerHTML = `<div class="status status-${type}">${message}</div>`;
+            setTimeout(() => {
+                statusMessageDiv.innerHTML = '';
+            }, 3000);
+        }
+        
+        // Función para actualizar la información de debug
+        function updateDebugInfo() {
+            document.getElementById('active-count').textContent = products.length;
+            document.getElementById('trash-count').textContent = trashProducts.length;
+            document.getElementById('status').textContent = 'Funcionando correctamente';
+        }
+        
+        // Función para renderizar productos activos
+        function renderActiveProducts() {
+            console.log('Renderizando productos activos...');
+            activeProductsDiv.innerHTML = '';
+            
+            if (products.length === 0) {
+                activeProductsDiv.innerHTML = '<p>No hay productos activos</p>';
+                return;
+            }
+            
+            products.forEach(product => {
+                const div = document.createElement('div');
+                div.className = 'product-item';
+                div.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${product.name}</strong><br>
+                            <small>$${product.price.toLocaleString('es-CL')} - ${product.category} - Stock: ${product.stock}</small>
+                        </div>
+                        <button class="btn btn-danger" onclick="initiateDelete(${product.id})">
+                            Eliminar
+                        </button>
+                    </div>
+                `;
+                activeProductsDiv.appendChild(div);
+            });
+            
+            console.log(`Productos activos renderizados: ${products.length}`);
+        }
+        
+        // Función para renderizar productos en papelera
+        function renderTrashProducts() {
+            console.log('Renderizando productos en papelera...');
+            trashProductsDiv.innerHTML = '';
+            
+            if (trashProducts.length === 0) {
+                trashProductsDiv.innerHTML = '<p>La papelera está vacía</p>';
+                return;
+            }
+            
+            trashProducts.forEach(product => {
+                const div = document.createElement('div');
+                div.className = 'product-item';
+                div.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${product.name}</strong><br>
+                            <small>$${product.price.toLocaleString('es-CL')} - ${product.category}</small><br>
+                            <small style="color: #666;">Eliminado: ${new Date(product.deletedAt).toLocaleString('es-CL')}</small>
+                        </div>
+                        <div>
+                            <button class="btn btn-success" onclick="restoreProduct(${product.id})" style="margin-right: 5px;">
+                                Recuperar
+                            </button>
+                            <button class="btn btn-danger" onclick="permanentDelete(${product.id})">
+                                Eliminar Permanentemente
+                            </button>
+                        </div>
+                    </div>
+                `;
+                trashProductsDiv.appendChild(div);
+            });
+            
+            console.log(`Productos en papelera renderizados: ${trashProducts.length}`);
+        }
+        
+        // Función para iniciar el proceso de eliminación
+        function initiateDelete(productId) {
+            console.log('Iniciando eliminación del producto ID:', productId);
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                console.error('Producto no encontrado:', productId);
+                showStatus('Error: Producto no encontrado', 'error');
+                return;
+            }
+            
+            productToDelete = productId;
+            productToDeleteSpan.textContent = product.name;
+            deleteModal.style.display = 'block';
+            
+            console.log('Modal de eliminación abierto para:', product.name);
+        }
+        
+        // Función para confirmar la eliminación
+        function confirmDelete() {
+            console.log('Confirmando eliminación del producto ID:', productToDelete);
+            
+            if (!productToDelete) {
+                console.error('No hay producto seleccionado para eliminar');
+                showStatus('Error: No hay producto seleccionado', 'error');
+                return;
+            }
+            
+            const productIndex = products.findIndex(p => p.id === productToDelete);
+            if (productIndex === -1) {
+                console.error('Producto no encontrado en la lista:', productToDelete);
+                showStatus('Error: Producto no encontrado', 'error');
+                return;
+            }
+            
+            const product = products[productIndex];
+            console.log('Eliminando producto:', product.name);
+            
+            // Agregar fecha de eliminación
+            product.deletedAt = new Date().toISOString();
+            product.deletedBy = 'admin';
+            
+            // Mover a la papelera
+            trashProducts.push(product);
+            console.log('Producto movido a la papelera');
+            
+            // Eliminar de la lista principal
+            products.splice(productIndex, 1);
+            console.log('Producto eliminado de la lista principal');
+            
+            // Actualizar vistas
+            renderActiveProducts();
+            renderTrashProducts();
+            updateDebugInfo();
+            
+            // Cerrar modal
+            closeDeleteModal();
+            
+            showStatus(`Producto "${product.name}" movido a la papelera exitosamente`, 'success');
+            console.log('Eliminación completada exitosamente');
+        }
+        
+        // Función para cerrar el modal de eliminación
+        function closeDeleteModal() {
+            deleteModal.style.display = 'none';
+            productToDelete = null;
+            console.log('Modal de eliminación cerrado');
+        }
+        
+        // Función para recuperar un producto
+        function restoreProduct(productId) {
+            console.log('Recuperando producto ID:', productId);
+            
+            const productIndex = trashProducts.findIndex(p => p.id === productId);
+            if (productIndex === -1) {
+                console.error('Producto no encontrado en la papelera:', productId);
+                showStatus('Error: Producto no encontrado en la papelera', 'error');
+                return;
+            }
+            
+            const product = trashProducts[productIndex];
+            console.log('Recuperando producto:', product.name);
+            
+            // Remover propiedades de eliminación
+            delete product.deletedAt;
+            delete product.deletedBy;
+            
+            // Agregar de vuelta a la lista principal
+            products.push(product);
+            console.log('Producto agregado de vuelta a la lista principal');
+            
+            // Eliminar de la papelera
+            trashProducts.splice(productIndex, 1);
+            console.log('Producto removido de la papelera');
+            
+            // Actualizar vistas
+            renderActiveProducts();
+            renderTrashProducts();
+            updateDebugInfo();
+            
+            showStatus(`Producto "${product.name}" recuperado exitosamente`, 'success');
+            console.log('Recuperación completada exitosamente');
+        }
+        
+        // Función para eliminar permanentemente
+        function permanentDelete(productId) {
+            console.log('Eliminando permanentemente producto ID:', productId);
+            
+            if (!confirm('¿Estás seguro de que deseas eliminar este producto permanentemente? Esta acción no se puede deshacer.')) {
+                console.log('Eliminación permanente cancelada por el usuario');
+                return;
+            }
+            
+            const productIndex = trashProducts.findIndex(p => p.id === productId);
+            if (productIndex === -1) {
+                console.error('Producto no encontrado en la papelera:', productId);
+                showStatus('Error: Producto no encontrado en la papelera', 'error');
+                return;
+            }
+            
+            const product = trashProducts[productIndex];
+            console.log('Eliminando permanentemente producto:', product.name);
+            
+            // Eliminar de la papelera
+            trashProducts.splice(productIndex, 1);
+            console.log('Producto eliminado permanentemente');
+            
+            // Actualizar vistas
+            renderTrashProducts();
+            updateDebugInfo();
+            
+            showStatus(`Producto "${product.name}" eliminado permanentemente`, 'success');
+            console.log('Eliminación permanente completada');
+        }
+        
+        // Inicializar la aplicación
+        function init() {
+            console.log('Inicializando aplicación...');
+            renderActiveProducts();
+            renderTrashProducts();
+            updateDebugInfo();
+            showStatus('Aplicación inicializada correctamente', 'success');
+            console.log('Aplicación inicializada correctamente');
+        }
+        
+        // Inicializar cuando se carga la página
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

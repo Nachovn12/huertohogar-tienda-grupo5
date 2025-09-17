@@ -198,8 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return offers;
     };
 
-    // --- Datos Completos de Productos (Basados en el PDF) ---
-    const products = [
+    // --- Función para obtener productos por defecto ---
+    const getDefaultProducts = () => [
         { 
             id: 'FR001', 
             name: 'Manzanas Fuji', 
@@ -208,7 +208,11 @@ document.addEventListener('DOMContentLoaded', () => {
             image: 'https://santaisabel.vtexassets.com/arquivos/ids/174684-900-900?width=900&height=900&aspect=true',
             stock: 150,
             unit: 'kilos',
-            description: 'Manzanas Fuji crujientes y dulces, cultivadas en el Valle del Maule. Perfectas para meriendas saludables o como ingrediente en postres. Estas manzanas son conocidas por su textura firme y su sabor equilibrado entre dulce y ácido.'
+            description: 'Manzanas Fuji crujientes y dulces, cultivadas en el Valle del Maule. Perfectas para meriendas saludables o como ingrediente en postres. Estas manzanas son conocidas por su textura firme y su sabor equilibrado entre dulce y ácido.',
+            features: ['Fresco', 'De temporada', 'Nutritivo'],
+            featured: true,
+            active: true,
+            createdAt: new Date().toISOString()
         },
         { 
             id: 'FR002', 
@@ -218,7 +222,11 @@ document.addEventListener('DOMContentLoaded', () => {
             image: 'https://static.vecteezy.com/system/resources/previews/022/825/544/non_2x/orange-fruit-orange-on-transparent-background-free-png.png',
             stock: 200,
             unit: 'kilos',
-            description: 'Jugosas y ricas en vitamina C, estas naranjas Valencia son ideales para zumos frescos y refrescantes. Cultivadas en condiciones climáticas óptimas que aseguran su dulzura y jugosidad.'
+            description: 'Jugosas y ricas en vitamina C, estas naranjas Valencia son ideales para zumos frescos y refrescantes. Cultivadas en condiciones climáticas óptimas que aseguran su dulzura y jugosidad.',
+            features: ['Fresco', 'Rico en vitamina C', 'Jugoso'],
+            featured: false,
+            active: true,
+            createdAt: new Date().toISOString()
         },
         { 
             id: 'FR003', 
@@ -228,7 +236,11 @@ document.addEventListener('DOMContentLoaded', () => {
             image: 'https://png.pngtree.com/png-vector/20240128/ourmid/pngtree-ripe-cavendish-banana-png-image_11508971.png',
             stock: 250,
             unit: 'kilos',
-            description: 'Plátanos maduros y dulces, perfectos para el desayuno o como snack energético. Estos plátanos son ricos en potasio y vitaminas, ideales para mantener una dieta equilibrada.'
+            description: 'Plátanos maduros y dulces, perfectos para el desayuno o como snack energético. Estos plátanos son ricos en potasio y vitaminas, ideales para mantener una dieta equilibrada.',
+            features: ['Fresco', 'Rico en potasio', 'Energético'],
+            featured: false,
+            active: true,
+            createdAt: new Date().toISOString()
         },
         { 
             id: 'VR001', 
@@ -238,7 +250,11 @@ document.addEventListener('DOMContentLoaded', () => {
             image: 'https://png.pngtree.com/png-vector/20241225/ourmid/pngtree-fresh-organic-carrots-in-a-neat-stack-png-image_14812590.png',
             stock: 100,
             unit: 'kilos',
-            description: 'Zanahorias crujientes cultivadas sin pesticidas en la Región de O\'Higgins. Excelente fuente de vitamina A y fibra, ideales para ensaladas, jugos o como snack saludable.'
+            description: 'Zanahorias crujientes cultivadas sin pesticidas en la Región de O\'Higgins. Excelente fuente de vitamina A y fibra, ideales para ensaladas, jugos o como snack saludable.',
+            features: ['Orgánico', 'Sin pesticidas', 'Rico en vitamina A'],
+            featured: false,
+            active: true,
+            createdAt: new Date().toISOString()
         },
         { 
             id: 'VR002', 
@@ -248,7 +264,11 @@ document.addEventListener('DOMContentLoaded', () => {
             image: 'https://pngimg.com/uploads/spinach/spinach_PNG45.png',
             stock: 80,
             unit: 'bolsas de 500g',
-            description: 'Espinacas frescas y nutritivas, perfectas para ensaladas y batidos verdes. Estas espinacas son cultivadas bajo prácticas orgánicas que garantizan su calidad y valor nutricional.'
+            description: 'Espinacas frescas y nutritivas, perfectas para ensaladas y batidos verdes. Estas espinacas son cultivadas bajo prácticas orgánicas que garantizan su calidad y valor nutricional.',
+            features: ['Orgánico', 'Fresco', 'Nutritivo'],
+            featured: false,
+            active: true,
+            createdAt: new Date().toISOString()
         },
         { 
             id: 'VR003', 
@@ -258,7 +278,11 @@ document.addEventListener('DOMContentLoaded', () => {
             image: 'https://png.pngtree.com/png-vector/20241212/ourmid/pngtree-colored-paprica-raw-paprika-fruit-png-image_14613829.png',
             stock: 120,
             unit: 'kilos',
-            description: 'Pimientos rojos, amarillos y verdes, ideales para salteados y platos coloridos. Ricos en antioxidantes y vitaminas, estos pimientos añaden un toque vibrante y saludable a cualquier receta.'
+            description: 'Pimientos rojos, amarillos y verdes, ideales para salteados y platos coloridos. Ricos en antioxidantes y vitaminas, estos pimientos añaden un toque vibrante y saludable a cualquier receta.',
+            features: ['Orgánico', 'Colorido', 'Rico en antioxidantes'],
+            featured: true,
+            active: true,
+            createdAt: new Date().toISOString()
         },
         { 
             id: 'PO001', 
@@ -268,7 +292,11 @@ document.addEventListener('DOMContentLoaded', () => {
             image: 'https://png.pngtree.com/png-clipart/20240720/original/pngtree-family-apiary-organic-honey-food-production-png-image_15597696.png',
             stock: 50,
             unit: 'frascos de 500g',
-            description: 'Miel pura y orgánica producida por apicultores locales. Rica en antioxidantes y con un sabor inigualable, perfecta para endulzar de manera natural tus comidas y bebidas.'
+            description: 'Miel pura y orgánica producida por apicultores locales. Rica en antioxidantes y con un sabor inigualable, perfecta para endulzar de manera natural tus comidas y bebidas.',
+            features: ['Orgánico', 'Natural', 'Rico en antioxidantes'],
+            featured: true,
+            active: true,
+            createdAt: new Date().toISOString()
         },
         { 
             id: 'PO003', 
@@ -278,7 +306,11 @@ document.addEventListener('DOMContentLoaded', () => {
             image: 'https://manare.cl/wp-content/uploads/2023/09/Manare_QuinoaOrganica400g.png',
             stock: 75,
             unit: 'paquetes de 400g',
-            description: 'Quinua orgánica de alta calidad, rica en proteínas y nutrientes esenciales. Perfecta para ensaladas, sopas y como sustituto del arroz. Cultivada en los Andes chilenos.'
+            description: 'Quinua orgánica de alta calidad, rica en proteínas y nutrientes esenciales. Perfecta para ensaladas, sopas y como sustituto del arroz. Cultivada en los Andes chilenos.',
+            features: ['Orgánico', 'Rico en proteínas', 'Nutritivo'],
+            featured: false,
+            active: true,
+            createdAt: new Date().toISOString()
         },
         { 
             id: 'PL001', 
@@ -288,9 +320,20 @@ document.addEventListener('DOMContentLoaded', () => {
             image: 'https://www.soprole.cl/public/storage/imagenes/banners/202304180943Soprole-Lecheentera-litro.png',
             stock: 200,
             unit: 'litros',
-            description: 'Leche entera fresca y nutritiva, rica en calcio y vitaminas. Perfecta para el desayuno, postres y preparaciones culinarias. Producida bajo los más altos estándares de calidad.'
+            description: 'Leche entera fresca y nutritiva, rica en calcio y vitaminas. Perfecta para el desayuno, postres y preparaciones culinarias. Producida bajo los más altos estándares de calidad.',
+            features: ['Fresco', 'Rico en calcio', 'Nutritivo'],
+            featured: false,
+            active: true,
+            createdAt: new Date().toISOString()
         }
     ];
+
+    // --- Cargar productos desde localStorage o usar los por defecto ---
+    let products = loadProductsFromStorage();
+    if (!products) {
+        products = getDefaultProducts();
+        saveProductsToStorage(products);
+    }
 
     // Inicializar ofertas especiales
     const specialOffers = getRecommendedProductsForOffers();

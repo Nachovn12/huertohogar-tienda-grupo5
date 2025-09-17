@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Eliminación - HuertoHogar</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .btn { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        .btn-danger { background: #dc3545; color: white; border: none; }
+        .btn-secondary { background: #6c757d; color: white; border: none; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: white; margin: 15% auto; padding: 20px; width: 300px; }
+        .product-item { padding: 10px; border: 1px solid #eee; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>Test de Eliminación de Productos</h1>
+    
+    <div class="test-section">
+        <h2>Productos de Prueba</h2>
+        <div id="products-list">
+            <!-- Los productos se cargarán aquí -->
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Papelera</h2>
+        <div id="trash-list">
+            <!-- Los productos eliminados se mostrarán aquí -->
+        </div>
+    </div>
+    
+    <!-- Modal de Confirmación -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <h3>Confirmar Eliminación</h3>
+            <p>¿Estás seguro de que deseas eliminar este producto?</p>
+            <p id="delete-product-name"></p>
+            <button id="confirm-delete" class="btn btn-danger">Eliminar</button>
+            <button id="cancel-delete" class="btn btn-secondary">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        // Datos de prueba
+        let products = [
+            { id: 1, name: "Manzanas", price: 2500, category: "Frutas" },
+            { id: 2, name: "Espinacas", price: 1800, category: "Verduras" },
+            { id: 3, name: "Miel", price: 4500, category: "Orgánicos" }
+        ];
+        
+        let trashProducts = [];
+        
+        // Elementos del DOM
+        const productsList = document.getElementById('products-list');
+        const trashList = document.getElementById('trash-list');
+        const deleteModal = document.getElementById('delete-modal');
+        const deleteProductName = document.getElementById('delete-product-name');
+        const confirmDelete = document.getElementById('confirm-delete');
+        const cancelDelete = document.getElementById('cancel-delete');
+        
+        let productToDelete = null;
+        
+        // Renderizar productos
+        function renderProducts() {
+            productsList.innerHTML = '';
+            products.forEach(product => {
+                const div = document.createElement('div');
+                div.className = 'product-item';
+                div.innerHTML = `
+                    <strong>${product.name}</strong> - $${product.price} (${product.category})
+                    <button onclick="confirmDeleteProduct(${product.id})" class="btn btn-danger" style="float: right;">Eliminar</button>
+                `;
+                productsList.appendChild(div);
+            });
+        }
+        
+        // Renderizar papelera
+        function renderTrash() {
+            trashList.innerHTML = '';
+            if (trashProducts.length === 0) {
+                trashList.innerHTML = '<p>Papelera vacía</p>';
+                return;
+            }
+            
+            trashProducts.forEach(product => {
+                const div = document.createElement('div');
+                div.className = 'product-item';
+                div.innerHTML = `
+                    <strong>${product.name}</strong> - $${product.price} (${product.category})
+                    <button onclick="restoreProduct(${product.id})" class="btn btn-secondary" style="float: right;">Recuperar</button>
+                `;
+                trashList.appendChild(div);
+            });
+        }
+        
+        // Confirmar eliminación
+        function confirmDeleteProduct(productId) {
+            console.log('confirmDeleteProduct llamado con ID:', productId);
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                productToDelete = productId;
+                deleteProductName.textContent = product.name;
+                deleteModal.style.display = 'block';
+                console.log('Modal abierto para:', product.name);
+            }
+        }
+        
+        // Eliminar producto
+        function deleteProduct() {
+            console.log('deleteProduct llamado');
+            if (productToDelete) {
+                const index = products.findIndex(p => p.id === productToDelete);
+                if (index !== -1) {
+                    const product = products[index];
+                    console.log('Eliminando producto:', product.name);
+                    
+                    // Mover a la papelera
+                    trashProducts.push(product);
+                    
+                    // Eliminar de la lista principal
+                    products.splice(index, 1);
+                    
+                    // Actualizar vistas
+                    renderProducts();
+                    renderTrash();
+                    
+                    // Cerrar modal
+                    deleteModal.style.display = 'none';
+                    productToDelete = null;
+                    
+                    console.log('Producto eliminado exitosamente');
+                }
+            }
+        }
+        
+        // Recuperar producto
+        function restoreProduct(productId) {
+            const index = trashProducts.findIndex(p => p.id === productId);
+            if (index !== -1) {
+                const product = trashProducts[index];
+                products.push(product);
+                trashProducts.splice(index, 1);
+                renderProducts();
+                renderTrash();
+                console.log('Producto recuperado:', product.name);
+            }
+        }
+        
+        // Event listeners
+        confirmDelete.addEventListener('click', deleteProduct);
+        cancelDelete.addEventListener('click', () => {
+            deleteModal.style.display = 'none';
+            productToDelete = null;
+        });
+        
+        // Inicializar
+        renderProducts();
+        renderTrash();
+    </script>
+</body>
+</html>
