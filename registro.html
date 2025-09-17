@@ -43,8 +43,14 @@
                 <div class="user-profile" id="user-profile" style="display: none;">
                     <span class="user-name" id="user-name"></span>
                     <div class="user-menu">
-                        <a href="mi-cuenta.html" class="user-menu-item">Mi Cuenta</a>
-                        <button id="logout-btn" class="user-menu-item logout-btn">Cerrar Sesión</button>
+                        <a href="mi-cuenta.html" class="user-menu-item">
+                            <i class="fas fa-user"></i>
+                            Mi Cuenta
+                        </a>
+                        <button id="logout-btn" class="user-menu-item logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </button>
                     </div>
                 </div>
                 <button id="open-cart-btn" class="cart-button">
@@ -63,25 +69,53 @@
                     <p>Únete a HuertoHogar y disfruta de productos frescos</p>
                 </div>
                 
-                <form data-auth="register" class="auth-form">
+                <form data-auth="register" class="auth-form" id="register-form">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="nombres">Nombres</label>
+                            <label for="nombres">Nombres *</label>
                             <input type="text" id="nombres" name="nombres" placeholder="Ana María" required>
+                            <div class="field-error" id="nombres-error"></div>
                         </div>
                         <div class="form-group">
-                            <label for="apellidos">Apellidos</label>
+                            <label for="apellidos">Apellidos *</label>
                             <input type="text" id="apellidos" name="apellidos" placeholder="Pérez González" required>
+                            <div class="field-error" id="apellidos-error"></div>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="tu@email.com" required>
+                        <label for="rut">RUT *</label>
+                        <input type="text" id="rut" name="rut" placeholder="12.345.678-9" required>
+                        <div class="field-error" id="rut-error"></div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="password">Contraseña</label>
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" placeholder="tu@email.com" required>
+                        <div class="field-error" id="email-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono">Teléfono *</label>
+                        <div class="phone-field">
+                            <select id="country-code" name="countryCode" class="country-code">
+                                <option value="+56">+56</option>
+                                <option value="+54">+54</option>
+                                <option value="+55">+55</option>
+                            </select>
+                            <input type="tel" id="telefono" name="telefono" placeholder="9 1234 5678" maxlength="11" required>
+                        </div>
+                        <div class="field-error" id="telefono-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="direccion">Dirección de Entrega *</label>
+                        <input type="text" id="direccion" name="direccion" placeholder="Calle, número, comuna" required>
+                        <div class="field-error" id="direccion-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Contraseña *</label>
                         <div class="password-field">
                             <input type="password" id="password" name="password" placeholder="Mín. 8 caracteres" required>
                             <button type="button" class="password-toggle" data-target="password">
@@ -89,35 +123,64 @@
                             </button>
                         </div>
                         <div id="password-strength">
-                            <div class="strength-bar"><span></span></div>
+                            <div class="strength-bar">
+                                <span class="strength-fill"></span>
+                            </div>
                             <div class="strength-text">Ingresa una contraseña</div>
+                            <div class="strength-requirements">
+                                <div class="requirement" id="req-length">
+                                    <i class="fas fa-times"></i>
+                                    <span>Mínimo 8 caracteres</span>
+                                </div>
+                                <div class="requirement" id="req-uppercase">
+                                    <i class="fas fa-times"></i>
+                                    <span>Una mayúscula</span>
+                                </div>
+                                <div class="requirement" id="req-lowercase">
+                                    <i class="fas fa-times"></i>
+                                    <span>Una minúscula</span>
+                                </div>
+                                <div class="requirement" id="req-number">
+                                    <i class="fas fa-times"></i>
+                                    <span>Un número</span>
+                                </div>
+                            </div>
                         </div>
+                        <div class="field-error" id="password-error"></div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="confirm-password">Confirmar Contraseña</label>
+                        <label for="confirm-password">Confirmar Contraseña *</label>
                         <div class="password-field">
                             <input type="password" id="confirm-password" name="confirm-password" placeholder="Repite tu contraseña" required>
                             <button type="button" class="password-toggle" data-target="confirm-password">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
+                        <div class="field-error" id="confirm-password-error"></div>
                     </div>
                     
                     <div class="form-options">
                         <label class="checkbox-label">
                             <input type="checkbox" id="terms" name="terms" required>
                             <span class="checkmark"></span>
-                            Acepto los términos y condiciones
+                            Acepto los <a href="#" class="terms-link">términos y condiciones</a> *
                         </label>
+                        <div class="field-error" id="terms-error"></div>
                         <label class="checkbox-label">
                             <input type="checkbox" id="newsletter" name="newsletter">
                             <span class="checkmark"></span>
-                            Quiero recibir novedades y promociones
+                            Quiero recibir novedades y promociones por email
                         </label>
                     </div>
                     
-                    <button type="submit" class="btn-primary">Crear Cuenta</button>
+                    <button type="submit" class="btn-primary" id="register-submit">
+                        <span class="btn-text">Crear Cuenta</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Creando cuenta...
+                        </span>
+                    </button>
                 </form>
                 
                 <div class="divider">
@@ -187,5 +250,6 @@
     </div>
 
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/auth-enhanced.js"></script>
 </body>
 </html>

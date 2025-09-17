@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Inicializar sesión de usuario ---
+    if (window.authEnhanced && typeof window.authEnhanced.checkExistingSession === 'function') {
+        window.authEnhanced.checkExistingSession();
+    } else {
+        // Si authEnhanced no está disponible aún, usar la función global
+        if (typeof window.updateHeaderInAllPages === 'function') {
+            window.updateHeaderInAllPages();
+        }
+    }
+    
     // --- Sistema de Búsqueda Local con localStorage ---
     const SEARCH_STORAGE_KEY = 'huertohogar_search_history';
     const PRODUCTS_STORAGE_KEY = 'huertohogar_products';
@@ -1603,8 +1613,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Verificar que el contenedor existe antes de proceder
         const offersContainer = document.getElementById('offers-grid');
         if (!offersContainer) {
-            console.log('⏳ Contenedor no encontrado, reintentando en 100ms...');
-            setTimeout(initializeOffers, 100);
+            console.log('⏳ Contenedor no encontrado, no se puede inicializar ofertas');
             return;
         }
         
@@ -2037,6 +2046,9 @@ class AuthModal {
 
     openModal() {
         console.log('🔐 Intentando abrir modal de autenticación...');
+        
+        // Verificar si el usuario está autenticado
+        this.checkAuthStatus();
         
         if (this.isAuthenticated) {
             console.log('✅ Usuario ya autenticado, procediendo al checkout');
@@ -2637,6 +2649,13 @@ class AuthModal {
         }
     }
 
+    checkAuthStatus() {
+        console.log('🔐 Verificando estado de autenticación...');
+        this.checkExistingAuth();
+        console.log('🔐 Estado actual - Autenticado:', this.isAuthenticated, 'Usuario:', this.user);
+        return this.isAuthenticated;
+    }
+
     saveAuth() {
         const authData = {
             user: this.user,
@@ -2718,7 +2737,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // Verificar si el modal existe
             if (window.authModal) {
                 console.log('✅ Modal de autenticación disponible');
-                window.authModal.openModal();
+                // Verificar estado de autenticación antes de abrir modal
+                window.authModal.checkAuthStatus();
+                if (window.authModal.isAuthenticated) {
+                    console.log('✅ Usuario autenticado, yendo al checkout');
+                    window.authModal.proceedToCheckout();
+                } else {
+                    console.log('❌ Usuario no autenticado, mostrando modal');
+                    window.authModal.openModal();
+                }
             } else {
                 console.error('❌ Modal de autenticación no disponible');
                 // Redirigir directamente a checkout si no hay modal
@@ -3499,17 +3526,10 @@ class PasswordToggleManager {
                 e.stopPropagation();
                 
                 const toggle = e.target;
-                const inputId = this.getInputIdFromToggle(toggle);
-                
                 console.log('🎯 Toggle encontrado:', toggle);
-                console.log('🎯 Input ID encontrado:', inputId);
                 
-                if (inputId) {
-                    console.log(`👁️ Toggle clickeado para: ${inputId}`);
-                    this.togglePasswordVisibility(inputId, toggle);
-                } else {
-                    console.error('❌ No se pudo encontrar el input asociado al toggle');
-                }
+                // Usar la función unificada
+                window.togglePasswordVisibility(toggle);
             }
         });
         
@@ -4142,5 +4162,37 @@ window.testForgotPasswordToggle = function() {
         confirmPasswordToggle.click();
     } else {
         console.error('❌ Toggle de confirmar contraseña no encontrado');
+    }
+};
+
+// Función unificada para toggle de contraseñas
+window.togglePasswordVisibility = function(toggleElement) {
+    if (!toggleElement) return;
+    
+    const inputId = toggleElement.getAttribute('data-target') || 
+                   toggleElement.id.replace('-toggle', '');
+    const input = document.getElementById(inputId);
+    
+    if (!input) {
+        console.error(`❌ Input no encontrado para: ${inputId}`);
+        return;
+    }
+    
+    const icon = toggleElement.querySelector('i');
+    if (!icon) {
+        console.error(`❌ Ícono no encontrado en el toggle`);
+        return;
+    }
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        toggleElement.classList.add('active');
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        toggleElement.classList.remove('active');
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
     }
 };

@@ -94,12 +94,14 @@
             // Remover todos los caracteres no numéricos
             const numbers = value.replace(/\D/g, '');
             
-            // Limitar a 8 dígitos (formato chileno)
-            const limitedNumbers = numbers.slice(0, 8);
+            // Limitar a 9 dígitos (formato chileno: 9 + 8 dígitos)
+            const limitedNumbers = numbers.slice(0, 9);
             
-            // Formatear como XXXX XXXX
-            if (limitedNumbers.length >= 4) {
-                return limitedNumbers.slice(0, 4) + ' ' + limitedNumbers.slice(4);
+            // Formatear como 9 XXXX XXXX
+            if (limitedNumbers.length >= 5) {
+                return limitedNumbers.slice(0, 1) + ' ' + limitedNumbers.slice(1, 5) + ' ' + limitedNumbers.slice(5);
+            } else if (limitedNumbers.length >= 1) {
+                return limitedNumbers.slice(0, 1) + ' ' + limitedNumbers.slice(1);
             }
             return limitedNumbers;
         }
@@ -131,7 +133,7 @@
         });
         
         // Configurar el placeholder
-        phoneInput.placeholder = '1234 5678';
+        phoneInput.placeholder = '9 1234 5678';
         
         // Inicializar el valor si ya hay uno
         if (phoneInput.value) {
@@ -1198,8 +1200,8 @@
 
     function isValidPhoneNew(phone) {
         // Validar el formato del input con prefijo fijo
-        // El input ahora solo contiene la parte editable (ej: "4812 3767")
-        // Remover espacios y validar que sean exactamente 8 dígitos
+        // El input ahora contiene la parte editable (ej: "9 1234 5678")
+        // Remover espacios y validar que sean exactamente 9 dígitos
         const cleanPhone = phone.replace(/\s/g, '');
         
         console.log('🔍 Validando teléfono:', {
@@ -1207,12 +1209,12 @@
             clean: cleanPhone,
             length: cleanPhone.length,
             isNumeric: /^\d+$/.test(cleanPhone),
-            isValid: /^\d{8}$/.test(cleanPhone)
+            isValid: /^9\d{8}$/.test(cleanPhone)
         });
         
-        // Debe tener exactamente 8 dígitos (números chilenos)
-        // Acepta cualquier número de 8 dígitos ya que el prefijo +56 9 está fijo
-        return /^\d{8}$/.test(cleanPhone);
+        // Debe tener exactamente 9 dígitos empezando con 9 (números chilenos)
+        // Acepta cualquier número de 9 dígitos que empiece con 9 ya que el prefijo +56 está fijo
+        return /^9\d{8}$/.test(cleanPhone);
     }
 
     function formatPrice(price) {

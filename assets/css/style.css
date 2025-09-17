@@ -327,37 +327,74 @@ body.cart-open { overflow: hidden; }
 }
 
 .user-name {
-    color: var(--color-primary);
+    color: var(--color-text-main);
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     cursor: pointer;
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
-    background: rgba(46, 139, 87, 0.1);
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, rgba(46, 139, 87, 0.08), rgba(46, 139, 87, 0.12));
     border: 1px solid rgba(46, 139, 87, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(46, 139, 87, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.user-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-name::before {
+    content: '\f007';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-size: 0.8rem;
+    opacity: 0.8;
+    width: auto;
+    height: auto;
+}
+
+.user-name::after {
+    content: '▼';
+    font-size: 0.7rem;
+    opacity: 0.6;
+    margin-left: 0.25rem;
+    transition: transform 0.3s ease;
 }
 
 .user-name:hover {
-    background: rgba(46, 139, 87, 0.15);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, rgba(46, 139, 87, 0.15), rgba(46, 139, 87, 0.2));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(46, 139, 87, 0.2);
+    border-color: var(--color-primary);
+}
+
+.user-name:hover::after {
+    transform: rotate(180deg);
 }
 
 .user-menu {
     position: absolute;
-    top: calc(100% + 12px);
+    top: calc(100% + 8px);
     left: 50%;
     transform: translateX(-50%) translateY(-10px);
     background: white;
     border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    padding: 0.75rem 0;
-    min-width: 180px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    padding: 0.5rem 0;
+    min-width: 200px;
     opacity: 0;
     visibility: hidden;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1000;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(46, 139, 87, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .user-menu.show {
@@ -382,32 +419,61 @@ body.cart-open { overflow: hidden; }
     display: flex;
     align-items: center;
     padding: 0.75rem 1.25rem;
-    color: var(--color-text-primary);
+    color: var(--color-text-main);
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    transition: all 0.2s ease;
     border: none;
     background: none;
     width: 100%;
     text-align: left;
     cursor: pointer;
     position: relative;
+    gap: 0.5rem;
+}
+
+.user-menu-item i {
+    font-size: 0.8rem;
+    width: 16px;
+    text-align: center;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.user-menu-item:hover i {
+    opacity: 1;
+}
+
+.logout-btn i {
+    color: #dc3545;
+    opacity: 0.8;
+}
+
+.logout-btn:hover i {
+    opacity: 1;
 }
 
 .user-menu-item:hover {
-    background: rgba(46, 139, 87, 0.1);
+    background: linear-gradient(135deg, rgba(46, 139, 87, 0.08), rgba(46, 139, 87, 0.12));
     color: var(--color-primary);
+    transform: translateX(4px);
+}
+
+.user-menu-item:hover::before {
+    opacity: 1;
 }
 
 .logout-btn {
     border-top: 1px solid rgba(0, 0, 0, 0.08);
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
     color: #dc3545 !important;
+    position: relative;
 }
 
+
 .logout-btn:hover {
-    background: rgba(220, 53, 69, 0.08) !important;
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.08), rgba(220, 53, 69, 0.12));
     color: #dc3545 !important;
 }
 
@@ -5293,6 +5359,13 @@ body.cart-open { overflow: hidden; }
     color: #9ca3af;
 }
 
+/* Altura específica para input de teléfono */
+.form-group input[type="tel"] {
+    height: 55.2px;
+    padding: 0.75rem;
+    font-size: 1rem;
+}
+
 .password-field {
     position: relative;
 }
@@ -5479,6 +5552,181 @@ body.cart-open { overflow: hidden; }
 }
 
 .forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== ESTILOS MEJORADOS PARA AUTENTICACIÓN ===== */
+
+/* Estados de validación mejorados */
+.form-group input.valid {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+.form-group input.error {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+.field-error {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    display: none;
+    font-weight: 500;
+    line-height: 1.4;
+    padding-left: 0.25rem;
+    animation: fadeInError 0.3s ease-in-out;
+}
+
+.field-error:not(:empty) {
+    display: block;
+}
+
+@keyframes fadeInError {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Campo de teléfono */
+.phone-field {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.country-code {
+    width: 80px;
+    flex-shrink: 0;
+    padding: 0.875rem 0.5rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #fafafa;
+    transition: all 0.2s ease;
+}
+
+.country-code:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
+}
+
+.phone-field input {
+    flex: 1;
+}
+
+/* Indicador de fortaleza de contraseña mejorado */
+#password-strength {
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+}
+
+.strength-bar {
+    width: 100%;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.strength-fill {
+    height: 100%;
+    width: 0;
+    transition: width 0.4s ease, background-color 0.3s ease;
+    border-radius: 3px;
+}
+
+.strength-text {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.strength-requirements {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.requirement {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.requirement i {
+    font-size: 0.7rem;
+    width: 12px;
+    text-align: center;
+}
+
+.requirement.valid {
+    color: #10b981;
+}
+
+.requirement.invalid {
+    color: #ef4444;
+}
+
+/* Botón principal mejorado */
+.btn-primary {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-loading {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Mensajes de notificación */
+.auth-message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    display: none;
+}
+
+.auth-message.success {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.auth-message.error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* Enlaces de términos */
+.terms-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.terms-link:hover {
     text-decoration: underline;
 }
 
@@ -5969,6 +6217,15 @@ body.cart-open { overflow: hidden; }
     .login-link {
         padding: 0.35rem 0.7rem;
         font-size: 0.75rem;
+    }
+    
+    .user-name {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .user-menu {
+        min-width: 180px;
     }
     
     .cart-button {
@@ -6551,16 +6808,16 @@ body.cart-open { overflow: hidden; }
     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
+.password-toggle i.fa-eye-slash {
+    display: none;
+}
+
 .password-toggle.active i.fa-eye {
     display: none;
 }
 
 .password-toggle.active i.fa-eye-slash {
     display: inline;
-}
-
-.password-toggle i.fa-eye-slash {
-    display: none;
 }
 
 /* Estilos para el enlace "¿Olvidaste tu contraseña?" */

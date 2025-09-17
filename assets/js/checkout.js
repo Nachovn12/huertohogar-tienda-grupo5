@@ -52,6 +52,13 @@
             nextBtn = document.getElementById('next-step');
             placeOrderBtn = document.getElementById('place-order');
             orderModal = document.getElementById('order-confirmation-modal');
+            
+            console.log('Elementos encontrados:');
+            console.log('- Pasos de checkout:', steps.length);
+            console.log('- Pasos de progreso:', progressSteps.length);
+            console.log('- Botón anterior:', prevBtn ? 'OK' : 'NO ENCONTRADO');
+            console.log('- Botón siguiente:', nextBtn ? 'OK' : 'NO ENCONTRADO');
+            console.log('- Botón finalizar:', placeOrderBtn ? 'OK' : 'NO ENCONTRADO');
 
             console.log('Elementos encontrados:', {
                 steps: steps.length,
@@ -71,6 +78,7 @@
 
             loadCartData();
             setupEventListeners();
+            showStep(1); // Mostrar el primer paso
             updateProgress();
             updateSummary();
             setupDatePicker();
@@ -193,6 +201,7 @@
             if (currentStep < 4) {
                 currentStep++;
                 console.log('Nuevo paso:', currentStep);
+                console.log('Mostrando paso:', currentStep);
                 showStep(currentStep);
                 updateProgress();
                 updateNavigationButtons();
@@ -217,8 +226,24 @@
     }
 
     function showStep(stepNumber) {
+        console.log('🎯 showStep llamado con paso:', stepNumber);
+        console.log('🎯 Total de pasos encontrados:', steps.length);
+        
+        if (!steps || steps.length === 0) {
+            console.error('❌ ERROR: No se encontraron pasos de checkout');
+            return;
+        }
+        
         steps.forEach((step, index) => {
-            step.classList.toggle('active', index + 1 === stepNumber);
+            const stepIndex = index + 1;
+            const isActive = stepIndex === stepNumber;
+            step.classList.toggle('active', isActive);
+            console.log(`🎯 Paso ${stepIndex}: ${isActive ? '✅ ACTIVO' : '❌ inactivo'}`);
+            
+            // Verificar si el paso tiene contenido
+            if (isActive) {
+                console.log('🎯 Contenido del paso activo:', step.innerHTML.substring(0, 100) + '...');
+            }
         });
     }
 
@@ -236,31 +261,42 @@
     }
 
     function updateNavigationButtons() {
+        // Mostrar/ocultar botón Anterior
         prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
         
-        if (currentStep === 4) {
-            nextBtn.style.display = 'none';
-            placeOrderBtn.style.display = 'block';
-        } else {
-            nextBtn.style.display = 'block';
+        // El botón Siguiente siempre está visible
+        nextBtn.style.display = 'block';
+        
+        // El botón Finalizar Pedido permanece oculto
+        if (placeOrderBtn) {
             placeOrderBtn.style.display = 'none';
         }
     }
 
     // --- Validación de Pasos ---
     function validateCurrentStep() {
+        console.log('🔍 Validando paso actual:', currentStep);
+        
+        let result = false;
         switch (currentStep) {
             case 1:
-                return validateCustomerInfo();
+                result = validateCustomerInfo();
+                break;
             case 2:
-                return validateDeliveryInfo();
+                result = validateDeliveryInfo();
+                break;
             case 3:
-                return validatePaymentInfo();
+                result = validatePaymentInfo();
+                break;
             case 4:
-                return validateConfirmation();
+                result = validateConfirmation();
+                break;
             default:
-                return true;
+                result = true;
         }
+        
+        console.log('🔍 Resultado de validación del paso', currentStep, ':', result ? '✅ EXITOSA' : '❌ FALLÓ');
+        return result;
     }
 
     function validateCustomerInfo() {
@@ -309,7 +345,7 @@
         const phone = document.getElementById('phone');
         if (phone && phone.value && !isValidPhone(phone.value)) {
             console.log('Teléfono inválido:', phone.value);
-            showFieldError(phone, 'Ingresa un teléfono válido (+56 9 1234 5678)');
+            showFieldError(phone, 'Ingresa un teléfono válido (9 1234 5678)');
             isValid = false;
             hasErrors = true;
         }
@@ -323,8 +359,13 @@
     }
 
     function validateDeliveryInfo() {
+        console.log('Validando información de entrega...');
+        
         const deliveryMethod = document.querySelector('input[name="delivery"]:checked');
+        console.log('Método de entrega seleccionado:', deliveryMethod ? deliveryMethod.value : 'NINGUNO');
+        
         if (!deliveryMethod) {
+            console.log('ERROR: No hay método de entrega seleccionado');
             showNotification('Selecciona un método de entrega', 'error');
             return false;
         }
@@ -333,17 +374,23 @@
             const deliveryDate = document.getElementById('delivery-date');
             const timeSlot = document.querySelector('input[name="timeSlot"]:checked');
             
+            console.log('Fecha de entrega:', deliveryDate ? deliveryDate.value : 'NO ENCONTRADA');
+            console.log('Horario seleccionado:', timeSlot ? timeSlot.value : 'NINGUNO');
+            
             if (!deliveryDate || !deliveryDate.value) {
+                console.log('ERROR: No hay fecha de entrega');
                 showFieldError(deliveryDate, 'Selecciona una fecha de entrega');
                 return false;
             }
             
             if (!timeSlot) {
+                console.log('ERROR: No hay horario seleccionado');
                 showNotification('Selecciona un horario de entrega', 'error');
                 return false;
             }
         }
 
+        console.log('✅ Validación de entrega exitosa');
         return true;
     }
 
@@ -468,6 +515,11 @@
             const maxDate = new Date();
             maxDate.setDate(maxDate.getDate() + 30);
             dateInput.max = maxDate.toISOString().split('T')[0];
+            
+            // Establecer fecha por defecto como mañana
+            if (!dateInput.value) {
+                dateInput.value = tomorrow.toISOString().split('T')[0];
+            }
         }
     }
 
@@ -687,7 +739,12 @@
         console.log('📱 Enviando SMS de confirmación...');
         
         // Aquí se integraría con servicios reales de email/SMS
-        showNotification('Notificaciones enviadas por email y SMS', 'success');
+        showNotification('¡Gracias por elegir HuertoHogar! Te hemos enviado la confirmación por email y SMS', 'success');
+        
+        // Mostrar mensaje adicional de HuertoHogar
+        setTimeout(() => {
+            showNotification('🌱 Tus productos frescos del campo están siendo preparados con amor', 'info');
+        }, 2000);
     }
 
     // --- Configuración del Modal ---
@@ -713,7 +770,9 @@
     }
 
     function isValidPhone(phone) {
-        return /^\+56\s?9\d{8}$/.test(phone) || /^\+56\s?[2-9]\d{7,8}$/.test(phone);
+        // Validar formato chileno: +56 9 1234 5678 (9 dígitos total)
+        const cleanPhone = phone.replace(/\s/g, '');
+        return /^\+569\d{8}$/.test(cleanPhone) || /^9\d{8}$/.test(cleanPhone);
     }
 
     function isValidCardNumber(number) {
@@ -784,33 +843,40 @@
     }
 
     function showNotification(message, type = 'info') {
-        // Crear notificación temporal
+        // Crear notificación temporal mejorada
         const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.textContent = message;
+        notification.className = `notification notification-${type} status-message`;
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas ${getNotificationIcon(type)}" style="font-size: 1.2rem;"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
         notification.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
             padding: 1rem 1.5rem;
-            border-radius: 8px;
+            border-radius: 12px;
             color: white;
             font-weight: 600;
             z-index: 10000;
             transform: translateX(100%);
-            transition: transform 0.3s ease;
-            max-width: 300px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 350px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            font-family: 'Montserrat', sans-serif;
         `;
         
         const colors = {
-            success: '#10b981',
-            error: '#ef4444',
-            warning: '#f59e0b',
-            info: '#3b82f6'
+            success: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+            error: 'linear-gradient(135deg, #ef4444 0%, #f87171 100%)',
+            warning: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
+            info: 'linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)'
         };
         
-        notification.style.backgroundColor = colors[type] || colors.info;
+        notification.style.background = colors[type] || colors.info;
         document.body.appendChild(notification);
         
         // Animar entrada
@@ -818,15 +884,25 @@
             notification.style.transform = 'translateX(0)';
         }, 100);
         
-        // Remover después de 3 segundos
+        // Remover después de 4 segundos
         setTimeout(() => {
             notification.style.transform = 'translateX(100%)';
             setTimeout(() => {
                 if (notification.parentNode) {
                     notification.parentNode.removeChild(notification);
                 }
-            }, 300);
-        }, 3000);
+            }, 400);
+        }, 4000);
+    }
+
+    function getNotificationIcon(type) {
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            warning: 'fa-exclamation-triangle',
+            info: 'fa-info-circle'
+        };
+        return icons[type] || icons.info;
     }
 
     function showLoading(show) {
@@ -838,20 +914,22 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, rgba(46, 139, 87, 0.9) 0%, rgba(0, 0, 0, 0.8) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10000;
             color: white;
             font-size: 1.2rem;
+            backdrop-filter: blur(5px);
         `;
         
         if (show) {
             loadingOverlay.innerHTML = `
-                <div style="text-align: center;">
-                    <div style="width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #2E8B57; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
-                    <p>Procesando pedido...</p>
+                <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 3rem; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                    <div class="loading-spinner" style="width: 60px; height: 60px; border: 4px solid rgba(255, 255, 255, 0.3); border-top: 4px solid #FFD700; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1.5rem;"></div>
+                    <h3 style="margin: 0 0 0.5rem 0; font-family: 'Playfair Display', serif; color: #FFD700;">Procesando tu pedido</h3>
+                    <p style="margin: 0; opacity: 0.9; font-family: 'Montserrat', sans-serif;">Preparando tus productos frescos...</p>
                 </div>
             `;
             document.body.appendChild(loadingOverlay);
