@@ -865,7 +865,8 @@ class AdminPanel {
                 <div class="trash-product-category">${product.category}</div>
             </td>
             <td>${product.category}</td>
-            <td class="trash-product-price">$${product.price.toLocaleString('es-CL')}</td>
+            <td class="product-price">$${product.price.toLocaleString('es-CL')}</td>
+            <td class="product-stock">${product.stock} ${product.unit}</td>
             <td class="trash-deleted-date">${deletedDate}</td>
             <td>
                 <div class="trash-actions-cell">

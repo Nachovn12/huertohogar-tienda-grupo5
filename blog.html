@@ -33,9 +33,6 @@
                 <a href="productos.html">Productos</a>
                 <a href="nosotros.html">Nosotros</a>
                 <a href="blog.html">Blog</a>
-                <a href="admin-panel.html" class="admin-link">
-                    <i class="fas fa-cog"></i> Admin
-                </a>
             </nav>
             <div class="header-actions">
                  <div class="search-bar">
@@ -46,8 +43,18 @@
                 <div class="user-profile" id="user-profile" style="display: none;">
                     <span class="user-name" id="user-name"></span>
                     <div class="user-menu">
-                        <a href="mi-cuenta.html" class="user-menu-item">Mi Cuenta</a>
-                        <button id="logout-btn" class="user-menu-item logout-btn">Cerrar Sesión</button>
+                        <a href="mi-cuenta.html" class="user-menu-item" id="mi-cuenta-link">
+                            <i class="fas fa-user"></i>
+                            Mi Cuenta
+                        </a>
+                        <a href="admin-panel.html" class="user-menu-item" id="admin-panel-link" style="display: none;">
+                            <i class="fas fa-cog"></i>
+                            Panel Admin
+                        </a>
+                        <button id="logout-btn" class="user-menu-item logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </button>
                     </div>
                 </div>
                 <button id="open-cart-btn" class="cart-button">
@@ -140,7 +147,79 @@
         </div>
     </div>
 
+    <!-- Script de protección de sesión de administrador - DEBE EJECUTARSE PRIMERO -->
+    <script src="assets/js/admin-session-protection.js"></script>
+    
     <script src="assets/js/script.js"></script>
     <script src="assets/js/auth-enhanced.js"></script>
+    
+    <script>
+        // Verificar sesión de administrador al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔍 Verificando sesión de administrador en blog.html...');
+            
+            const isAdmin = localStorage.getItem('huertohogar_is_admin') === 'true';
+            const userRole = localStorage.getItem('huertohogar_user_role');
+            
+            if (isAdmin && userRole === 'admin') {
+                console.log('✅ Sesión de administrador detectada, actualizando header...');
+                
+                // Ocultar enlace "Ingresar"
+                const loginLink = document.getElementById('user-login-link');
+                if (loginLink) {
+                    loginLink.style.display = 'none';
+                }
+                
+                // Mostrar perfil de usuario
+                const userProfile = document.getElementById('user-profile');
+                if (userProfile) {
+                    userProfile.style.display = 'block';
+                }
+                
+                // Actualizar nombre de usuario
+                const userName = document.getElementById('user-name');
+                if (userName) {
+                    userName.textContent = 'Administrador';
+                }
+                
+                // Mostrar enlace al panel de administración
+                const adminPanelLink = document.getElementById('admin-panel-link');
+                if (adminPanelLink) {
+                    adminPanelLink.style.display = 'block';
+                }
+                
+                // Ocultar enlace "Mi Cuenta" para administradores
+                const miCuentaLink = document.getElementById('mi-cuenta-link');
+                if (miCuentaLink) {
+                    miCuentaLink.style.display = 'none';
+                }
+                
+                // Configurar logout
+                const logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', function() {
+                        console.log('🚪 Cerrando sesión de administrador...');
+                        
+                        // Usar función de limpieza autorizada si existe
+                        if (typeof window.clearAdminSession === 'function') {
+                            window.clearAdminSession();
+                        } else {
+                            // Fallback: limpiar manualmente
+                            localStorage.removeItem('huertohogar_is_admin');
+                            localStorage.removeItem('huertohogar_user_role');
+                            localStorage.removeItem('huertoHogarAuth');
+                        }
+                        
+                        // Recargar la página para actualizar el header
+                        window.location.reload();
+                    });
+                }
+                
+                console.log('✅ Header actualizado para administrador');
+            } else {
+                console.log('ℹ️ No hay sesión de administrador activa');
+            }
+        });
+    </script>
 </body>
 </html>

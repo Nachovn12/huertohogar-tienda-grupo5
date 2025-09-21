@@ -18,20 +18,36 @@
 /* === LAYOUT PRINCIPAL === */
 .admin-main {
     min-height: calc(100vh - 200px);
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     background: var(--color-background);
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 /* === HEADER DEL PANEL === */
 .admin-header {
-    background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 30%, #2e7d32 70%, #388e3c 100%);
     color: white;
-    padding: 3rem 0;
-    margin-bottom: 2rem;
+    padding: 3.5rem 0;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 12px 40px rgba(46, 125, 50, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.2) 0%, transparent 30%, rgba(255, 255, 255, 0.1) 70%, rgba(255, 255, 255, 0.15) 100%);
+    pointer-events: none;
 }
 
 .admin-header-content {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 2rem;
     display: flex;
@@ -39,6 +55,8 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 2rem;
+    position: relative;
+    z-index: 1;
 }
 
 .admin-title-section {
@@ -53,23 +71,30 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: -0.5px;
 }
 
 .admin-title i {
-    font-size: 2rem;
-    color: var(--admin-accent);
+    font-size: 2.2rem;
+    color: #ffd700;
+    text-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
 }
 
 .admin-subtitle {
-    font-size: 1.1rem;
-    opacity: 0.9;
+    font-size: 1.2rem;
+    opacity: 0.95;
     margin: 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.3px;
 }
 
 .admin-actions {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .admin-actions .btn {
@@ -124,25 +149,25 @@
 
 /* === ESTADÍSTICAS === */
 .admin-stats {
-    max-width: 1200px;
-    margin: 0 auto 2rem auto;
+    max-width: 1400px;
+    margin: 0 auto 2.5rem auto;
     padding: 0 2rem;
 }
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
 }
 
 .stat-card {
     background: white;
-    padding: 2rem;
-    border-radius: 12px;
+    padding: 1.75rem;
+    border-radius: 10px;
     box-shadow: var(--admin-shadow);
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.25rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -193,25 +218,25 @@
 
 /* === FILTROS === */
 .admin-filters {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto 2rem auto;
     padding: 0 2rem;
 }
 
 .filters-container {
     background: white;
-    padding: 2rem;
-    border-radius: 12px;
+    padding: 1.75rem;
+    border-radius: 10px;
     box-shadow: var(--admin-shadow);
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     align-items: center;
     flex-wrap: wrap;
 }
 
 .search-section {
     flex: 1;
-    min-width: 300px;
+    min-width: 280px;
 }
 
 .search-input-container {
@@ -284,20 +309,20 @@
 
 /* === PRODUCTOS === */
 .admin-products {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 2rem;
 }
 
 .products-container {
     background: white;
-    border-radius: 12px;
+    border-radius: 10px;
     box-shadow: var(--admin-shadow);
     overflow: hidden;
 }
 
 .products-header {
-    padding: 2rem;
+    padding: 1.75rem;
     border-bottom: 1px solid var(--admin-border);
     display: flex;
     justify-content: space-between;
@@ -328,17 +353,32 @@
 
 .products-table th {
     background: var(--admin-light);
-    padding: 1rem;
+    padding: 2rem 1.5rem;
     text-align: left;
     font-weight: 600;
     color: var(--admin-dark);
     border-bottom: 2px solid var(--admin-border);
+    font-size: 0.9rem;
+}
+
+/* Centrar específicamente los headers de precio y stock */
+.products-table th:nth-child(4),
+.products-table th:nth-child(5) {
+    text-align: center;
 }
 
 .products-table td {
-    padding: 1rem;
-    border-bottom: 1px solid var(--admin-border);
+    padding: 2rem 1.5rem;
     vertical-align: middle;
+    font-size: 0.9rem;
+}
+
+/* Centrar específicamente las columnas de precio y stock */
+.products-table td:nth-child(4),
+.products-table td:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+    padding: 2rem 1.5rem;
 }
 
 .products-table tbody tr:hover {
@@ -368,15 +408,26 @@
     font-weight: 600;
     color: var(--admin-primary);
     font-size: 1.1rem;
+    text-align: center !important;
+    line-height: 1.4;
+    display: block !important;
+    width: 100% !important;
+    position: relative;
+    top: 65px;
 }
 
 .product-stock {
     font-weight: 500;
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.4;
 }
 
 .product-status {
     display: inline-block;
-    padding: 0.25rem 0.75rem;
+    padding: 0.5rem 1rem;
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 500;
@@ -395,7 +446,7 @@
 
 .product-featured {
     display: inline-block;
-    padding: 0.25rem 0.75rem;
+    padding: 0.5rem 1rem;
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 500;
@@ -414,7 +465,8 @@
 
 .product-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
+    justify-content: center;
 }
 
 .btn-action {
@@ -857,14 +909,46 @@
 }
 
 /* === RESPONSIVE === */
+@media (max-width: 1200px) {
+    .admin-main {
+        padding: 1rem 0;
+    }
+    
+    .admin-header-content,
+    .admin-stats,
+    .admin-filters,
+    .admin-products {
+        padding: 0 1rem;
+    }
+}
+
 @media (max-width: 768px) {
+    .admin-header {
+        padding: 2rem 0;
+    }
+    
     .admin-header-content {
         flex-direction: column;
         text-align: center;
+        gap: 1rem;
     }
     
     .admin-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
+    }
+    
+    .admin-actions {
+        justify-content: center;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1.5rem;
+        gap: 1rem;
     }
     
     .form-row {
@@ -874,6 +958,11 @@
     .filters-container {
         flex-direction: column;
         align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .search-section {
+        min-width: auto;
     }
     
     .filter-section {
@@ -883,6 +972,7 @@
     .products-header {
         flex-direction: column;
         align-items: stretch;
+        gap: 1rem;
     }
     
     .products-actions {
@@ -890,7 +980,7 @@
     }
     
     .products-table {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
     
     .products-table th,
@@ -1066,6 +1156,7 @@
 .trash-product-price {
     font-weight: 600;
     color: var(--admin-primary);
+    text-align: center;
 }
 
 .trash-deleted-date {

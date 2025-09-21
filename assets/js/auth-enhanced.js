@@ -827,11 +827,27 @@ class AuthEnhanced {
     logout() {
         console.log('🚪 Ejecutando logout...');
         
-        // Limpiar todas las sesiones relacionadas
-        localStorage.removeItem('huertoHogarAuth');
-        sessionStorage.removeItem('huertoHogarAuth');
-        localStorage.removeItem('huerto_session');
-        sessionStorage.removeItem('huerto_session');
+        // Verificar si es una sesión de administrador
+        const isAdmin = localStorage.getItem('huertohogar_is_admin') === 'true';
+        const userRole = localStorage.getItem('huertohogar_user_role');
+        
+        if (isAdmin && userRole === 'admin') {
+            console.log('🛡️ Sesión de administrador detectada, usando limpieza autorizada...');
+            // Usar la función de limpieza autorizada si existe
+            if (typeof window.clearAdminSession === 'function') {
+                window.clearAdminSession();
+            } else {
+                // Fallback: limpiar solo las claves no protegidas
+                localStorage.removeItem('huerto_session');
+                sessionStorage.removeItem('huerto_session');
+            }
+        } else {
+            // Limpiar todas las sesiones relacionadas para usuarios normales
+            localStorage.removeItem('huertoHogarAuth');
+            sessionStorage.removeItem('huertoHogarAuth');
+            localStorage.removeItem('huerto_session');
+            sessionStorage.removeItem('huerto_session');
+        }
         
         console.log('✅ Sesiones limpiadas');
         

@@ -51,18 +51,15 @@
                 <a href="productos.html">Productos</a>
                 <a href="nosotros.html">Nosotros</a>
                 <a href="blog.html">Blog</a>
-                <a href="admin-panel.html" class="admin-link">
-                    <i class="fas fa-cog"></i> Admin
-                </a>
             </nav>
             <div class="header-actions">
-                <a href="login.html" class="login-link" id="user-login-link">Ingresar</a>
-                <div class="user-profile" id="user-profile" style="display: none;">
-                    <span class="user-name" id="user-name"></span>
+                <a href="login.html" class="login-link" id="user-login-link" style="display: none;">Ingresar</a>
+                <div class="user-profile" id="user-profile">
+                    <span class="user-name" id="user-name">Administrador</span>
                     <div class="user-menu">
-                        <a href="mi-cuenta.html" class="user-menu-item">
-                            <i class="fas fa-user"></i>
-                            Mi Cuenta
+                        <a href="admin-panel.html" class="user-menu-item">
+                            <i class="fas fa-cog"></i>
+                            Panel Admin
                         </a>
                         <button id="logout-btn" class="user-menu-item logout-btn">
                             <i class="fas fa-sign-out-alt"></i>
@@ -74,69 +71,15 @@
         </div>
     </header>
 
-    <!-- Modal de Login de Administrador -->
-    <div id="admin-login-modal" class="modal-overlay" style="display: flex;">
-        <div class="modal-container admin-login-container">
-            <div class="admin-login-header">
-                <div class="admin-login-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h2>Acceso de Administrador</h2>
-                <p>Ingresa tus credenciales para acceder al panel de administración</p>
-            </div>
-            <div class="admin-login-body">
-                <form id="admin-login-form" class="admin-login-form">
-                    <div class="form-group">
-                        <label for="admin-username">Usuario</label>
-                        <div class="input-container">
-                            <input type="text" id="admin-username" name="username" placeholder="Ingresa tu usuario" required>
-                            <i class="fas fa-user input-icon"></i>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="admin-password">Contraseña</label>
-                        <div class="input-container">
-                            <input type="password" id="admin-password" name="password" placeholder="Ingresa tu contraseña" required>
-                            <i class="fas fa-lock input-icon"></i>
-                            <button type="button" class="password-toggle" id="admin-password-toggle">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="form-group checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="admin-remember" name="remember">
-                            <span class="checkmark"></span>
-                            Recordar sesión
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-login" id="admin-login-submit">
-                        <span class="btn-text">
-                            <i class="fas fa-sign-in-alt"></i>
-                            Iniciar Sesión
-                        </span>
-                        <span class="btn-loading" style="display: none;">
-                            <i class="fas fa-spinner fa-spin"></i>
-                            Verificando...
-                        </span>
-                    </button>
-                </form>
-                <div class="admin-login-help">
-                    <p><strong>Credenciales de prueba:</strong></p>
-                    <p>Usuario: <code>admin</code></p>
-                    <p>Contraseña: <code>admin</code></p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Modal de Login de Administrador ELIMINADO - Ahora se usa login.html -->
 
-    <main class="admin-main" id="admin-main-content" style="display: none;">
+    <main class="admin-main" id="admin-main-content">
         <!-- Header del Panel de Administración -->
         <section class="admin-header">
             <div class="admin-header-content">
                 <div class="admin-title-section">
                     <h1 class="admin-title">
-                        <i class="fas fa-cog"></i>
+                        <i class="fas fa-seedling"></i>
                         Panel de Administración
                     </h1>
                     <p class="admin-subtitle">Gestiona los productos de HuertoHogar</p>
@@ -484,8 +427,51 @@
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
 
+    <!-- Script de protección de sesión de administrador - DEBE EJECUTARSE PRIMERO -->
+    <script src="assets/js/admin-session-protection.js"></script>
+    
     <script src="assets/js/script.js"></script>
     <script src="assets/js/auth-enhanced.js"></script>
     <script src="assets/js/admin-panel.js"></script>
+    
+    <script>
+        // Verificar permisos de administrador al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔍 Verificando permisos de administrador...');
+            
+            const isAdmin = localStorage.getItem('huertohogar_is_admin') === 'true';
+            const userRole = localStorage.getItem('huertohogar_user_role');
+            
+            if (!isAdmin || userRole !== 'admin') {
+                console.log('❌ Sin permisos de administrador, redirigiendo al login...');
+                alert('Acceso denegado. Necesitas permisos de administrador.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            console.log('✅ Permisos de administrador verificados');
+            
+                // Configurar logout desde el header
+                const logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', function() {
+                        console.log('🚪 Cerrando sesión de administrador...');
+                        
+                        // Usar función de limpieza autorizada si existe
+                        if (typeof window.clearAdminSession === 'function') {
+                            window.clearAdminSession();
+                        } else {
+                            // Fallback: limpiar manualmente
+                            localStorage.removeItem('huertohogar_is_admin');
+                            localStorage.removeItem('huertohogar_user_role');
+                            localStorage.removeItem('huertoHogarAuth');
+                        }
+                        
+                        // Redirigir al login
+                        window.location.href = 'login.html';
+                    });
+                }
+        });
+    </script>
 </body>
 </html>

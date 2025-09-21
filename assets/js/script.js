@@ -2740,8 +2740,17 @@ class AuthModal {
     logout() {
         this.isAuthenticated = false;
         this.user = null;
-        localStorage.removeItem('huertoHogarAuth');
-        console.log('🔐 Usuario deslogueado');
+        
+        // Verificar si es una sesión de administrador antes de limpiar
+        const isAdmin = localStorage.getItem('huertohogar_is_admin') === 'true';
+        const userRole = localStorage.getItem('huertohogar_user_role');
+        
+        if (isAdmin && userRole === 'admin') {
+            console.log('🛡️ Sesión de administrador detectada, no limpiando localStorage');
+        } else {
+            localStorage.removeItem('huertoHogarAuth');
+            console.log('🔐 Usuario deslogueado');
+        }
     }
 }
 

@@ -20,6 +20,185 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/admin-panel.css">
+    <style>
+        .user-type-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+        
+        .user-type-select:focus {
+            outline: none;
+            border-color: #2E8B57;
+        }
+        
+        .admin-help {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #2E8B57;
+            text-align: center;
+        }
+        
+        .admin-help p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .admin-help code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #2E8B57;
+            font-weight: bold;
+        }
+        
+        .divider {
+            margin: 20px 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+        
+        .divider span {
+            background: white;
+            padding: 0 20px;
+            color: #666;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        
+        .social-auth {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            width: 100%;
+            align-items: stretch;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-align: center;
+            min-height: 44px;
+        }
+        
+        .social-btn i {
+            font-size: 16px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .social-btn:hover {
+            border-color: #2E8B57;
+            background: #f8f9fa;
+            transform: translateY(-1px);
+        }
+        
+        .google-btn:hover {
+            border-color: #db4437;
+            color: #db4437;
+        }
+        
+        .facebook-btn:hover {
+            border-color: #4267B2;
+            color: #4267B2;
+        }
+        
+        .admin-panel-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #f8f9fa;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .admin-login-container {
+            max-width: 400px;
+            margin: 5% auto;
+        }
+        
+        .admin-login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .admin-login-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2E8B57, #4CAF50);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .admin-login-help {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #2E8B57;
+        }
+        
+        .admin-login-help p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .admin-login-help code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #2E8B57;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -69,11 +248,25 @@
                     <p>Accede a tu cuenta de HuertoHogar</p>
                 </div>
                 
-                <form data-auth="login" class="auth-form" id="login-form">
+                <form class="auth-form" id="login-form" novalidate data-custom-handler="true" data-skip-auth="true">
                     <div class="form-group">
+                        <label for="user-type">Tipo de Acceso</label>
+                        <select id="user-type" name="userType" class="user-type-select">
+                            <option value="user">Usuario Normal</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="email-group">
                         <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" placeholder="tu@email.com" required>
+                        <input type="email" id="email" name="email" placeholder="tu@email.com">
                         <div class="field-error" id="email-error"></div>
+                    </div>
+                    
+                    <div class="form-group" id="username-group" style="display: none;">
+                        <label for="username">Usuario *</label>
+                        <input type="text" id="username" name="username" placeholder="admin">
+                        <div class="field-error" id="username-error"></div>
                     </div>
                     
                     <div class="form-group">
@@ -84,7 +277,7 @@
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <a href="recuperar.html" class="forgot-link">¿Olvidaste tu contraseña?</a>
+                        <a href="recuperar.html" class="forgot-link" id="forgot-link">¿Olvidaste tu contraseña?</a>
                         <div class="field-error" id="password-error"></div>
                     </div>
                     
@@ -103,7 +296,6 @@
                             Iniciando sesión...
                         </span>
                     </button>
-                </form>
                 
                 <div class="divider">
                     <span>o continúa con</span>
@@ -119,13 +311,164 @@
                         Facebook
                     </button>
                 </div>
+                </form>
                 
                 <div class="auth-footer">
                     <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
+            <div class="admin-help" id="admin-help" style="display: none;">
+                <p><strong>Credenciales de administrador:</strong></p>
+                <p>Usuario: <code>admin</code> | Contraseña: <code>admin</code></p>
+            </div>
                 </div>
             </div>
         </div>
     </main>
+
+
+    <!-- Panel de Administración (oculto inicialmente) -->
+    <div id="admin-panel-container" class="admin-panel-container" style="display: none;">
+        <!-- Header del Panel de Administración -->
+        <section class="admin-header">
+            <div class="admin-header-content">
+                <div class="admin-title-section">
+                    <h1 class="admin-title">
+                        <i class="fas fa-cog"></i>
+                        Panel de Administración
+                    </h1>
+                    <p class="admin-subtitle">Gestiona los productos de HuertoHogar</p>
+                </div>
+                <div class="admin-actions">
+                    <button id="add-product-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Agregar Producto
+                    </button>
+                    <button id="refresh-products-btn" class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i>
+                        Actualizar
+                    </button>
+                    <button id="admin-logout-btn" class="btn btn-outline">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estadísticas del Panel -->
+        <section class="admin-stats">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="total-products">0</h3>
+                        <p>Total Productos</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="total-categories">0</h3>
+                        <p>Categorías</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="avg-price">$0</h3>
+                        <p>Precio Promedio</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="featured-products">0</h3>
+                        <p>Productos Destacados</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filtros y Búsqueda -->
+        <section class="admin-filters">
+            <div class="filters-container">
+                <div class="search-section">
+                    <div class="search-input-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="admin-search" placeholder="Buscar productos...">
+                    </div>
+                </div>
+                <div class="filter-section">
+                    <select id="category-filter" class="filter-select">
+                        <option value="">Todas las categorías</option>
+                    </select>
+                    <select id="status-filter" class="filter-select">
+                        <option value="">Todos los estados</option>
+                        <option value="active">Activos</option>
+                        <option value="inactive">Inactivos</option>
+                    </select>
+                    <button id="clear-filters" class="btn btn-outline">
+                        <i class="fas fa-times"></i>
+                        Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabla de Productos -->
+        <section class="admin-products">
+            <div class="products-container">
+                <div class="products-header">
+                    <h2>Lista de Productos</h2>
+                <div class="products-actions">
+                    <button id="view-trash-btn" class="btn btn-outline">
+                        <i class="fas fa-trash"></i>
+                        Papelera (<span id="trash-count">0</span>)
+                    </button>
+                    <button id="export-products" class="btn btn-outline">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </button>
+                    <button id="import-products" class="btn btn-outline">
+                        <i class="fas fa-upload"></i>
+                        Importar
+                    </button>
+                </div>
+                </div>
+                
+                <div class="products-table-container">
+                    <table class="products-table" id="products-table">
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                                <th>Destacado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-tbody">
+                            <!-- Los productos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="products-pagination" id="products-pagination">
+                    <!-- La paginación se generará dinámicamente -->
+                </div>
+            </div>
+        </section>
+    </div>
 
     <footer class="main-footer">
         <div class="footer-content">
@@ -154,6 +497,189 @@
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
     
+    <!-- Modales del Panel de Administración -->
+    <!-- Modal para Agregar/Editar Producto -->
+    <div id="product-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="modal-title">Agregar Producto</h2>
+                <button class="close-btn" id="close-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form" class="product-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="product-name">Nombre del Producto *</label>
+                            <input type="text" id="product-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-category">Categoría *</label>
+                            <select id="product-category" name="category" required>
+                                <option value="">Seleccionar categoría</option>
+                                <option value="Frutas Frescas">Frutas Frescas</option>
+                                <option value="Verduras Orgánicas">Verduras Orgánicas</option>
+                                <option value="Productos Orgánicos">Productos Orgánicos</option>
+                                <option value="Productos Lácteos">Productos Lácteos</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="product-price">Precio (CLP) *</label>
+                            <input type="number" id="product-price" name="price" min="0" step="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-stock">Stock *</label>
+                            <input type="number" id="product-stock" name="stock" min="0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="product-image">URL de la Imagen *</label>
+                            <input type="url" id="product-image" name="image" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-unit">Unidad de Medida</label>
+                            <select id="product-unit" name="unit">
+                                <option value="kg">Kilogramo (kg)</option>
+                                <option value="g">Gramo (g)</option>
+                                <option value="unidad">Unidad</option>
+                                <option value="litro">Litro (L)</option>
+                                <option value="ml">Mililitro (ml)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-description">Descripción</label>
+                        <textarea id="product-description" name="description" rows="4" placeholder="Describe las características del producto..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-features">Características (separadas por comas)</label>
+                        <input type="text" id="product-features" name="features" placeholder="Ej: Orgánico, Fresco, De temporada">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="product-featured" name="featured">
+                                <span class="checkmark"></span>
+                                Producto destacado
+                            </label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="product-active" name="active" checked>
+                                <span class="checkmark"></span>
+                                Producto activo
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancel-product">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="save-product">
+                            <span class="btn-text">Guardar Producto</span>
+                            <span class="btn-loading" style="display: none;">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                Guardando...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Eliminación -->
+    <div id="delete-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-container delete-modal">
+            <div class="modal-header">
+                <h2>Confirmar Eliminación</h2>
+                <button class="close-btn" id="close-delete-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="delete-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>¿Estás seguro de que deseas eliminar este producto?</p>
+                    <p class="delete-product-name" id="delete-product-name"></p>
+                    <p class="delete-warning-text">Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-delete">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete">
+                        <i class="fas fa-trash"></i>
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Papelera -->
+    <div id="trash-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-container trash-modal">
+            <div class="modal-header">
+                <h2>
+                    <i class="fas fa-trash"></i>
+                    Papelera de Productos
+                </h2>
+                <button class="close-btn" id="close-trash-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="trash-info">
+                    <p>Productos eliminados recientemente. Puedes recuperarlos o eliminarlos permanentemente.</p>
+                </div>
+                
+                <div class="trash-actions">
+                    <button id="restore-all-btn" class="btn btn-success" disabled>
+                        <i class="fas fa-undo"></i>
+                        Recuperar Todo
+                    </button>
+                    <button id="delete-all-btn" class="btn btn-danger" disabled>
+                        <i class="fas fa-trash"></i>
+                        Eliminar Todo Permanentemente
+                    </button>
+                </div>
+                
+                <div class="trash-table-container">
+                    <table class="trash-table" id="trash-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="select-all-trash">
+                                </th>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Eliminado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trash-tbody">
+                            <!-- Los productos eliminados se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="trash-empty" id="trash-empty" style="display: none;">
+                    <div class="empty-state">
+                        <i class="fas fa-trash-alt"></i>
+                        <h3>Papelera Vacía</h3>
+                        <p>No hay productos eliminados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input oculto para importar archivos -->
+    <input type="file" id="import-file-input" accept=".json" style="display: none;">
+    
     <div id="cart-overlay" class="hidden"></div>
     <div id="cart-offcanvas" class="hidden">
         <div class="cart-header">
@@ -172,32 +698,242 @@
     </div>
     
     <script src="assets/js/script.js"></script>
-    <script src="assets/js/auth-enhanced.js"></script>
+    
+    <!-- Script para deshabilitar auth-enhanced.js ANTES de que se cargue -->
+    <script>
+        // Deshabilitar auth-enhanced.js completamente para nuestro formulario
+        (function() {
+            // Interceptar el objeto AuthEnhanced antes de que se inicialice
+            window.AuthEnhanced = function() {
+                console.log('🚫 AuthEnhanced interceptado y deshabilitado');
+                return {
+                    init: function() {
+                        console.log('🚫 AuthEnhanced.init() deshabilitado');
+                    },
+                    validateForm: function() {
+                        console.log('🚫 AuthEnhanced.validateForm() deshabilitado');
+                        return true; // Siempre retorna true para evitar errores
+                    }
+                };
+            };
+            
+            console.log('✅ AuthEnhanced interceptado y deshabilitado');
+        })();
+    </script>
+    
+    <!-- <script src="assets/js/auth-enhanced.js"></script> -->
+    <script src="assets/js/admin-panel.js"></script>
+    
+    <!-- Script inmediato para configurar campos -->
+    <script>
+
+        // Configurar campos inmediatamente
+        function setupFormFields() {
+            const userTypeSelect = document.getElementById('user-type');
+            const emailGroup = document.getElementById('email-group');
+            const usernameGroup = document.getElementById('username-group');
+            const forgotLink = document.getElementById('forgot-link');
+            const adminHelp = document.getElementById('admin-help');
+            const divider = document.querySelector('.divider');
+            const socialAuth = document.querySelector('.social-auth');
+            const authFooter = document.querySelector('.auth-footer');
+            
+            if (userTypeSelect && emailGroup && usernameGroup) {
+                function updateFields() {
+                    const userType = userTypeSelect.value;
+                    
+                    if (userType === 'admin') {
+                        // Ocultar campos de usuario normal
+                        emailGroup.style.display = 'none';
+                        usernameGroup.style.display = 'block';
+                        if (forgotLink) forgotLink.style.display = 'none';
+                        if (adminHelp) adminHelp.style.display = 'block';
+                        
+                        // Ocultar opciones de redes sociales y registro
+                        if (divider) divider.style.display = 'none';
+                        if (socialAuth) socialAuth.style.display = 'none';
+                        if (authFooter) {
+                            // Ocultar el párrafo de registro pero mantener la ayuda de admin
+                            const registerLink = authFooter.querySelector('p');
+                            if (registerLink) registerLink.style.display = 'none';
+                        }
+                        
+                        document.getElementById('password').placeholder = 'admin';
+                        document.getElementById('username').required = true;
+                        document.getElementById('email').required = false;
+                        document.getElementById('email').removeAttribute('required');
+                    } else {
+                        // Mostrar campos de usuario normal
+                        emailGroup.style.display = 'block';
+                        usernameGroup.style.display = 'none';
+                        if (forgotLink) forgotLink.style.display = 'block';
+                        if (adminHelp) adminHelp.style.display = 'none';
+                        
+                        // Mostrar opciones de redes sociales y registro
+                        if (divider) divider.style.display = 'flex';
+                        if (socialAuth) socialAuth.style.display = 'flex';
+                        if (authFooter) {
+                            // Mostrar el párrafo de registro
+                            const registerLink = authFooter.querySelector('p');
+                            if (registerLink) registerLink.style.display = 'block';
+                        }
+                        
+                        document.getElementById('password').placeholder = 'Tu contraseña';
+                        document.getElementById('email').required = true;
+                        document.getElementById('email').setAttribute('required', 'required');
+                        document.getElementById('username').required = false;
+                        document.getElementById('username').removeAttribute('required');
+                    }
+                }
+                
+                // Configurar inicialmente
+                updateFields();
+                
+                // Agregar listener
+                userTypeSelect.addEventListener('change', updateFields);
+            }
+        }
+        
+        // Ejecutar inmediatamente
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupFormFields);
+        } else {
+            setupFormFields();
+        }
+    </script>
     
     <script>
-        // Verificar si ya hay una sesión activa
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔍 Verificando sesión existente en login...');
+        // SCRIPT COMPLETAMENTE NUEVO Y SIMPLE
+        console.log('🔧 Script de login completamente nuevo iniciado');
+        
+        // Función simple para manejar el login
+        function handleLogin() {
+            console.log('🎯 Función handleLogin ejecutada');
             
-            // Verificar si hay una sesión activa
-            const authData = localStorage.getItem('huertoHogarAuth') || sessionStorage.getItem('huertoHogarAuth');
+            const userType = document.getElementById('user-type').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             
-            if (authData) {
-                try {
-                    const session = JSON.parse(authData);
-                    if (session.isAuthenticated && session.user) {
-                        console.log('✅ Usuario ya autenticado, redirigiendo...');
-                        alert('Ya tienes una sesión activa. Serás redirigido al inicio.');
-                        window.location.href = 'index.html';
-                        return;
-                    }
-                } catch (error) {
-                    console.error('Error al verificar sesión:', error);
-                }
+            console.log('🔍 Valores:', userType, username, password);
+            
+            if (userType === 'admin' && username === 'admin' && password === 'admin') {
+                console.log('✅ Credenciales correctas, redirigiendo...');
+                localStorage.setItem('huertohogar_is_admin', 'true');
+                localStorage.setItem('huertohogar_user_role', 'admin');
+                window.location.href = 'admin-panel.html';
+            } else {
+                console.log('❌ Credenciales incorrectas');
+                alert('Credenciales incorrectas. Usa admin/admin para acceder.');
             }
+        }
+        
+        // Configurar el formulario cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 DOM listo, configurando formulario...');
             
-            console.log('ℹ️ No hay sesión activa, mostrando formulario de login');
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                console.log('✅ Formulario encontrado');
+                
+                // Limpiar el formulario
+                const newForm = loginForm.cloneNode(true);
+                loginForm.parentNode.replaceChild(newForm, loginForm);
+                
+                // Configurar el nuevo formulario
+                const freshForm = document.getElementById('login-form');
+                freshForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('🎯 Formulario enviado!');
+                    handleLogin();
+                });
+                
+                // Configurar el cambio dinámico de campos
+                setupFormFields();
+                
+                console.log('✅ Formulario configurado correctamente');
+            } else {
+                console.error('❌ Formulario no encontrado');
+            }
         });
+
+        // Función para configurar campos dinámicamente
+        function setupFormFields() {
+            console.log('🔧 Configurando campos dinámicos...');
+            
+            const userTypeSelect = document.getElementById('user-type');
+            const emailGroup = document.getElementById('email-group');
+            const usernameGroup = document.getElementById('username-group');
+            const forgotLink = document.getElementById('forgot-link');
+            const adminHelp = document.getElementById('admin-help');
+            const divider = document.querySelector('.divider');
+            const socialAuth = document.querySelector('.social-auth');
+            const authFooter = document.querySelector('.auth-footer');
+            
+            if (userTypeSelect && emailGroup && usernameGroup) {
+                function updateFields() {
+                    const userType = userTypeSelect.value;
+                    console.log('🔄 Cambiando tipo de acceso a:', userType);
+                    
+                    if (userType === 'admin') {
+                        // Ocultar campos de usuario normal
+                        emailGroup.style.display = 'none';
+                        usernameGroup.style.display = 'block';
+                        if (forgotLink) forgotLink.style.display = 'none';
+                        if (adminHelp) adminHelp.style.display = 'block';
+                        
+                        // Ocultar opciones de redes sociales y registro
+                        if (divider) divider.style.display = 'none';
+                        if (socialAuth) socialAuth.style.display = 'none';
+                        if (authFooter) {
+                            const registerLink = authFooter.querySelector('p');
+                            if (registerLink) registerLink.style.display = 'none';
+                        }
+                        
+                        document.getElementById('password').placeholder = 'admin';
+                        document.getElementById('username').required = true;
+                        document.getElementById('email').required = false;
+                        document.getElementById('email').removeAttribute('required');
+                        
+                        console.log('✅ Campos configurados para administrador');
+                    } else {
+                        // Mostrar campos de usuario normal
+                        emailGroup.style.display = 'block';
+                        usernameGroup.style.display = 'none';
+                        if (forgotLink) forgotLink.style.display = 'block';
+                        if (adminHelp) adminHelp.style.display = 'none';
+                        
+                        // Mostrar opciones de redes sociales y registro
+                        if (divider) divider.style.display = 'flex';
+                        if (socialAuth) socialAuth.style.display = 'flex';
+                        if (authFooter) {
+                            const registerLink = authFooter.querySelector('p');
+                            if (registerLink) registerLink.style.display = 'block';
+                        }
+                        
+                        document.getElementById('password').placeholder = 'Tu contraseña';
+                        document.getElementById('email').required = true;
+                        document.getElementById('email').setAttribute('required', 'required');
+                        document.getElementById('username').required = false;
+                        document.getElementById('username').removeAttribute('required');
+                        
+                        console.log('✅ Campos configurados para usuario normal');
+                    }
+                }
+                
+                // Configurar inicialmente
+                updateFields();
+                
+                // Agregar listener
+                userTypeSelect.addEventListener('change', updateFields);
+                
+                console.log('✅ Campos dinámicos configurados');
+            } else {
+                console.error('❌ Elementos del formulario no encontrados');
+            }
+        }
+
+        // TODO EL CÓDIGO PROBLEMÁTICO ELIMINADO
+
     </script>
 </body>
 </html>
