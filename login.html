@@ -226,7 +226,7 @@
                     <h1>Iniciar Sesión</h1>
                     <p>Accede a tu cuenta de HuertoHogar</p>
                 </div>
-                <form class="auth-form" id="login-form" novalidate data-custom-handler="true" data-skip-auth="true">
+                <form class="auth-form" id="login-form" method="post" action="#" novalidate data-custom-handler="true" data-skip-auth="true">
                     <div class="form-group">
                         <label for="user-type">Tipo de Acceso</label>
                         <select id="user-type" name="userType" class="user-type-select">
@@ -645,24 +645,7 @@
         </div>
     </div>
     <script src="assets/js/script.js"></script>
-    <!-- Script para deshabilitar autenticacion-mejorada.js ANTES de que se cargue -->
-    <script>
-        // Deshabilitar autenticacion-mejorada.js completamente para nuestro formulario
-        (function() {
-            // Interceptar el objeto AuthEnhanced antes de que se inicialice
-            window.AuthEnhanced = function() {
-                return {
-                    init: function() {
-                    },
-                    validateForm: function() {
-                        return true; // Siempre retorna true para evitar errores
-                    }
-                };
-            };
-        })();
-    </script>
-    <!-- <script src="assets/js/autenticacion-mejorada.js"></script> -->
-    <script src="assets/js/panel-administrador.js"></script>
+    <script src="assets/js/autenticacion-mejorada.js"></script>
     <!-- Script inmediato para configurar campos -->
     <script>
         // Configurar campos inmediatamente
@@ -731,39 +714,11 @@
         }
     </script>
     <script>
-        // SCRIPT COMPLETAMENTE NUEVO Y SIMPLE
-        // Función simple para manejar el login
-        function handleLogin() {
-            const userType = document.getElementById('user-type').value;
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            if (userType === 'admin' && username === 'admin' && password === 'admin') {
-                localStorage.setItem('huertohogar_is_admin', 'true');
-                localStorage.setItem('huertohogar_user_role', 'admin');
-                window.location.href = 'panel-administrador.html';
-            } else {
-                alert('Credenciales incorrectas. Usa admin/admin para acceder.');
-            }
-        }
-        // Configurar el formulario cuando el DOM esté listo
+        // Script para manejar cambio de campos entre usuario normal y admin
         document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('login-form');
-            if (loginForm) {
-                // Limpiar el formulario
-                const newForm = loginForm.cloneNode(true);
-                loginForm.parentNode.replaceChild(newForm, loginForm);
-                // Configurar el nuevo formulario
-                const freshForm = document.getElementById('login-form');
-                freshForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    handleLogin();
-                });
-                // Configurar el cambio dinámico de campos
-                setupFormFields();
-            } else {
-            }
+            setupFormFields();
         });
-        // Función para configurar campos dinámicamente
+        
         function setupFormFields() {
             const userTypeSelect = document.getElementById('user-type');
             const emailGroup = document.getElementById('email-group');
@@ -773,54 +728,45 @@
             const divider = document.querySelector('.divider');
             const socialAuth = document.querySelector('.social-auth');
             const authFooter = document.querySelector('.auth-footer');
+            
             if (userTypeSelect && emailGroup && usernameGroup) {
                 function updateFields() {
                     const userType = userTypeSelect.value;
                     if (userType === 'admin') {
-                        // Ocultar campos de usuario normal
+                        // Campos para administrador
                         emailGroup.style.display = 'none';
                         usernameGroup.style.display = 'block';
                         if (forgotLink) forgotLink.style.display = 'none';
                         if (adminHelp) adminHelp.style.display = 'block';
-                        // Ocultar opciones de redes sociales y registro
                         if (divider) divider.style.display = 'none';
                         if (socialAuth) socialAuth.style.display = 'none';
                         if (authFooter) {
                             const registerLink = authFooter.querySelector('p');
                             if (registerLink) registerLink.style.display = 'none';
                         }
-                        document.getElementById('password').placeholder = 'admin';
                         document.getElementById('username').required = true;
                         document.getElementById('email').required = false;
-                        document.getElementById('email').removeAttribute('required');
                     } else {
-                        // Mostrar campos de usuario normal
+                        // Campos para usuario normal
                         emailGroup.style.display = 'block';
                         usernameGroup.style.display = 'none';
                         if (forgotLink) forgotLink.style.display = 'block';
                         if (adminHelp) adminHelp.style.display = 'none';
-                        // Mostrar opciones de redes sociales y registro
                         if (divider) divider.style.display = 'flex';
                         if (socialAuth) socialAuth.style.display = 'flex';
                         if (authFooter) {
                             const registerLink = authFooter.querySelector('p');
                             if (registerLink) registerLink.style.display = 'block';
                         }
-                        document.getElementById('password').placeholder = 'Tu contraseña';
                         document.getElementById('email').required = true;
-                        document.getElementById('email').setAttribute('required', 'required');
                         document.getElementById('username').required = false;
-                        document.getElementById('username').removeAttribute('required');
                     }
                 }
-                // Configurar inicialmente
+                
                 updateFields();
-                // Agregar listener
                 userTypeSelect.addEventListener('change', updateFields);
-            } else {
             }
         }
-        // TODO EL CÓDIGO PROBLEMÁTICO ELIMINADO
     </script>
 </body>
 </html>

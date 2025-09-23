@@ -88,26 +88,22 @@ class AuthEnhanced {
         }
     }
     togglePasswordVisibility(button) {
-        // Usar la función unificada global
-        if (window.togglePasswordVisibility) {
-            window.togglePasswordVisibility(button);
-        } else {
-            // Fallback si la función global no está disponible
-            const targetId = button.getAttribute('data-target');
-            const input = document.getElementById(targetId);
-            const icon = button.querySelector('i');
-            if (input && icon) {
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    button.classList.add('active');
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    input.type = 'password';
-                    button.classList.remove('active');
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
+        // Implementación directa para evitar dependencias
+        const targetId = button.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        const icon = button.querySelector('i');
+        
+        if (input && icon) {
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.classList.add('active');
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                button.classList.remove('active');
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         }
     }
@@ -175,6 +171,15 @@ class AuthEnhanced {
                     isValid = false;
                 } else if (value.length < 10) {
                     errorMessage = 'La dirección debe tener al menos 10 caracteres';
+                    isValid = false;
+                }
+                break;
+            case 'username':
+                if (!value) {
+                    errorMessage = 'El usuario es requerido';
+                    isValid = false;
+                } else if (value.length < 1) {
+                    errorMessage = 'El usuario es requerido';
                     isValid = false;
                 }
                 break;
@@ -369,19 +374,25 @@ class AuthEnhanced {
                 isValid = false;
             }
         } else if (formType === 'login') {
-            const fields = ['email', 'password'];
-            fields.forEach(fieldId => {
-                if (!this.validateField(fieldId)) {
-                    isValid = false;
-                }
-            });
+            // Determinar tipo de usuario para validar campos apropiados
+            const userTypeSelect = document.getElementById('user-type');
+            const userType = userTypeSelect ? userTypeSelect.value : 'user';
+            
+            if (userType === 'admin') {
+                // Para admin, validar username y password
+                if (!this.validateField('username')) isValid = false;
+                if (!this.validateField('password')) isValid = false;
+            } else {
+                // Para usuarios normales, validar email y password
+                if (!this.validateField('email')) isValid = false;
+                if (!this.validateField('password')) isValid = false;
+            }
         }
         return isValid;
     }
     setLoadingState(buttonId, isLoading) {
         const button = document.getElementById(buttonId);
         if (!button) return;
-        console.trace('Stack trace del setLoadingState');
         const btnText = button.querySelector('.btn-text');
         const btnLoading = button.querySelector('.btn-loading');
         if (isLoading) {
@@ -487,40 +498,74 @@ class AuthEnhanced {
     }
     async handleLogin(e) {
         e.preventDefault();
-        if (!this.validateForm('login')) {
+        
+        // Validación simplificada
+        const formData = new FormData(e.target);
+        const userType = formData.get('userType') || 'user';
+        const loginData = {
+            email: userType === 'admin' ? formData.get('username') : formData.get('email'),
+            password: formData.get('password'),
+            remember: formData.get('remember') === 'on',
+            userType: userType
+        };
+        
+        // Verificar que tenemos los datos básicos
+        if (!loginData.email || !loginData.password) {
+            this.showErrorMessage('Por favor completa todos los campos.');
             return;
         }
-        const formData = new FormData(e.target);
-        const loginData = {
-            email: formData.get('email'),
-            password: formData.get('password'),
-            remember: formData.get('remember') === 'on'
-        };
         // VALIDACIÓN INMEDIATA - Sin estado de carga
-        // Buscar usuario existente en la base de datos
-        const existingUsers = JSON.parse(localStorage.getItem('huerto_users') || '[]');
-        const userData = existingUsers.find(user => user.email === loginData.email);
-        // Validar credenciales INMEDIATAMENTE
-        if (!userData) {
-            // Verificar si es el usuario admin especial
+        // Si es admin, validar credenciales directamente
+        if (loginData.userType === 'admin') {
             if (loginData.email === 'admin' && loginData.password === 'admin') {
-                userData = {
+                const adminData = {
                     id: 'admin',
                     name: 'Administrador',
                     email: 'admin',
                     role: 'admin',
                     isAdmin: true
                 };
+                
+                // Solo mostrar estado de carga si las credenciales son correctas
+                this.setLoadingState('login-submit', true);
+                
+                try {
+                    await this.simulateApiCall(1500);
+                    this.saveUserSession(adminData, loginData.remember);
+                    localStorage.setItem('huertohogar_is_admin', 'true');
+                    localStorage.setItem('huertohogar_user_role', 'admin');
+                    this.showSuccessMessage('¡Bienvenido, Administrador!');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'panel-administrador.html';
+                    }, 1500);
+                    return;
+                } catch (error) {
+                    this.showErrorMessage('Error de conexión. Inténtalo de nuevo.');
+                    return;
+                } finally {
+                    this.setLoadingState('login-submit', false);
+                }
             } else {
-                this.showErrorMessage('Email o contraseña incorrectos.');
+                this.showErrorMessage('Credenciales de administrador incorrectas.');
                 return;
             }
-        } else {
-            // Verificar contraseña INMEDIATAMENTE para usuarios normales
-            if (userData.password !== loginData.password) {
-                this.showErrorMessage('Email o contraseña incorrectos.');
-                return;
-            }
+        }
+        
+        // Para usuarios normales, buscar en la base de datos
+        const existingUsers = JSON.parse(localStorage.getItem('huerto_users') || '[]');
+        const userData = existingUsers.find(user => user.email === loginData.email);
+        
+        // Validar credenciales para usuarios normales
+        if (!userData) {
+            this.showErrorMessage('Email o contraseña incorrectos.');
+            return;
+        }
+        
+        // Verificar contraseña para usuarios normales
+        if (userData.password !== loginData.password) {
+            this.showErrorMessage('Email o contraseña incorrectos.');
+            return;
         }
         // Solo mostrar estado de carga si las credenciales son correctas
         this.setLoadingState('login-submit', true);
@@ -608,10 +653,7 @@ class AuthEnhanced {
         const loginLink = document.getElementById('user-login-link');
         const userProfile = document.getElementById('user-profile');
         const userName = document.getElementById('user-name');
-            loginLink: !!loginLink,
-            userProfile: !!userProfile,
-            userName: !!userName
-        });
+        
         if (loginLink && userProfile && userName) {
             // Ocultar botón de login
             loginLink.style.display = 'none';
@@ -634,7 +676,6 @@ class AuthEnhanced {
             userName.textContent = displayName;
             // Agregar event listeners para logout
             this.setupLogoutHandler();
-        } else {
         }
     }
     setupLogoutHandler() {
@@ -738,17 +779,34 @@ window.updateHeaderInAllPages = function() {
 };
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    const auth = new AuthEnhanced();
-    // Hacer disponible globalmente
-    window.authEnhanced = auth;
-    // Verificar si hay una sesión existente
-    auth.checkExistingSession();
-    // Event listener global como respaldo para logout
-    document.addEventListener('click', (e) => {
-        if (e.target && e.target.id === 'logout-btn') {
-            e.preventDefault();
-            e.stopPropagation();
-            auth.logout();
+    try {
+        const auth = new AuthEnhanced();
+        // Hacer disponible globalmente
+        window.authEnhanced = auth;
+        // Verificar si hay una sesión existente
+        auth.checkExistingSession();
+        
+        // Event listener global como respaldo para logout
+        document.addEventListener('click', (e) => {
+            if (e.target && e.target.id === 'logout-btn') {
+                e.preventDefault();
+                e.stopPropagation();
+                auth.logout();
+            }
+        });
+        
+        // Verificación adicional para login form
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            // Asegurar que el event listener esté bien configurado
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (window.authEnhanced && typeof window.authEnhanced.handleLogin === 'function') {
+                    window.authEnhanced.handleLogin(e);
+                }
+            });
         }
-    });
+    } catch (error) {
+        // Fallback en caso de error
+    }
 });
