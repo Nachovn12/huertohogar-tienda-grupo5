@@ -5,17 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finalizar Compra - HuertoHogar | Productos Frescos del Campo</title>
     <meta name="description" content="Completa tu compra de productos frescos y orgánicos en HuertoHogar. Envío seguro y rápido a todo Chile.">
-    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
-    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/normalizar.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/checkout.css">
-    
+    <link rel="stylesheet" href="assets/css/pago.css">
     <style>
         /* Estilos para el modal de autenticación en checkout */
         .modal {
@@ -29,11 +27,9 @@
             background-color: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
         }
-        
         .modal.hidden {
             display: none !important;
         }
-        
         .auth-modal-content {
             background-color: white;
             margin: 5% auto;
@@ -44,7 +40,6 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
             animation: modalSlideIn 0.3s ease-out;
         }
-        
         @keyframes modalSlideIn {
             from {
                 opacity: 0;
@@ -55,7 +50,6 @@
                 transform: translateY(0);
             }
         }
-        
         .modal-header {
             background: linear-gradient(135deg, #2E8B57, #3CB371);
             color: white;
@@ -65,13 +59,11 @@
             justify-content: space-between;
             align-items: center;
         }
-        
         .modal-header h2 {
             margin: 0;
             font-size: 1.5rem;
             font-weight: 600;
         }
-        
         .modal-close {
             background: none;
             border: none;
@@ -82,21 +74,17 @@
             border-radius: 50%;
             transition: background-color 0.2s;
         }
-        
         .modal-close:hover {
             background-color: rgba(255, 255, 255, 0.2);
         }
-        
         .modal-body {
             padding: 30px;
         }
-        
         .auth-tabs {
             display: flex;
             margin-bottom: 30px;
             border-bottom: 2px solid #e5e7eb;
         }
-        
         .tab-button {
             flex: 1;
             padding: 12px 20px;
@@ -109,41 +97,33 @@
             border-bottom: 2px solid transparent;
             transition: all 0.2s;
         }
-        
         .tab-button.active {
             color: #2E8B57;
             border-bottom-color: #2E8B57;
         }
-        
         .tab-button:hover {
             color: #2E8B57;
         }
-        
         .auth-form {
             display: none;
         }
-        
         .auth-form.active {
             display: block;
         }
-        
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
-        
         .form-group {
             margin-bottom: 20px;
         }
-        
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
             color: #374151;
         }
-        
         .form-group input {
             width: 100%;
             padding: 12px 16px;
@@ -152,21 +132,17 @@
             font-size: 1rem;
             transition: border-color 0.2s;
         }
-        
         .form-group input:focus {
             outline: none;
             border-color: #2E8B57;
             box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
         }
-        
         .password-input-container {
             position: relative;
         }
-        
         .password-input-container input {
             padding-right: 50px;
         }
-        
         .password-toggle {
             position: absolute;
             right: 12px;
@@ -180,11 +156,9 @@
             border-radius: 4px;
             transition: color 0.2s;
         }
-        
         .password-toggle:hover {
             color: #2E8B57;
         }
-        
         .checkbox-label {
             display: flex;
             align-items: center;
@@ -192,19 +166,16 @@
             font-size: 0.9rem;
             color: #6B7280;
         }
-        
         .checkbox-label input[type="checkbox"] {
             margin-right: 10px;
             width: auto;
         }
-        
         .btn-full {
             width: 100%;
             padding: 14px;
             font-size: 1rem;
             font-weight: 600;
         }
-        
         .btn-primary {
             background: linear-gradient(135deg, #2E8B57, #3CB371);
             color: white;
@@ -213,27 +184,22 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        
         .btn-primary:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(46, 139, 87, 0.3);
         }
-        
         .btn-primary:active {
             transform: translateY(0);
         }
-        
         /* Responsive */
         @media (max-width: 768px) {
             .auth-modal-content {
                 margin: 10% auto;
                 width: 95%;
             }
-            
             .form-row {
                 grid-template-columns: 1fr;
             }
-            
             .modal-body {
                 padding: 20px;
             }
@@ -254,7 +220,6 @@
             </div>
         </div>
     </div>
-    
     <header class="main-header">
         <div class="header-content">
             <a href="index.html" class="logo-container">
@@ -287,7 +252,6 @@
             </div>
         </div>
     </header>
-
     <main class="checkout-main">
         <!-- Breadcrumb -->
         <div class="checkout-breadcrumb">
@@ -299,7 +263,6 @@
                 <span class="current">Finalizar Compra</span>
             </div>
         </div>
-
         <!-- Progreso del Checkout -->
         <div class="checkout-progress">
             <div class="container">
@@ -323,7 +286,6 @@
                 </div>
             </div>
         </div>
-
         <div class="container checkout-container">
             <div class="checkout-layout">
                 <!-- Formulario Principal -->
@@ -334,7 +296,6 @@
                         <h2><i class="fas fa-user"></i> Información del Cliente</h2>
                         <p>Completa tus datos para procesar el pedido y recibir tus productos frescos</p>
                     </div>
-                        
                         <form class="checkout-form" id="customer-form">
                             <div class="form-row">
                                 <div class="form-group">
@@ -346,12 +307,10 @@
                                     <input type="text" id="last-name" name="lastName" required>
                                 </div>
                             </div>
-                            
                             <div class="form-group">
                                 <label for="email">Correo Electrónico *</label>
                                 <input type="email" id="email" name="email" required>
                             </div>
-                            
                         <div class="form-group">
                             <label for="phone">Teléfono *</label>
                             <div class="phone-input-container">
@@ -359,12 +318,10 @@
                                 <input type="tel" id="phone" name="phone" placeholder="9 1234 5678" required>
                             </div>
                         </div>
-                            
                             <div class="form-group">
                                 <label for="address">Dirección de Entrega *</label>
                                 <textarea id="address" name="address" rows="3" placeholder="Calle, número, comuna, región" required></textarea>
                             </div>
-                            
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="city">Ciudad *</label>
@@ -375,21 +332,18 @@
                                     <input type="text" id="postal-code" name="postalCode">
                                 </div>
                             </div>
-                            
                             <div class="form-group">
                                 <label for="notes">Notas adicionales (opcional)</label>
                                 <textarea id="notes" name="notes" rows="2" placeholder="Instrucciones especiales para la entrega"></textarea>
                             </div>
                         </form>
                     </div>
-
                     <!-- Paso 2: Selección de Entrega -->
                     <div class="checkout-step" id="step-2">
                     <div class="step-header">
                         <h2><i class="fas fa-truck"></i> Método de Entrega</h2>
                         <p>Elige cómo quieres recibir tus productos frescos del campo</p>
                     </div>
-                        
                         <div class="delivery-options">
                             <div class="delivery-option active" data-delivery="standard">
                                 <div class="option-header">
@@ -407,7 +361,6 @@
                                     <p>Horario: 9:00 - 18:00</p>
                                 </div>
                             </div>
-                            
                             <div class="delivery-option" data-delivery="express">
                                 <div class="option-header">
                                     <input type="radio" id="delivery-express" name="delivery" value="express">
@@ -424,7 +377,6 @@
                                     <p>Horario: 9:00 - 20:00</p>
                                 </div>
                             </div>
-                            
                             <div class="delivery-option" data-delivery="pickup">
                                 <div class="option-header">
                                     <input type="radio" id="delivery-pickup" name="delivery" value="pickup">
@@ -442,7 +394,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="delivery-schedule" id="delivery-schedule">
                             <h3>Selecciona Fecha y Horario</h3>
                             <div class="schedule-options">
@@ -450,7 +401,6 @@
                                     <label for="delivery-date">Fecha de Entrega *</label>
                                     <input type="date" id="delivery-date" name="deliveryDate" required>
                                 </div>
-                                
                                 <div class="time-slots">
                                     <label>Horario de Entrega *</label>
                                     <div class="time-options">
@@ -471,14 +421,12 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Paso 3: Método de Pago -->
                     <div class="checkout-step" id="step-3">
                     <div class="step-header">
                         <h2><i class="fas fa-credit-card"></i> Método de Pago</h2>
                         <p>Elige la forma más conveniente para pagar tu pedido</p>
                     </div>
-                        
                         <div class="payment-methods">
                             <div class="payment-option active" data-payment="card">
                                 <div class="option-header">
@@ -495,7 +443,6 @@
                                         </div>
                                     </label>
                                 </div>
-                                
                                 <div class="payment-form" id="card-form">
                                     <div class="form-row">
                                         <div class="form-group">
@@ -503,7 +450,6 @@
                                             <input type="text" id="card-number" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
                                         </div>
                                     </div>
-                                    
                                     <div class="form-row">
                                         <div class="form-group">
                                             <label for="card-name">Nombre en la Tarjeta *</label>
@@ -520,7 +466,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
                             <div class="payment-option" data-payment="transfer">
                                 <div class="option-header">
                                     <input type="radio" id="payment-transfer" name="payment" value="transfer">
@@ -531,7 +476,6 @@
                                         </div>
                                     </label>
                                 </div>
-                                
                                 <div class="payment-info">
                                     <p>Realiza la transferencia a:</p>
                                     <div class="bank-details">
@@ -543,7 +487,6 @@
                                     <p class="transfer-note">Envía el comprobante a contacto@huertohogar.cl</p>
                                 </div>
                             </div>
-                            
                             <div class="payment-option" data-payment="cash">
                                 <div class="option-header">
                                     <input type="radio" id="payment-cash" name="payment" value="cash">
@@ -554,7 +497,6 @@
                                         </div>
                                     </label>
                                 </div>
-                                
                                 <div class="payment-info">
                                     <p>Paga en efectivo cuando recibas tu pedido</p>
                                     <p class="cash-note">Solo disponible para entregas a domicilio</p>
@@ -562,36 +504,30 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Paso 4: Confirmación -->
                     <div class="checkout-step" id="step-4">
                     <div class="step-header">
                         <h2><i class="fas fa-check-circle"></i> Confirmación del Pedido</h2>
                         <p>Revisa todos los detalles antes de finalizar tu compra</p>
                     </div>
-                        
                         <div class="order-summary">
                             <div class="summary-section">
                                 <h3>Información del Cliente</h3>
                                 <div id="customer-summary"></div>
                             </div>
-                            
                             <div class="summary-section">
                                 <h3>Método de Entrega</h3>
                                 <div id="delivery-summary"></div>
                             </div>
-                            
                             <div class="summary-section">
                                 <h3>Método de Pago</h3>
                                 <div id="payment-summary"></div>
                             </div>
-                            
                             <div class="summary-section">
                                 <h3>Productos</h3>
                                 <div id="products-summary"></div>
                             </div>
                         </div>
-                        
                         <div class="terms-acceptance">
                             <label class="checkbox-label">
                                 <input type="checkbox" id="accept-terms" required>
@@ -600,7 +536,6 @@
                             </label>
                         </div>
                     </div>
-
                     <!-- Botones de Navegación -->
                     <div class="checkout-navigation">
                         <button type="button" id="prev-step" class="btn btn-secondary" style="display: none;">
@@ -614,7 +549,6 @@
                         </button>
                     </div>
                 </div>
-
                 <!-- Resumen del Pedido -->
                 <div class="checkout-summary">
                     <div class="summary-card">
@@ -622,7 +556,6 @@
                         <div class="summary-items" id="summary-items">
                             <!-- Los items se cargarán dinámicamente -->
                         </div>
-                        
                         <div class="summary-totals">
                             <div class="total-line">
                                 <span>Subtotal:</span>
@@ -641,7 +574,6 @@
                                 <span id="total">$0 CLP</span>
                             </div>
                         </div>
-                        
                         <div class="security-badges">
                             <div class="security-item">
                                 <i class="fas fa-shield-alt"></i>
@@ -657,8 +589,6 @@
             </div>
         </div>
     </main>
-
-
     <!-- Modal de Autenticación -->
     <div id="auth-modal" class="modal" style="display: none;">
         <div class="modal-content auth-modal-content">
@@ -671,7 +601,6 @@
                     <button class="tab-button active" data-tab="login">Iniciar Sesión</button>
                     <button class="tab-button" data-tab="register">Registrarse</button>
                 </div>
-                
                 <!-- Formulario de Login -->
                 <div class="auth-form active" id="login-form">
                     <form id="auth-login-form">
@@ -698,7 +627,6 @@
                         <button type="submit" class="btn btn-primary btn-full">Iniciar Sesión</button>
                     </form>
                 </div>
-                
                 <!-- Formulario de Registro -->
                 <div class="auth-form" id="register-form">
                     <form id="auth-register-form">
@@ -747,7 +675,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal de Confirmación -->
     <div id="order-confirmation-modal" class="modal hidden">
         <div class="modal-content">
@@ -775,7 +702,6 @@
             </div>
         </div>
     </div>
-
     <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -802,54 +728,37 @@
         </div>
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
-
     <!-- Librería jsPDF para generar comprobantes -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
     <script src="assets/js/script.js"></script>
-    <script src="assets/js/auth-enhanced.js"></script>
-    <script src="assets/js/checkout-simple.js"></script>
-    
+    <script src="assets/js/autenticacion-mejorada.js"></script>
+    <script src="assets/js/pago-simple.js"></script>
     <script>
         // Sistema de autenticación para checkout
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🛒 Inicializando checkout con autenticación...');
-            
             // Verificar si el usuario está logueado
             checkUserAuthentication();
-            
             // Inicializar modal de autenticación
             initializeAuthModal();
         });
-        
         function checkUserAuthentication() {
-            console.log('🔍 Verificando autenticación del usuario...');
-            
             // Verificar sesión existente
             const authData = localStorage.getItem('huertoHogarAuth') || sessionStorage.getItem('huertoHogarAuth');
-            
             if (authData) {
                 try {
                     const session = JSON.parse(authData);
                     if (session.isAuthenticated && session.user) {
-                        console.log('✅ Usuario autenticado, autocompletando datos...');
                         autofillCheckoutData(session.user);
                         hideAuthModal(); // Asegurar que el modal esté oculto
                         return;
                     }
                 } catch (error) {
-                    console.error('Error al verificar sesión:', error);
                 }
             }
-            
             // Si no está autenticado, ocultar modal (solo se mostrará al hacer clic en Finalizar Compra)
-            console.log('❌ Usuario no autenticado, ocultando modal...');
             hideAuthModal();
         }
-        
         function autofillCheckoutData(user) {
-            console.log('📝 Autocompletando datos del checkout...', user);
-            
             // Mapear datos del usuario a los campos del checkout
             const fieldMappings = {
                 'first-name': user.nombre || user.nombres || '',
@@ -859,68 +768,52 @@
                 'address': user.direccion || ''
                 // No incluir 'city' ni 'postal-code' ya que no están en el registro
             };
-            
             // Llenar campos
             Object.keys(fieldMappings).forEach(fieldId => {
                 const field = document.getElementById(fieldId);
                 if (field && fieldMappings[fieldId]) {
                     field.value = fieldMappings[fieldId];
-                    console.log(`✅ Campo ${fieldId} llenado con: ${fieldMappings[fieldId]}`);
                 }
             });
-            
             // Actualizar header si es necesario
             updateHeaderForCheckout(user);
         }
-        
         function updateHeaderForCheckout(user) {
             const loginLink = document.getElementById('user-login-link');
             const userProfile = document.getElementById('user-profile');
             const userName = document.getElementById('user-name');
-            
             if (loginLink && userProfile && userName) {
                 loginLink.style.display = 'none';
                 userProfile.style.display = 'flex';
-                
                 // Mostrar solo el primer nombre
                 const displayName = (user.nombre || user.nombres || user.name || '').split(' ')[0];
                 userName.textContent = displayName || 'Usuario';
-                
-                console.log('✅ Header actualizado para checkout');
             }
         }
-        
         function showAuthModal() {
             const modal = document.getElementById('auth-modal');
             if (modal) {
                 modal.classList.remove('hidden');
                 modal.style.display = 'flex';
-                console.log('✅ Modal de autenticación mostrado');
             }
         }
-        
         function hideAuthModal() {
             const modal = document.getElementById('auth-modal');
             if (modal) {
                 modal.classList.add('hidden');
                 modal.style.display = 'none';
-                console.log('✅ Modal de autenticación ocultado');
             }
         }
-        
         function initializeAuthModal() {
             // Tabs del modal
             const tabButtons = document.querySelectorAll('.tab-button');
             const authForms = document.querySelectorAll('.auth-form');
-            
             tabButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const targetTab = this.getAttribute('data-tab');
-                    
                     // Actualizar botones activos
                     tabButtons.forEach(btn => btn.classList.remove('active'));
                     this.classList.add('active');
-                    
                     // Mostrar formulario correspondiente
                     authForms.forEach(form => {
                         form.classList.remove('active');
@@ -930,13 +823,11 @@
                     });
                 });
             });
-            
             // Cerrar modal
             const closeBtn = document.getElementById('close-auth-modal');
             if (closeBtn) {
                 closeBtn.addEventListener('click', hideAuthModal);
             }
-            
             // Cerrar al hacer click fuera del modal
             const modal = document.getElementById('auth-modal');
             if (modal) {
@@ -946,31 +837,24 @@
                     }
                 });
             }
-            
             // Manejar formularios de autenticación
             const loginForm = document.getElementById('auth-login-form');
             const registerForm = document.getElementById('auth-register-form');
-            
             if (loginForm) {
                 loginForm.addEventListener('submit', handleAuthLogin);
             }
-            
             if (registerForm) {
                 registerForm.addEventListener('submit', handleAuthRegister);
             }
         }
-        
         function handleAuthLogin(e) {
             e.preventDefault();
-            console.log('🔐 Procesando login desde checkout...');
-            
             const formData = new FormData(e.target);
             const loginData = {
                 email: formData.get('email'),
                 password: formData.get('password'),
                 remember: formData.get('remember') === 'on'
             };
-            
             // Usar authEnhanced si está disponible
             if (window.authEnhanced && typeof window.authEnhanced.handleLogin === 'function') {
                 // Simular el evento del formulario
@@ -978,11 +862,8 @@
                     preventDefault: () => {},
                     target: e.target
                 };
-                
                 window.authEnhanced.handleLogin(fakeEvent).then(() => {
-                    console.log('✅ Login exitoso desde checkout');
                     hideAuthModal();
-                    
                     // Recargar datos del usuario
                     const authData = localStorage.getItem('huertoHogarAuth') || sessionStorage.getItem('huertoHogarAuth');
                     if (authData) {
@@ -990,17 +871,12 @@
                         autofillCheckoutData(session.user);
                     }
                 }).catch(error => {
-                    console.error('❌ Error en login:', error);
+                    console.error('Error en login:', error);
                 });
-            } else {
-                console.error('❌ authEnhanced no disponible');
             }
         }
-        
         function handleAuthRegister(e) {
             e.preventDefault();
-            console.log('📝 Procesando registro desde checkout...');
-            
             const formData = new FormData(e.target);
             const userData = {
                 nombres: formData.get('nombres'),
@@ -1010,7 +886,6 @@
                 confirmPassword: formData.get('confirm-password'),
                 terms: formData.get('terms') === 'on'
             };
-            
             // Usar authEnhanced si está disponible
             if (window.authEnhanced && typeof window.authEnhanced.handleRegister === 'function') {
                 // Simular el evento del formulario
@@ -1018,11 +893,8 @@
                     preventDefault: () => {},
                     target: e.target
                 };
-                
                 window.authEnhanced.handleRegister(fakeEvent).then(() => {
-                    console.log('✅ Registro exitoso desde checkout');
                     hideAuthModal();
-                    
                     // Recargar datos del usuario
                     const authData = localStorage.getItem('huertoHogarAuth') || sessionStorage.getItem('huertoHogarAuth');
                     if (authData) {
@@ -1030,10 +902,8 @@
                         autofillCheckoutData(session.user);
                     }
                 }).catch(error => {
-                    console.error('❌ Error en registro:', error);
+                    console.error('Error en registro:', error);
                 });
-            } else {
-                console.error('❌ authEnhanced no disponible');
             }
         }
     </script>

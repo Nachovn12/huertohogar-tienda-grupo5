@@ -2328,10 +2328,40 @@ body.cart-open { overflow: hidden; }
 }
 .section-title {
     font-family: var(--font-heading);
-    font-size: 2.5rem;
-    text-align: center;
-    margin: 0 0 3rem 0;
+    font-size: 2.8rem;
+    text-align: center !important;
+    margin: 0 auto 1rem auto !important;
     color: var(--color-title);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    width: 100%;
+    display: block;
+}
+
+.section-header {
+    text-align: center !important;
+    margin: 0 auto 4rem auto;
+    max-width: 800px;
+    padding: 0 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    margin: 0 auto !important;
+    font-weight: 400;
+    opacity: 0.8;
+    text-align: center !important;
+    line-height: 1.5;
+    max-width: 600px;
+    width: 100%;
+    display: block;
 }
 .btn {
     padding: 0.8rem 1.8rem;
@@ -2523,10 +2553,15 @@ body.cart-open { overflow: hidden; }
 
 .offers-section-title {
     font-family: var(--font-heading);
-    font-size: 2.5rem;
-    margin: 0 0 0.5rem 0;
-    color: var(--color-text-main);
-    font-weight: 600;
+    font-size: 3rem;
+    margin: 0 0 1.5rem 0;
+    color: #e74c3c;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(231, 76, 60, 0.2);
+    position: relative;
+    line-height: 1.1;
 }
 
 .offers-subtitle {
@@ -2535,6 +2570,13 @@ body.cart-open { overflow: hidden; }
     margin: 0;
     font-family: var(--font-body);
     font-weight: 400;
+}
+
+/* Espaciado específico para el subtítulo en ofertas */
+.offers-header .section-subtitle {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    padding-top: 0.5rem;
 }
 
 .offers-view-all-btn {
@@ -7619,21 +7661,22 @@ body.modal-open .auth-modal-overlay {
 }
 
 .btn-secondary {
-    background: white;
-    color: var(--color-primary);
+    background: var(--color-primary);
+    color: white;
     border: 2px solid var(--color-primary);
     box-shadow: var(--shadow-soft);
+    transition: none !important;
 }
 
 .btn-secondary:hover {
     background: var(--color-primary);
     color: white;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-medium);
+    transform: none !important;
+    box-shadow: var(--shadow-soft);
 }
 
 .btn-secondary:active {
-    transform: translateY(0);
+    transform: none !important;
 }
 
 .link-guest {

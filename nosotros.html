@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon/favicon-512x512.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
     <link rel="manifest" href="assets/favicon/site.webmanifest">
-    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/normalizar.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -23,14 +23,12 @@
     <!-- OpenStreetMap con Leaflet (Alternativa gratuita) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
     <style>
         /* Estilos personalizados para marcadores */
         .custom-marker {
             background: transparent;
             border: none;
         }
-        
         .marker-circle {
             width: 40px;
             height: 40px;
@@ -44,7 +42,6 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
-        
         .marker-number {
             color: #ffffff;
             font-weight: bold;
@@ -52,7 +49,6 @@
             font-family: Arial, sans-serif;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
-        
         /* Estilos para popups personalizados */
         .custom-popup .leaflet-popup-content-wrapper {
             background: #ffffff;
@@ -60,24 +56,20 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
             border: 2px solid #2E8B57;
         }
-        
         .custom-popup .leaflet-popup-content {
             margin: 15px;
             font-family: 'Montserrat', sans-serif;
         }
-        
         .custom-popup .leaflet-popup-tip {
             background: #ffffff;
             border: 2px solid #2E8B57;
         }
-        
         /* Efectos hover mejorados */
         .marker-circle:hover {
             transform: scale(1.15);
             box-shadow: 0 6px 20px rgba(46, 139, 87, 0.4);
             border-color: #FFD700;
         }
-        
         /* Estilos para tiendas activas en la lista */
         .store-item {
             cursor: pointer;
@@ -86,31 +78,25 @@
             padding: 12px;
             margin-bottom: 8px;
         }
-        
         .store-item:hover {
             background-color: #f8f9fa;
             transform: translateX(5px);
         }
-        
         .store-item-active {
             background: linear-gradient(135deg, #2E8B57, #4CAF50);
             color: white;
             transform: translateX(8px);
             box-shadow: 0 4px 15px rgba(46, 139, 87, 0.3);
         }
-        
         .store-item-active i {
             color: #FFD700;
         }
-        
         .store-item-active h4 {
             color: white;
         }
-        
         .store-item-active p {
             color: rgba(255, 255, 255, 0.9);
         }
-
         /* Sección de introducción */
         .intro-section {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -121,7 +107,6 @@
             overflow: hidden;
             max-width: 1200px;
         }
-
         .intro-section::before {
             content: '';
             position: absolute;
@@ -132,7 +117,6 @@
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%232E8B57" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%234CAF50" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%232E8B57" opacity="0.05"/><circle cx="10" cy="60" r="0.5" fill="%234CAF50" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
             opacity: 0.3;
         }
-
         .intro-content {
             text-align: center;
             position: relative;
@@ -141,7 +125,6 @@
             max-width: 1000px;
             padding: 0 20px;
         }
-
         .intro-title {
             font-size: 2.8rem;
             font-weight: 700;
@@ -150,7 +133,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
             line-height: 1.2;
         }
-
         .intro-text {
             font-size: 1.1rem;
             color: #666;
@@ -162,15 +144,12 @@
             text-align: center;
             padding: 0 20px;
         }
-
         /* Sección about mejorada */
         .about-section {
             max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
         }
-
-
         /* Cards de misión y visión mejoradas */
         .about-us-grid {
             display: grid;
@@ -181,7 +160,6 @@
             max-width: 1000px;
             margin: 0 auto;
         }
-
         .about-card {
             background: white;
             padding: 35px;
@@ -196,7 +174,6 @@
             flex-direction: column;
             width: 100%;
         }
-
         .about-card::before {
             content: '';
             position: absolute;
@@ -206,12 +183,10 @@
             height: 4px;
             background: linear-gradient(90deg, #2E8B57, #4CAF50);
         }
-
         .about-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
-
         .card-icon {
             width: 80px;
             height: 80px;
@@ -223,12 +198,10 @@
             margin: 0 auto 25px;
             box-shadow: 0 8px 20px rgba(46, 139, 87, 0.3);
         }
-
         .card-icon i {
             font-size: 2rem;
             color: white;
         }
-
         .about-card h3 {
             font-size: 1.8rem;
             font-weight: 600;
@@ -236,7 +209,6 @@
             margin-bottom: 20px;
             text-align: center;
         }
-
         .about-card p {
             font-size: 0.95rem;
             line-height: 1.6;
@@ -245,17 +217,14 @@
             margin: 0;
             flex: 1;
         }
-
         /* Estilos para la sección del mapa mejorada */
         .map-section {
             margin-top: 60px;
         }
-
         .section-header {
             text-align: center;
             margin-bottom: 40px;
         }
-
         .section-title {
             font-size: 2.5rem;
             font-weight: 700;
@@ -263,7 +232,6 @@
             margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
-
         .section-subtitle {
             font-size: 1.2rem;
             color: #666;
@@ -271,7 +239,6 @@
             margin: 0 auto;
             line-height: 1.6;
         }
-
         .map-container {
             border-radius: 20px;
             overflow: hidden;
@@ -280,7 +247,6 @@
             margin-bottom: 40px;
             position: relative;
         }
-
         .map-container::before {
             content: '';
             position: absolute;
@@ -292,7 +258,6 @@
             pointer-events: none;
             z-index: 1;
         }
-
         /* Estilos para la lista de tiendas mejorada */
         .stores-info {
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
@@ -303,7 +268,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .stores-info::before {
             content: '';
             position: absolute;
@@ -313,19 +277,16 @@
             height: 4px;
             background: linear-gradient(90deg, #2E8B57, #4CAF50);
         }
-
         .stores-header {
             text-align: center;
             margin-bottom: 30px;
         }
-
         .stores-info h3 {
             font-size: 1.8rem;
             font-weight: 600;
             color: #2E8B57;
             margin: 0 0 15px 0;
         }
-
         .stores-instruction {
             color: #666;
             font-size: 14px;
@@ -336,18 +297,15 @@
             justify-content: center;
             gap: 8px;
         }
-
         .stores-instruction i {
             color: #2E8B57;
             font-size: 16px;
         }
-
         .stores-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
         }
-
         /* Cards de tienda mejoradas */
         .store-item {
             background: white;
@@ -363,7 +321,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .store-item::before {
             content: '';
             position: absolute;
@@ -375,38 +332,32 @@
             transform: scaleY(0);
             transition: transform 0.3s ease;
         }
-
         .store-item:hover::before {
             transform: scaleY(1);
         }
-
         .store-item:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             border-color: #2E8B57;
         }
-
         .store-item i {
             font-size: 1.5rem;
             color: #2E8B57;
             min-width: 25px;
             text-align: center;
         }
-
         .store-item h4 {
             font-size: 1.2rem;
             font-weight: 600;
             color: #333;
             margin: 0 0 5px 0;
         }
-
         .store-item p {
             font-size: 0.9rem;
             color: #666;
             margin: 0;
             line-height: 1.4;
         }
-
         .store-item-active {
             background: linear-gradient(135deg, #2E8B57, #4CAF50);
             color: white;
@@ -414,133 +365,105 @@
             box-shadow: 0 15px 30px rgba(46, 139, 87, 0.4);
             border-color: #FFD700;
         }
-
         .store-item-active::before {
             transform: scaleY(1);
             background: #FFD700;
         }
-
         .store-item-active i {
             color: #FFD700;
         }
-
         .store-item-active h4 {
             color: white;
         }
-
         .store-item-active p {
             color: rgba(255, 255, 255, 0.9);
         }
-
         /* Responsive para móviles */
         @media (max-width: 768px) {
             .intro-section {
                 padding: 40px 0;
                 margin: 20px auto;
             }
-
             .intro-content {
                 padding: 0 15px;
             }
-
             .intro-title {
                 font-size: 2.2rem;
                 line-height: 1.1;
             }
-
             .intro-text {
                 font-size: 1rem;
                 line-height: 1.6;
                 text-align: center;
                 padding: 0 10px;
             }
-
             .about-section {
                 padding: 30px 15px;
             }
-
             .about-us-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-
             .about-card {
                 padding: 25px;
                 min-height: 380px;
             }
-
             .card-icon {
                 width: 60px;
                 height: 60px;
                 margin-bottom: 20px;
             }
-
             .card-icon i {
                 font-size: 1.5rem;
             }
-
             .about-card h3 {
                 font-size: 1.4rem;
                 margin-bottom: 15px;
             }
-
             .about-card p {
                 font-size: 0.9rem;
                 line-height: 1.5;
             }
-
             .section-header {
                 padding: 0 15px;
             }
-
             .section-title {
                 font-size: 1.8rem;
             }
-
             .section-subtitle {
                 font-size: 0.95rem;
                 line-height: 1.4;
             }
-
             .map-container {
                 margin: 0 15px 30px;
             }
-
             .stores-info {
                 margin: 0 15px;
                 padding: 25px;
             }
-
             .stores-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
-
             .store-item {
                 padding: 15px;
             }
-
             .store-item h4 {
                 font-size: 1.1rem;
             }
-
             .store-item p {
                 font-size: 0.85rem;
             }
-
             .marker-circle {
                 width: 35px;
                 height: 35px;
             }
-            
             .marker-number {
                 font-size: 14px;
             }
-            
             .store-item:hover {
                 transform: translateY(-2px);
             }
-            
             .store-item-active {
                 transform: translateY(-3px);
             }
@@ -573,7 +496,7 @@
                             <i class="fas fa-user"></i>
                             Mi Cuenta
                         </a>
-                        <a href="admin-panel.html" class="user-menu-item" id="admin-panel-link" style="display: none;">
+                        <a href="panel-administrador.html" class="user-menu-item" id="admin-panel-link" style="display: none;">
                             <i class="fas fa-cog"></i>
                             Panel Admin
                         </a>
@@ -590,7 +513,6 @@
             </div>
         </div>
     </header>
-
     <main class="page-container">
         <section class="intro-section">
             <div class="intro-content">
@@ -598,7 +520,6 @@
                 <p class="intro-text">HuertoHogar es una tienda online dedicada a llevar la frescura y calidad de los productos del campo directamente a la puerta de nuestros clientes en Chile. Con más de 6 años de experiencia, operamos en más de 9 puntos a lo largo del país, incluyendo ciudades clave como Santiago, Puerto Montt, Villarrica, Nacimiento, Viña del Mar, Valparaíso, y Concepción. Nuestra misión es conectar a las familias chilenas con el campo, promoviendo un estilo de vida saludable y sostenible.</p>
             </div>
         </section>
-
         <section class="about-section">
             <div class="about-us-grid">
                 <div class="about-card mission-card">
@@ -701,7 +622,6 @@
             </div>
         </section>
     </main>
-    
     <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -728,7 +648,6 @@
         </div>
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
-
     <div id="cart-overlay" class="hidden"></div>
     <div id="cart-offcanvas" class="hidden">
         <div class="cart-header">
@@ -745,12 +664,10 @@
             <button class="btn btn-primary checkout-btn">Finalizar Compra</button>
         </div>
     </div>
-    
     <!-- Script de protección de sesión de administrador - DEBE EJECUTARSE PRIMERO -->
-    <script src="assets/js/admin-session-protection.js"></script>
-    
+    <script src="assets/js/proteccion-sesion-admin.js"></script>
     <script src="assets/js/script.js"></script>
-    <script src="assets/js/auth-enhanced.js"></script>
+    <script src="assets/js/autenticacion-mejorada.js"></script>
     <script>
         // Coordenadas de las tiendas en Chile
         const stores = [
@@ -818,30 +735,24 @@
                 info: 'Tienda Antofagasta - Región de Antofagasta'
             }
         ];
-
         // Variable global para el mapa
         let map;
         let markers = [];
-
         // Función para inicializar el mapa de OpenStreetMap
         function initMap() {
             try {
                 // Verificar que Leaflet esté disponible
                 if (typeof L === 'undefined') {
-                    console.error('Leaflet no está disponible');
                     handleMapError();
                     return;
                 }
-
                 // Crear el mapa centrado en Chile
                 map = L.map('map').setView([-35.6751, -71.5430], 6);
-
                 // Agregar capa de OpenStreetMap
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                     maxZoom: 18
                 }).addTo(map);
-
                 // Crear marcadores personalizados para cada tienda
                 stores.forEach((store, index) => {
                     // Crear icono personalizado con número
@@ -856,13 +767,10 @@
                         iconAnchor: [20, 40],
                         popupAnchor: [0, -40]
                     });
-
                     // Crear marcador con popup
                     const marker = L.marker([store.lat, store.lng], { icon: customIcon }).addTo(map);
-                    
                     // Almacenar el marcador en el array global
                     markers.push(marker);
-                    
                     // Crear contenido del popup
                     const popupContent = `
                         <div class="store-popup">
@@ -876,23 +784,19 @@
                             </p>
                         </div>
                     `;
-                    
                     // Agregar popup al marcador
                     marker.bindPopup(popupContent, {
                         maxWidth: 250,
                         className: 'custom-popup'
                     });
-
                     // Efecto hover en el marcador
                     marker.on('mouseover', function() {
                         this.getElement().querySelector('.marker-circle').style.transform = 'scale(1.1)';
                     });
-                    
                     marker.on('mouseout', function() {
                         this.getElement().querySelector('.marker-circle').style.transform = 'scale(1)';
                     });
                 });
-
                 // Agregar controles personalizados
                 const mapControls = L.control({ position: 'topright' });
                 mapControls.onAdd = function() {
@@ -914,11 +818,9 @@
                     return div;
                 };
                 mapControls.addTo(map);
-
                 // Centrar el mapa para mostrar todas las tiendas
                 const bounds = L.latLngBounds(stores.map(store => [store.lat, store.lng]));
                 map.fitBounds(bounds, { padding: [20, 20] });
-
                 // Agregar botón para centrar el mapa
                 const centerButton = L.control({ position: 'topleft' });
                 centerButton.onAdd = function() {
@@ -950,24 +852,17 @@
                     return div;
                 };
                 centerButton.addTo(map);
-
-                console.log('✅ Mapa de OpenStreetMap inicializado correctamente');
             } catch (error) {
-                console.error('❌ Error al inicializar el mapa:', error);
                 handleMapError();
             }
         }
-
         // Función para navegar a una tienda específica
         function navigateToStore(storeIndex) {
             if (!map || !markers[storeIndex]) {
-                console.error('Mapa o marcador no disponible');
                 return;
             }
-
             const store = stores[storeIndex];
             const marker = markers[storeIndex];
-
             // Scroll suave hacia el mapa
             const mapContainer = document.querySelector('.map-container');
             if (mapContainer) {
@@ -976,18 +871,15 @@
                     block: 'center' 
                 });
             }
-
             // Centrar el mapa en la tienda seleccionada con animación
             map.setView([store.lat, store.lng], 15, {
                 animate: true,
                 duration: 1.5
             });
-
             // Abrir el popup del marcador después de la animación
             setTimeout(() => {
                 marker.openPopup();
             }, 800);
-
             // Efecto visual en el marcador
             const markerElement = marker.getElement();
             if (markerElement) {
@@ -995,32 +887,27 @@
                 if (circle) {
                     circle.style.transform = 'scale(1.2)';
                     circle.style.boxShadow = '0 6px 20px rgba(46, 139, 87, 0.6)';
-                    
                     setTimeout(() => {
                         circle.style.transform = 'scale(1)';
                         circle.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
                     }, 1000);
                 }
             }
-
             // Resaltar la tienda en la lista
             highlightStoreInList(storeIndex);
         }
-
         // Función para resaltar la tienda en la lista
         function highlightStoreInList(storeIndex) {
             // Remover resaltado anterior
             document.querySelectorAll('.store-item').forEach(item => {
                 item.classList.remove('store-item-active');
             });
-
             // Resaltar la tienda seleccionada
             const storeItems = document.querySelectorAll('.store-item');
             if (storeItems[storeIndex]) {
                 storeItems[storeIndex].classList.add('store-item-active');
             }
         }
-
         // Función para manejar errores del mapa
         function handleMapError() {
             const mapContainer = document.getElementById('map');
@@ -1037,70 +924,53 @@
                 `;
             }
         }
-
         // Inicializar el mapa cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Inicializando mapa de OpenStreetMap...');
-            
             // Esperar un poco para asegurar que Leaflet esté cargado
             setTimeout(() => {
                 if (typeof L !== 'undefined') {
                     initMap();
                 } else {
-                    console.error('❌ Leaflet no está disponible');
                     handleMapError();
                 }
             }, 500);
         });
     </script>
-    
     <script>
         // Verificar sesión de administrador al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔍 Verificando sesión de administrador en nosotros.html...');
-            
             const isAdmin = localStorage.getItem('huertohogar_is_admin') === 'true';
             const userRole = localStorage.getItem('huertohogar_user_role');
-            
             if (isAdmin && userRole === 'admin') {
-                console.log('✅ Sesión de administrador detectada, actualizando header...');
-                
                 // Ocultar enlace "Ingresar"
                 const loginLink = document.getElementById('user-login-link');
                 if (loginLink) {
                     loginLink.style.display = 'none';
                 }
-                
                 // Mostrar perfil de usuario
                 const userProfile = document.getElementById('user-profile');
                 if (userProfile) {
                     userProfile.style.display = 'block';
                 }
-                
                 // Actualizar nombre de usuario
                 const userName = document.getElementById('user-name');
                 if (userName) {
                     userName.textContent = 'Administrador';
                 }
-                
                 // Mostrar enlace al panel de administración
                 const adminPanelLink = document.getElementById('admin-panel-link');
                 if (adminPanelLink) {
                     adminPanelLink.style.display = 'block';
                 }
-                
                 // Ocultar enlace "Mi Cuenta" para administradores
                 const miCuentaLink = document.getElementById('mi-cuenta-link');
                 if (miCuentaLink) {
                     miCuentaLink.style.display = 'none';
                 }
-                
                 // Configurar logout
                 const logoutBtn = document.getElementById('logout-btn');
                 if (logoutBtn) {
                     logoutBtn.addEventListener('click', function() {
-                        console.log('🚪 Cerrando sesión de administrador...');
-                        
                         // Usar función de limpieza autorizada si existe
                         if (typeof window.clearAdminSession === 'function') {
                             window.clearAdminSession();
@@ -1110,15 +980,11 @@
                             localStorage.removeItem('huertohogar_user_role');
                             localStorage.removeItem('huertoHogarAuth');
                         }
-                        
                         // Recargar la página para actualizar el header
                         window.location.reload();
                     });
                 }
-                
-                console.log('✅ Header actualizado para administrador');
             } else {
-                console.log('ℹ️ No hay sesión de administrador activa');
             }
         });
     </script>

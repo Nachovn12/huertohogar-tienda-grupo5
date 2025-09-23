@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon/favicon-512x512.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
     <link rel="manifest" href="assets/favicon/site.webmanifest">
-    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/normalizar.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
                             <i class="fas fa-user"></i>
                             Mi Cuenta
                         </a>
-                        <a href="admin-panel.html" class="user-menu-item" id="admin-panel-link" style="display: none;">
+                        <a href="panel-administrador.html" class="user-menu-item" id="admin-panel-link" style="display: none;">
                             <i class="fas fa-cog"></i>
                             Panel Admin
                         </a>
@@ -64,11 +64,9 @@
             </div>
         </div>
     </header>
-
     <main class="page-container">
         <h1 class="page-title">Nuestro Blog</h1>
         <p class="page-subtitle">Consejos, recetas y noticias sobre alimentación saludable y sostenibilidad.</p>
-        
         <div class="blog-grid content-section">
             <div class="blog-card grid-card">
                 <img src="https://images.pexels.com/photos/1656666/pexels-photo-1656666.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Receta de ensalada">
@@ -79,7 +77,6 @@
                     <a href="#" class="read-more-link">Leer más →</a>
                 </div>
             </div>
-
             <div class="blog-card grid-card" style="--delay: 0.1s">
                 <img src="https://images.pexels.com/photos/4198023/pexels-photo-4198023.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Compostaje casero">
                 <div class="blog-info">
@@ -89,7 +86,6 @@
                     <a href="#" class="read-more-link">Leer más →</a>
                 </div>
             </div>
-
             <div class="blog-card grid-card" style="--delay: 0.2s">
                 <img src="https://images.pexels.com/photos/257853/pexels-photo-257853.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Beneficios de la miel">
                 <div class="blog-info">
@@ -100,9 +96,7 @@
                 </div>
             </div>
         </div>
-
     </main>
-
     <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -129,7 +123,6 @@
         </div>
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
-    
     <div id="cart-overlay" class="hidden"></div>
     <div id="cart-offcanvas" class="hidden">
         <div class="cart-header">
@@ -146,60 +139,45 @@
             <button class="btn btn-primary checkout-btn">Finalizar Compra</button>
         </div>
     </div>
-
     <!-- Script de protección de sesión de administrador - DEBE EJECUTARSE PRIMERO -->
-    <script src="assets/js/admin-session-protection.js"></script>
-    
+    <script src="assets/js/proteccion-sesion-admin.js"></script>
     <script src="assets/js/script.js"></script>
-    <script src="assets/js/auth-enhanced.js"></script>
-    
+    <script src="assets/js/autenticacion-mejorada.js"></script>
     <script>
         // Verificar sesión de administrador al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔍 Verificando sesión de administrador en blog.html...');
-            
             const isAdmin = localStorage.getItem('huertohogar_is_admin') === 'true';
             const userRole = localStorage.getItem('huertohogar_user_role');
-            
             if (isAdmin && userRole === 'admin') {
-                console.log('✅ Sesión de administrador detectada, actualizando header...');
-                
                 // Ocultar enlace "Ingresar"
                 const loginLink = document.getElementById('user-login-link');
                 if (loginLink) {
                     loginLink.style.display = 'none';
                 }
-                
                 // Mostrar perfil de usuario
                 const userProfile = document.getElementById('user-profile');
                 if (userProfile) {
                     userProfile.style.display = 'block';
                 }
-                
                 // Actualizar nombre de usuario
                 const userName = document.getElementById('user-name');
                 if (userName) {
                     userName.textContent = 'Administrador';
                 }
-                
                 // Mostrar enlace al panel de administración
                 const adminPanelLink = document.getElementById('admin-panel-link');
                 if (adminPanelLink) {
                     adminPanelLink.style.display = 'block';
                 }
-                
                 // Ocultar enlace "Mi Cuenta" para administradores
                 const miCuentaLink = document.getElementById('mi-cuenta-link');
                 if (miCuentaLink) {
                     miCuentaLink.style.display = 'none';
                 }
-                
                 // Configurar logout
                 const logoutBtn = document.getElementById('logout-btn');
                 if (logoutBtn) {
                     logoutBtn.addEventListener('click', function() {
-                        console.log('🚪 Cerrando sesión de administrador...');
-                        
                         // Usar función de limpieza autorizada si existe
                         if (typeof window.clearAdminSession === 'function') {
                             window.clearAdminSession();
@@ -209,15 +187,11 @@
                             localStorage.removeItem('huertohogar_user_role');
                             localStorage.removeItem('huertoHogarAuth');
                         }
-                        
                         // Recargar la página para actualizar el header
                         window.location.reload();
                     });
                 }
-                
-                console.log('✅ Header actualizado para administrador');
             } else {
-                console.log('ℹ️ No hay sesión de administrador activa');
             }
         });
     </script>

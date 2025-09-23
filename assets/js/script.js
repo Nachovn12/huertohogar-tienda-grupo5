@@ -8,22 +8,16 @@ document.addEventListener('DOMContentLoaded', () => {
             window.updateHeaderInAllPages();
         }
     }
-    
     // --- Sistema de Búsqueda Local con localStorage ---
     const SEARCH_STORAGE_KEY = 'huertohogar_search_history';
     const PRODUCTS_STORAGE_KEY = 'huertohogar_products';
-    
     // --- Funcionalidad del Botón Hero ---
     const initHeroButton = () => {
         const heroButton = document.querySelector('.hero-section .btn-primary');
-        console.log('Botón hero encontrado:', heroButton);
-        
         if (heroButton) {
             // Agregar evento de click
             heroButton.addEventListener('click', function(e) {
-                console.log('Botón hero clickeado!');
                 e.preventDefault(); // Prevenir comportamiento por defecto
-                
                 // Tracking de analytics (opcional)
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'click', {
@@ -31,14 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         'event_label': 'Descubre Nuestros Productos'
                     });
                 }
-                
                 // Verificar si estamos en la página de productos
                 const currentPath = window.location.pathname;
                 const isOnProductsPage = currentPath.includes('productos.html') || currentPath.endsWith('/productos.html');
-                
                 if (isOnProductsPage) {
                     // Si estamos en productos.html, hacer scroll suave
-                    console.log('Haciendo scroll suave a productos');
                     const productsSection = document.getElementById('categories') || document.querySelector('.content-section');
                     if (productsSection) {
                         productsSection.scrollIntoView({ 
@@ -48,54 +39,42 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } else {
                     // Si no estamos en productos.html, navegar normalmente
-                    console.log('Navegando a productos.html');
                     window.location.href = 'productos.html';
                 }
             });
-            
             // Agregar evento de mouseover para debug
             heroButton.addEventListener('mouseover', function() {
-                console.log('Mouse sobre el botón hero');
             });
         } else {
-            console.log('No se encontró el botón hero');
         }
     };
-    
     // Inicializar funcionalidad del botón hero
     initHeroButton();
-    
     // Función para guardar productos en localStorage
     const saveProductsToStorage = (products) => {
         localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
     };
-    
     // Función para cargar productos desde localStorage
     const loadProductsFromStorage = () => {
         const stored = localStorage.getItem(PRODUCTS_STORAGE_KEY);
         return stored ? JSON.parse(stored) : null;
     };
-    
     // Función para guardar historial de búsquedas
     const saveSearchHistory = (searchTerm) => {
         if (!searchTerm.trim()) return;
-        
         let history = JSON.parse(localStorage.getItem(SEARCH_STORAGE_KEY) || '[]');
         history = history.filter(term => term !== searchTerm); // Evitar duplicados
         history.unshift(searchTerm); // Agregar al inicio
         history = history.slice(0, 10); // Mantener solo 10 búsquedas recientes
         localStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify(history));
     };
-    
     // Función para cargar historial de búsquedas
     const loadSearchHistory = () => {
         return JSON.parse(localStorage.getItem(SEARCH_STORAGE_KEY) || '[]');
     };
-    
     // Función de búsqueda local
     const searchProducts = (query, products) => {
         if (!query.trim()) return products;
-        
         const searchTerm = query.toLowerCase().trim();
         return products.filter(product => 
             product.name.toLowerCase().includes(searchTerm) ||
@@ -104,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
             product.id.toLowerCase().includes(searchTerm)
         );
     };
-    
     // Mapeo de productos a URLs amigables profesionales
     window.productUrlMap = {
         'FR001': 'producto/manzanas-fuji.html',
@@ -117,18 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
         'PO003': 'producto/quinua-organica.html',
         'PL001': 'producto/leche-entera.html'
     };
-    
     // Función para mostrar sugerencias de búsqueda
     const showSearchSuggestions = (input, products) => {
         const suggestionsContainer = document.getElementById('search-suggestions');
         if (!suggestionsContainer) return;
-        
         const query = input.value.toLowerCase().trim();
         if (query.length < 2) {
             suggestionsContainer.style.display = 'none';
             return;
         }
-        
         const suggestions = products
             .filter(product => 
                 product.name.toLowerCase().includes(query) ||
@@ -140,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: product.category,
                 id: product.id
             }));
-        
         if (suggestions.length > 0) {
             suggestionsContainer.innerHTML = suggestions
                 .map(suggestion => `
@@ -154,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
             suggestionsContainer.style.display = 'none';
         }
     };
-    
     // --- Sistema de Ofertas Especiales ---
     // Seleccionar los 4 productos más recomendados para ofertas
     const getRecommendedProductsForOffers = () => {
@@ -162,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const organicProducts = products.filter(p => p.category === 'Productos Orgánicos');
         const fujiApples = products.find(p => p.id === 'FR001');
         const carrots = products.find(p => p.id === 'VR003');
-        
         const recommendedProducts = [
             // Productos Orgánicos (2 productos)
             ...organicProducts,
@@ -171,14 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // Agregar 1 producto de Verduras Orgánicas (Zanahorias)
             carrots
         ].filter(Boolean); // Eliminar valores undefined
-        
         // Convertir a formato de ofertas con descuentos
         const offers = recommendedProducts.map((product, index) => {
             const discounts = [25, 20, 15, 18]; // Descuentos diferentes para cada producto
             const discount = discounts[index] || 15;
             const originalPrice = product.price;
             const offerPrice = Math.round(originalPrice * (1 - discount / 100));
-            
             return {
                 id: product.id,
                 name: product.name,
@@ -193,11 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 badge: `${discount}% OFF`
             };
         });
-        
-        console.log('🎯 Ofertas generadas:', offers);
         return offers;
     };
-
     // --- Función para obtener productos por defecto ---
     const getDefaultProducts = () => [
         { 
@@ -327,58 +294,40 @@ document.addEventListener('DOMContentLoaded', () => {
             createdAt: new Date().toISOString()
         }
     ];
-
     // --- Cargar productos desde localStorage o usar los por defecto ---
     let products = loadProductsFromStorage();
     if (!products) {
         products = getDefaultProducts();
         saveProductsToStorage(products);
     }
-
     // Inicializar ofertas especiales
     const specialOffers = getRecommendedProductsForOffers();
-    console.log('🎯 Ofertas especiales inicializadas:', specialOffers);
-    
     // Función de debug inmediato
     const debugOffersImmediately = () => {
-        console.log('🔍 DEBUG INMEDIATO:');
-        console.log('- Productos disponibles:', products.length);
-        console.log('- Ofertas generadas:', specialOffers.length);
-        console.log('- Contenedor offers-grid existe:', !!document.getElementById('offers-grid'));
-        console.log('- Document ready state:', document.readyState);
-        
         if (specialOffers.length > 0) {
-            console.log('- Primera oferta:', specialOffers[0]);
         }
     };
-    
     // Ejecutar debug inmediatamente
     debugOffersImmediately();
-
     // Función para obtener el precio de oferta de un producto
     const getOfferPrice = (productId) => {
         const offer = specialOffers.find(o => o.id === productId);
         return offer ? offer.offerPrice : null;
     };
-
     // Función para obtener el precio original de un producto en oferta
     const getOriginalPrice = (productId) => {
         const offer = specialOffers.find(o => o.id === productId);
         return offer ? offer.originalPrice : null;
     };
-
     // Función para verificar si un producto está en oferta
     const isProductOnOffer = (productId) => {
         return specialOffers.some(o => o.id === productId);
     };
-
     // Hacer las funciones de ofertas disponibles globalmente
     window.getOfferPrice = getOfferPrice;
     window.getOriginalPrice = getOriginalPrice;
     window.isProductOnOffer = isProductOnOffer;
-
     let cart = JSON.parse(localStorage.getItem('huertoHogarCart')) || [];
-    
     // --- Selectores del DOM ---
     const productListHome = document.getElementById('product-list-home');
     const productListFull = document.getElementById('product-list-full');
@@ -390,53 +339,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeCartBtn = document.getElementById('close-cart-btn');
     const cartOffcanvas = document.getElementById('cart-offcanvas');
     const cartOverlay = document.getElementById('cart-overlay');
-    
     // --- Funciones del Carrito y Productos ---
     const formatPrice = (price) => `$${price.toLocaleString('es-CL')} CLP`;
-    
     // Hacer formatPrice disponible globalmente
     window.formatPrice = formatPrice;
-    
     // Función para renderizar productos
     const renderProducts = (category = 'all', container, limit = null) => {
-        console.log('🎯 renderProducts llamado:', { category, container: !!container, limit });
-        
         try {
             if (!container) {
-                console.log('❌ No se encontró el contenedor');
                 return;
             }
-            
             const filtered = category === 'all' ? products : products.filter(p => p.category === category);
             const productsToRender = limit ? filtered.slice(0, limit) : filtered;
-            console.log('Productos a renderizar:', productsToRender.length);
-            console.log('Productos disponibles:', products.length);
-
             if (productsToRender.length === 0) {
-                console.log('❌ No hay productos para renderizar');
                 container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No hay productos disponibles.</p>';
                 return;
             }
-
             // Aplicar clase especial para categorías con pocos productos
             if (category !== 'all' && productsToRender.length <= 2) {
                 container.classList.add('few-products');
             } else {
                 container.classList.remove('few-products');
             }
-
             // Renderizado simplificado para debug
             let html = '';
             productsToRender.forEach((product, index) => {
-                console.log(`Renderizando producto ${index + 1}:`, product.name);
-                
                 try {
                     const offerPrice = getOfferPrice(product.id);
                     const originalPrice = getOriginalPrice(product.id);
                     const isOnOffer = isProductOnOffer(product.id);
                     const discountPercentage = isOnOffer ? Math.round((1 - offerPrice / originalPrice) * 100) : 0;
                     const savings = isOnOffer ? (originalPrice - offerPrice) : 0;
-                    
                     const productHtml = `
                         <div class="product-card grid-card" style="--delay: ${index * 0.1}s">
                             ${isOnOffer ? `<div class="offer-badge">🔥 ${discountPercentage}% OFF</div>` : (product.popular ? '<div class="new-badge">Popular</div>' : '')}
@@ -460,19 +393,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     `;
-                    
                     html += productHtml;
-                    console.log(`✅ Producto ${index + 1} renderizado correctamente`);
                 } catch (error) {
-                    console.error(`❌ Error al renderizar producto ${index + 1}:`, error);
                 }
             });
-
             container.innerHTML = html;
-            console.log('✅ renderProducts completado.');
-            console.log('HTML generado:', container.innerHTML.substring(0, 200) + '...');
-            console.log('Número de elementos en el contenedor:', container.children.length);
-
             // Aplicar animaciones a los productos recién renderizados
             setTimeout(() => {
                 try {
@@ -480,25 +405,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     enhanceImageAnimations();
                     enhanceButtonAnimations();
                 } catch (error) {
-                    console.error('Error en animaciones:', error);
                 }
             }, 100);
-            
         } catch (error) {
-            console.error('❌ Error general en renderProducts:', error);
             container.innerHTML = '<p style="text-align: center; color: #e74c3c; padding: 2rem;">Error al cargar los productos. Por favor, recarga la página.</p>';
         }
     };
-
     // Inicializar productos para la página principal
     if (productListHome) {
-        console.log('🎯 Inicializando productos para página principal...');
         renderProducts('all', productListHome, 6);
     }
-    
-    // La página de productos se inicializa con advanced-filters-fixed.js
+    // La página de productos se inicializa con filtros-avanzados.js
     // No necesitamos inicializar aquí para evitar conflictos
-
     // --- Función para Mostrar Detalles del Producto ---
     // --- Función para Redirigir a Detalles del Producto ---
     const goToProductDetails = (productId) => {
@@ -506,54 +424,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (productUrl) {
             window.location.href = productUrl;
         } else {
-            console.warn(`No se encontró URL para el producto: ${productId}`);
         }
     };
-
     const renderProductsAlphabetically = (category = 'all', container) => {
-        console.log('🎯 renderProductsAlphabetically llamado:', { category, container: !!container });
-        
         try {
             if (!container) {
-                console.log('❌ No se encontró el contenedor');
                 return;
             }
-            
             const filtered = category === 'all' ? products : products.filter(p => p.category === category);
-            
             // Ordenar productos alfabéticamente por nombre
             const sortedProducts = [...filtered].sort((a, b) => {
                 return a.name.localeCompare(b.name, 'es', { sensitivity: 'base' });
             });
-            
-            console.log('Productos a renderizar (ordenados alfabéticamente):', sortedProducts.length);
-            console.log('Orden de productos:', sortedProducts.map(p => p.name));
-
             if (sortedProducts.length === 0) {
-                console.log('❌ No hay productos para renderizar');
                 container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No hay productos disponibles.</p>';
                 return;
             }
-
             // Aplicar clase especial para categorías con pocos productos
             if (category !== 'all' && sortedProducts.length <= 2) {
                 container.classList.add('few-products');
             } else {
                 container.classList.remove('few-products');
             }
-
             // Renderizado con orden alfabético
             let html = '';
             sortedProducts.forEach((product, index) => {
-                console.log(`Renderizando producto ${index + 1}:`, product.name);
-                
                 try {
                     const offerPrice = getOfferPrice(product.id);
                     const originalPrice = getOriginalPrice(product.id);
                     const isOnOffer = isProductOnOffer(product.id);
                     const discountPercentage = isOnOffer ? Math.round((1 - offerPrice / originalPrice) * 100) : 0;
                     const savings = isOnOffer ? (originalPrice - offerPrice) : 0;
-                    
                     const productHtml = `
                         <div class="product-card grid-card" style="--delay: ${index * 0.1}s">
                             ${isOnOffer ? `<div class="offer-badge">🔥 ${discountPercentage}% OFF</div>` : (product.popular ? '<div class="new-badge">Popular</div>' : '')}
@@ -577,19 +478,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     `;
-                    
                     html += productHtml;
-                    console.log(`✅ Producto ${index + 1} renderizado correctamente`);
                 } catch (error) {
-                    console.error(`❌ Error al renderizar producto ${index + 1}:`, error);
                 }
             });
-
             container.innerHTML = html;
-            console.log('✅ renderProductsAlphabetically completado.');
-            console.log('HTML generado:', container.innerHTML.substring(0, 200) + '...');
-            console.log('Número de elementos en el contenedor:', container.children.length);
-
             // Aplicar animaciones a los productos recién renderizados
             setTimeout(() => {
                 try {
@@ -597,16 +490,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     enhanceImageAnimations();
                     enhanceButtonAnimations();
                 } catch (error) {
-                    console.error('Error en animaciones:', error);
                 }
             }, 100);
-            
         } catch (error) {
-            console.error('❌ Error general en renderProductsAlphabetically:', error);
             container.innerHTML = '<p style="text-align: center; color: #e74c3c; padding: 2rem;">Error al cargar los productos. Por favor, recarga la página.</p>';
         }
     };
-
     const renderCart = () => {
         if (cart.length === 0) {
             cartItemsList.innerHTML = `
@@ -618,7 +507,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         } else {
             cartItemsList.innerHTML = cart.map(item => {
-                console.log(`🛒 Renderizando item del carrito: ${item.name} (ID: ${item.id})`);
                 return `
                     <div class="cart-item" data-id="${item.id}">
                         <div class="cart-item-image">
@@ -649,34 +537,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        
         cartTotalSpan.textContent = formatPrice(total);
         cartCounter.textContent = totalItems;
         localStorage.setItem('huertoHogarCart', JSON.stringify(cart));
-        
         // Debug: verificar que los controles se crearon correctamente
         setTimeout(() => {
             const decreaseBtns = document.querySelectorAll('.decrease-btn');
             const increaseBtns = document.querySelectorAll('.increase-btn');
-            console.log(`🔍 Controles del carrito creados: ${decreaseBtns.length} botones - y ${increaseBtns.length} botones +`);
             decreaseBtns.forEach((btn, index) => {
-                console.log(`  - Botón ${index + 1}: ID=${btn.dataset.id}, Clases=${btn.className}`);
             });
             increaseBtns.forEach((btn, index) => {
-                console.log(`  + Botón ${index + 1}: ID=${btn.dataset.id}, Clases=${btn.className}`);
             });
         }, 100);
     };
-    
     const addToCart = (productId) => {
         // Buscar en productos regulares primero
         let productToAdd = products.find(p => p.id === productId);
-        
         if (productToAdd) {
             // Verificar si está en oferta
             const offerPrice = getOfferPrice(productId);
             const isOnOffer = isProductOnOffer(productId);
-            
             if (isOnOffer) {
                 productToAdd = {
                     ...productToAdd,
@@ -693,62 +573,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             }
         }
-        
         if (!productToAdd) return;
-        
         const existingItem = cart.find(item => item.id === productId);
-
         if (existingItem) {
             existingItem.quantity++;
         } else {
             cart.push({ ...productToAdd, quantity: 1 });
         }
-        
         renderCart();
-        
         // Mostrar notificación
         showNotification(`${productToAdd.name} agregado al carrito`, 'success');
-        
         // Solo abrir el carrito para productos regulares, no para ofertas
         if (products.find(p => p.id === productId)) {
             openCart();
         }
     };
-    
     const removeFromCart = (productId) => {
         cart = cart.filter(item => item.id !== productId);
         renderCart();
     };
-
     const increaseQuantity = (productId) => {
-        console.log('Aumentando cantidad para producto:', productId);
         const item = cart.find(item => item.id === productId);
         if (item) {
             item.quantity++;
             renderCart();
-            console.log('Cantidad actualizada:', item.quantity);
         } else {
-            console.log('Producto no encontrado en el carrito');
         }
     };
-
     const decreaseQuantity = (productId) => {
-        console.log('Disminuyendo cantidad para producto:', productId);
         const item = cart.find(item => item.id === productId);
         if (item) {
             if (item.quantity > 1) {
                 item.quantity--;
-                console.log('Cantidad actualizada:', item.quantity);
             } else {
-                console.log('Eliminando producto del carrito');
                 removeFromCart(productId);
             }
             renderCart();
         } else {
-            console.log('Producto no encontrado en el carrito');
         }
     };
-    
     const openCart = () => {
         cartOffcanvas.classList.remove('hidden');
         cartOverlay.classList.remove('hidden');
@@ -758,7 +621,6 @@ document.addEventListener('DOMContentLoaded', () => {
             cartOverlay.classList.add('visible');
         }, 10);
     };
-    
     const closeCart = () => {
         cartOffcanvas.classList.remove('visible');
         cartOverlay.classList.remove('visible');
@@ -768,7 +630,6 @@ document.addEventListener('DOMContentLoaded', () => {
             cartOverlay.classList.add('hidden');
         }, 300);
     };
-
     // --- Lógica de Filtros ---
     if (filterButtons.length > 0) {
         filterButtons.forEach(button => {
@@ -776,7 +637,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 filterButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
                 renderProducts(button.dataset.category, productListFull);
-                
                 // Mostrar/ocultar información de categoría
                 if (button.dataset.category === 'all') {
                     hideCategoryInfo();
@@ -786,19 +646,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-    
     // --- Filtrado Automático por Categoría desde URL ---
     const autoFilterByCategory = () => {
         // Obtener el parámetro de categoría de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const categoria = urlParams.get('categoria');
-        
         if (categoria && filterButtons.length > 0) {
             // Buscar el botón de filtro correspondiente
             const targetButton = Array.from(filterButtons).find(btn => 
                 btn.dataset.category === categoria
             );
-            
             if (targetButton) {
                 // Remover clase active de todos los botones
                 filterButtons.forEach(btn => btn.classList.remove('active'));
@@ -806,10 +663,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetButton.classList.add('active');
                 // Renderizar productos filtrados
                 renderProducts(categoria, productListFull);
-                
                 // Mostrar mensaje informativo de categoría
                 showCategoryInfo(categoria);
-                
                 // Hacer scroll suave hasta la sección de productos
                 setTimeout(() => {
                     document.getElementById('product-list-full').scrollIntoView({
@@ -820,18 +675,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     };
-    
     // --- Mostrar Información de Categoría Filtrada ---
     const showCategoryInfo = (categoria) => {
         const categoryInfo = document.getElementById('category-info');
         const categoryInfoText = document.getElementById('category-info-text');
-        
         if (categoryInfo && categoryInfoText) {
             categoryInfoText.textContent = `Mostrando productos de: ${categoria}`;
             categoryInfo.style.display = 'flex';
         }
     };
-    
     // --- Ocultar Información de Categoría ---
     const hideCategoryInfo = () => {
         const categoryInfo = document.getElementById('category-info');
@@ -839,14 +691,12 @@ document.addEventListener('DOMContentLoaded', () => {
             categoryInfo.style.display = 'none';
         }
     };
-
     // --- Event Listeners Globales ---
     if (openCartBtn) {
         openCartBtn.addEventListener('click', (e) => { e.preventDefault(); openCart(); });
         closeCartBtn.addEventListener('click', closeCart);
         cartOverlay.addEventListener('click', closeCart);
     }
-    
     // --- Event Listener para Botón "Ver Todos" ---
     const clearFilterBtn = document.getElementById('clear-filter');
     if (clearFilterBtn) {
@@ -855,20 +705,16 @@ document.addEventListener('DOMContentLoaded', () => {
             filterButtons.forEach(btn => btn.classList.remove('active'));
             const allButton = Array.from(filterButtons).find(btn => btn.dataset.category === 'all');
             if (allButton) allButton.classList.add('active');
-            
             // Renderizar todos los productos
             renderProducts('all', productListFull);
-            
             // Ocultar información de categoría
             hideCategoryInfo();
-            
             // Limpiar parámetro de URL
             const url = new URL(window.location);
             url.searchParams.delete('categoria');
             window.history.replaceState({}, '', url);
         });
     }
-
     // Event delegation para todos los botones
     document.body.addEventListener('click', (e) => {
         // Botón agregar al carrito (productos regulares)
@@ -878,7 +724,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 addToCart(productId);
             }
         }
-        
         // Botón eliminar del carrito
         if (e.target.classList.contains('remove-btn') || e.target.closest('.remove-btn')) {
             e.preventDefault();
@@ -886,11 +731,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const button = e.target.classList.contains('remove-btn') ? e.target : e.target.closest('.remove-btn');
             const productId = button?.dataset.id;
             if (productId) {
-                console.log('Botón eliminar clickeado, ID:', productId);
                 removeFromCart(productId);
             }
         }
-        
         // Botón aumentar cantidad
         if (e.target.classList.contains('increase-btn') || e.target.closest('.increase-btn')) {
             e.preventDefault();
@@ -898,11 +741,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const button = e.target.classList.contains('increase-btn') ? e.target : e.target.closest('.increase-btn');
             const productId = button?.dataset.id;
             if (productId) {
-                console.log('Botón + clickeado, ID:', productId);
                 increaseQuantity(productId);
             }
         }
-        
         // Botón disminuir cantidad
         if (e.target.classList.contains('decrease-btn') || e.target.closest('.decrease-btn')) {
             e.preventDefault();
@@ -910,11 +751,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const button = e.target.classList.contains('decrease-btn') ? e.target : e.target.closest('.decrease-btn');
             const productId = button?.dataset.id;
             if (productId) {
-                console.log('Botón - clickeado, ID:', productId);
                 decreaseQuantity(productId);
             }
         }
-        
         // Botón ver detalles
         if (e.target.classList.contains('view-details-btn') && !e.target.closest('.offer-card')) {
             const productId = e.target.dataset.id || e.target.closest('[data-id]')?.dataset.id;
@@ -923,7 +762,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-
     // --- Lógica para Animaciones al Hacer Scroll (Scroll Reveal) ---
     const intersectionObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -933,11 +771,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }, { threshold: 0.1 });
-
     document.querySelectorAll('.content-section').forEach(section => {
         intersectionObserver.observe(section);
     });
-
     // --- Renderizado Inicial ---
     if (productListHome) {
         renderProducts('all', productListHome, 6);
@@ -948,7 +784,6 @@ document.addEventListener('DOMContentLoaded', () => {
         autoFilterByCategory();
     }
     renderCart();
-    
     // --- Animación de Categorías ---
     const animateCategories = () => {
         const categoryCards = document.querySelectorAll('.category-card.detailed-card');
@@ -962,7 +797,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }, { threshold: 0.1 });
-        
         categoryCards.forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(30px)';
@@ -970,17 +804,14 @@ document.addEventListener('DOMContentLoaded', () => {
             categoryObserver.observe(card);
         });
     };
-
     // --- Animaciones Mejoradas para Productos ---
     const enhanceProductAnimations = () => {
         const productCards = document.querySelectorAll('.product-card');
-        
         productCards.forEach(card => {
             // Agregar efecto de entrada suave
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
             card.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-            
             // Observar cuando la tarjeta es visible
             const cardObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -992,16 +823,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }, { threshold: 0.1 });
-            
             cardObserver.observe(card);
-            
             // Agregar efectos de hover mejorados
             card.addEventListener('mouseenter', () => {
                 card.style.transform = 'translateY(-6px) scale(1.02)';
                 card.style.boxShadow = '0 20px 40px rgba(46, 139, 87, 0.15)';
                 card.style.borderColor = 'rgba(46, 139, 87, 0.3)';
             });
-            
             card.addEventListener('mouseleave', () => {
                 card.style.transform = 'translateY(0) scale(1)';
                 card.style.boxShadow = 'var(--shadow-soft)';
@@ -1009,49 +837,40 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     };
-
     // --- Animaciones para Imágenes de Productos ---
     const enhanceImageAnimations = () => {
         const productImages = document.querySelectorAll('.product-card img');
-        
         productImages.forEach(img => {
             img.addEventListener('mouseenter', () => {
                 img.style.transform = 'scale(1.05)';
                 img.style.boxShadow = '0 8px 20px rgba(46, 139, 87, 0.1)';
             });
-            
             img.addEventListener('mouseleave', () => {
                 img.style.transform = 'scale(1)';
                 img.style.boxShadow = 'none';
             });
         });
     };
-
     // --- Animaciones para Botones ---
     const enhanceButtonAnimations = () => {
         const buttons = document.querySelectorAll('.add-to-cart-btn');
-        
         buttons.forEach(button => {
             button.addEventListener('mouseenter', () => {
                 button.style.transform = 'translateY(-2px) scale(1.02)';
                 button.style.boxShadow = '0 6px 20px rgba(46, 139, 87, 0.4)';
             });
-            
             button.addEventListener('mouseleave', () => {
                 button.style.transform = 'translateY(0) scale(1)';
                 button.style.boxShadow = '0 2px 8px rgba(46, 139, 87, 0.3)';
             });
         });
     };
-    
     // --- Actualizar Contadores de Productos por Categoría ---
     const updateCategoryProductCounts = () => {
         const categories = ['Frutas Frescas', 'Verduras Orgánicas', 'Productos Orgánicos', 'Productos Lácteos'];
-        
         categories.forEach(category => {
             const productCount = products.filter(p => p.category === category).length;
             const countElements = document.querySelectorAll('.count-number');
-            
             // Mapear categoría con su posición en el HTML
             const categoryIndex = {
                 'Frutas Frescas': 0,
@@ -1059,10 +878,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Productos Orgánicos': 2,
                 'Productos Lácteos': 3
             };
-            
             if (countElements[categoryIndex[category]]) {
                 countElements[categoryIndex[category]].textContent = productCount;
-                
                 // Actualizar texto singular/plural
                 const parentDiv = countElements[categoryIndex[category]].parentElement;
                 const textNode = parentDiv.childNodes[2]; // El nodo de texto después del span
@@ -1072,18 +889,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     };
-
     // --- Inicialización del Sistema de Búsqueda ---
     const initializeSearchSystem = () => {
         // Guardar productos en localStorage si no existen
         if (!loadProductsFromStorage()) {
             saveProductsToStorage(products);
         }
-        
         // Obtener elementos de búsqueda
         const searchInputs = document.querySelectorAll('.search-bar input[type="text"]');
         const searchButtons = document.querySelectorAll('.search-bar');
-        
         searchInputs.forEach(input => {
             // Crear contenedor de sugerencias si no existe
             if (!document.getElementById('search-suggestions')) {
@@ -1104,7 +918,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     max-height: 300px;
                     overflow-y: auto;
                 `;
-                
                 // Insertar después del input
                 const searchBar = input.closest('.search-bar');
                 if (searchBar) {
@@ -1112,13 +925,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     searchBar.appendChild(suggestionsContainer);
                 }
             }
-            
             // Evento de búsqueda en tiempo real
             input.addEventListener('input', (e) => {
                 const query = e.target.value;
                 showSearchSuggestions(input, products);
             });
-            
             // Evento de búsqueda al presionar Enter
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -1126,7 +937,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.performSearch(input.value);
                 }
             });
-            
             // Evento de click en sugerencias
             document.addEventListener('click', (e) => {
                 if (e.target.closest('.search-suggestion')) {
@@ -1144,7 +954,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
-            
             // Ocultar sugerencias al hacer click fuera
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.search-bar')) {
@@ -1155,27 +964,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-        
         // Función para realizar búsqueda (global)
         window.performSearch = (query) => {
             if (!query.trim()) return;
-            
             // Guardar en historial
             saveSearchHistory(query);
-            
             // Filtrar productos
             const filteredProducts = searchProducts(query, products);
-            
             // Mostrar resultados
             displaySearchResults(filteredProducts, query);
-            
             // Ocultar sugerencias
             const suggestions = document.getElementById('search-suggestions');
             if (suggestions) {
                 suggestions.style.display = 'none';
             }
         };
-        
         // Función para mostrar resultados de búsqueda
         const displaySearchResults = (filteredProducts, query) => {
             // Si hay exactamente 1 resultado, ir directamente al producto
@@ -1189,7 +992,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return;
             }
-            
             // Si estamos en la página de productos, filtrar la vista
             if (window.location.pathname.includes('productos.html')) {
                 const productGrid = document.getElementById('product-list-home');
@@ -1212,11 +1014,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = `productos.html?${searchParams.toString()}`;
             }
         };
-        
         // Función para renderizar productos (usando la función principal)
         const renderSearchProducts = (productsToRender, container) => {
             if (!container) return;
-            
             // Usar la función principal renderProducts
             container.innerHTML = productsToRender.map((product, index) => {
                 const offerPrice = getOfferPrice(product.id);
@@ -1224,7 +1024,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isOnOffer = isProductOnOffer(product.id);
                 const discountPercentage = isOnOffer ? Math.round((1 - offerPrice / originalPrice) * 100) : 0;
                 const savings = isOnOffer ? (originalPrice - offerPrice) : 0;
-                
                 return `
                     <div class="product-card grid-card" style="--delay: ${index * 0.1}s">
                         ${isOnOffer ? `<div class="offer-badge">🔥 ${discountPercentage}% OFF</div>` : (product.popular ? '<div class="new-badge">Popular</div>' : '')}
@@ -1251,27 +1050,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }).join('');
         };
     };
-    
     // Inicializar animaciones de categorías
     animateCategories();
-    
     // Inicializar animaciones mejoradas para productos
     enhanceProductAnimations();
     enhanceImageAnimations();
     enhanceButtonAnimations();
-    
     // Actualizar contadores de productos por categoría
     updateCategoryProductCounts();
-    
     // Inicializar sistema de búsqueda
     initializeSearchSystem();
-    
     // Manejar búsquedas desde URL
     const handleURLSearch = () => {
         if (window.location.pathname.includes('productos.html')) {
             const urlParams = new URLSearchParams(window.location.search);
             const searchQuery = urlParams.get('search');
-            
             if (searchQuery) {
                 // Aplicar búsqueda automáticamente
                 const searchInput = document.querySelector('.search-bar input[type="text"]');
@@ -1282,22 +1075,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     };
-    
     // Ejecutar búsqueda desde URL al cargar la página
     handleURLSearch();
-    
     // Función para corregir controles del carrito con IDs hardcodeados
     const fixHardcodedCartControls = () => {
-        console.log('🔧 Verificando controles del carrito con IDs hardcodeados...');
-        
         // Buscar todos los controles del carrito que puedan tener IDs hardcodeados
         const cartControls = document.querySelectorAll('.cart-item-controls');
-        
         cartControls.forEach(control => {
             const decreaseBtn = control.querySelector('.decrease-btn');
             const increaseBtn = control.querySelector('.increase-btn');
             const removeBtn = control.querySelector('.remove-btn');
-            
             // Buscar el ID del producto en el contexto del item del carrito
             const cartItem = control.closest('.cart-item');
             if (cartItem) {
@@ -1309,44 +1096,34 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Actualizar los data-id de los botones
                         if (decreaseBtn) {
                             decreaseBtn.dataset.id = product.id;
-                            console.log(`✅ Corregido decrease-btn para ${product.name}: ${product.id}`);
                         }
                         if (increaseBtn) {
                             increaseBtn.dataset.id = product.id;
-                            console.log(`✅ Corregido increase-btn para ${product.name}: ${product.id}`);
                         }
                         if (removeBtn) {
                             removeBtn.dataset.id = product.id;
-                            console.log(`✅ Corregido remove-btn para ${product.name}: ${product.id}`);
                         }
                     }
                 }
             }
         });
     };
-    
     // Ejecutar corrección de controles al cargar la página
     setTimeout(fixHardcodedCartControls, 1000);
-    
     // También ejecutar cuando se actualice el carrito
     const originalRenderCart = renderCart;
     const enhancedRenderCart = function() {
         originalRenderCart.call(this);
         setTimeout(fixHardcodedCartControls, 100);
     };
-    
     // Reemplazar la función original
     window.renderCart = enhancedRenderCart;
-    
     // Función para asegurar que todos los controles del carrito funcionen
     const ensureCartControlsWork = () => {
-        console.log('🛒 Asegurando que todos los controles del carrito funcionen...');
-        
         // Buscar todos los botones de control del carrito en toda la página
         const allDecreaseBtns = document.querySelectorAll('.decrease-btn');
         const allIncreaseBtns = document.querySelectorAll('.increase-btn');
         const allRemoveBtns = document.querySelectorAll('.remove-btn');
-        
         // Función para corregir un botón específico
         const fixButton = (button, type) => {
             if (!button.dataset.id) {
@@ -1361,24 +1138,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         );
                         if (product) {
                             button.dataset.id = product.id;
-                            console.log(`✅ Corregido ${type} para ${product.name}: ${product.id}`);
                         }
                     }
                 }
             }
         };
-        
         // Corregir todos los botones
         allDecreaseBtns.forEach(btn => fixButton(btn, 'decrease-btn'));
         allIncreaseBtns.forEach(btn => fixButton(btn, 'increase-btn'));
         allRemoveBtns.forEach(btn => fixButton(btn, 'remove-btn'));
-        
-        console.log('✅ Verificación de controles del carrito completada');
     };
-    
     // Ejecutar la verificación periódicamente
     setInterval(ensureCartControlsWork, 2000);
-    
     // También ejecutar cuando se detecten cambios en el DOM
     const cartObserver = new MutationObserver((mutations) => {
         let shouldCheck = false;
@@ -1392,18 +1163,15 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(ensureCartControlsWork, 500);
         }
     });
-    
     cartObserver.observe(document.body, {
         childList: true,
         subtree: true
     });
-    
     // --- Funcionalidad para página de detalle de producto ---
     const loadProductDetail = () => {
         if (window.location.pathname.includes('producto-detalle.html')) {
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
-            
             if (productId) {
                 const product = products.find(p => p.id === productId);
                 if (product) {
@@ -1415,10 +1183,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('product-description').textContent = product.description;
                     document.getElementById('product-origin').textContent = 'Valle del Maule, Chile';
                     document.getElementById('product-stock').textContent = `${product.stock} ${product.unit}`;
-                    
                     // Actualizar título de la página
                     document.title = `${product.name} - HuertoHogar`;
-                    
                     // Configurar botón de agregar al carrito
                     const addToCartBtn = document.getElementById('add-to-cart-detail');
                     if (addToCartBtn) {
@@ -1454,44 +1220,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     };
-    
     // Cargar detalle del producto al cargar la página
     loadProductDetail();
-    
     // --- Sistema de Ofertas Especiales ---
-
     // Función para renderizar ofertas especiales
     const renderOffers = () => {
-        console.log('🎯 Ejecutando renderOffers...');
-        console.log('Ofertas disponibles:', specialOffers);
-        
         const offersContainer = document.getElementById('offers-grid');
-        console.log('Contenedor de ofertas encontrado:', offersContainer);
-        
         if (!offersContainer) {
-            console.log('❌ No se encontró el contenedor offers-grid');
             // Reintentar después de un breve delay
             setTimeout(() => {
                 const retryContainer = document.getElementById('offers-grid');
                 if (retryContainer) {
-                    console.log('✅ Contenedor encontrado en reintento');
                     renderOffers();
                 }
             }, 100);
             return;
         }
-
         if (!specialOffers || specialOffers.length === 0) {
-            console.log('❌ No hay ofertas disponibles para renderizar');
             offersContainer.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No hay ofertas disponibles en este momento.</p>';
             return;
         }
-
-        console.log('Ofertas a renderizar:', specialOffers.length);
-        
         try {
             offersContainer.innerHTML = specialOffers.map((offer, index) => {
-                console.log(`Renderizando oferta ${index + 1}:`, offer);
                 return `
                     <div class="offer-card grid-card" style="--delay: ${index * 0.2}s; opacity: 1; transform: translateY(0px) scale(1); transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: var(--shadow-soft); border-color: rgba(0, 0, 0, 0.05);">
                         <div class="offer-badge">${offer.badge}</div>
@@ -1515,20 +1265,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
             }).join('');
-
-            console.log('✅ Ofertas renderizadas correctamente');
-            console.log('HTML generado:', offersContainer.innerHTML.substring(0, 200) + '...');
-
             // Aplicar animaciones a las ofertas
             setTimeout(() => {
                 const offerCards = document.querySelectorAll('.offer-card');
-                console.log('Tarjetas de ofertas encontradas para animar:', offerCards.length);
-                
                 offerCards.forEach(card => {
                     card.style.opacity = '0';
                     card.style.transform = 'translateY(30px)';
                     card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                    
                     const offerObserver = new IntersectionObserver((entries) => {
                         entries.forEach(entry => {
                             if (entry.isIntersecting) {
@@ -1539,47 +1282,37 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         });
                     }, { threshold: 0.1 });
-                    
                     offerObserver.observe(card);
                 });
             }, 100);
         } catch (error) {
-            console.error('❌ Error al renderizar ofertas:', error);
             offersContainer.innerHTML = '<p style="text-align: center; color: #e74c3c; padding: 2rem;">Error al cargar las ofertas. Por favor, recarga la página.</p>';
         }
     };
-
     // Función para agregar oferta al carrito
     const addOfferToCart = (offerId) => {
         const offer = specialOffers.find(o => o.id === offerId);
         if (!offer) return;
-
         // Convertir oferta a formato de producto normal
         const productToAdd = {
             ...offer,
             price: offer.offerPrice
         };
-        
         const existingItem = cart.find(item => item.id === offerId);
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
             cart.push({ ...productToAdd, quantity: 1 });
         }
-        
         renderCart();
-        
         // Abrir el carrito automáticamente
         openCart();
-        
         // Mostrar notificación
         showNotification(`${offer.name} agregado al carrito`, 'success');
     };
-
     const showOfferDetails = (offerId) => {
         goToProductDetails(offerId);
     };
-
     // Función para mostrar notificaciones mejorada
     const showNotification = (message, type = 'info') => {
         // Crear elemento de notificación
@@ -1589,15 +1322,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <i class="fas fa-${getNotificationIcon(type)}"></i>
             <span>${message}</span>
         `;
-        
         // Agregar al DOM
         document.body.appendChild(notification);
-        
         // Mostrar con animación
         setTimeout(() => {
             notification.classList.add('show');
         }, 100);
-        
         // Remover después de 4 segundos (más tiempo para leer)
         setTimeout(() => {
             notification.classList.remove('show');
@@ -1608,7 +1338,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 300);
         }, 4000);
     };
-
     function getNotificationIcon(type) {
         const icons = {
             success: 'check-circle',
@@ -1618,10 +1347,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         return icons[type] || 'info-circle';
     }
-
     // Hacer showNotification disponible globalmente
     window.showNotification = showNotification;
-
     // Event listeners para ofertas
     document.body.addEventListener('click', (e) => {
         // Botones de ofertas
@@ -1632,50 +1359,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const offerId = e.target.dataset.id;
             showOfferDetails(offerId);
         }
-        
         if (e.target.classList.contains('offer-view-btn')) {
             const offerId = e.target.dataset.id;
             goToProductDetails(offerId);
         }
     });
-
     // Variable para controlar si ya se inicializaron las ofertas
     let offersInitialized = false;
-    
     // Función de inicialización de ofertas
     const initializeOffers = () => {
         // Evitar múltiples inicializaciones
         if (offersInitialized) {
             return;
         }
-        
-        console.log('🎯 Inicializando sistema de ofertas...');
-        console.log('Ofertas disponibles:', specialOffers);
-        console.log('Contenedor offers-grid existe:', !!document.getElementById('offers-grid'));
-        
         // Verificar que el contenedor existe antes de proceder
         const offersContainer = document.getElementById('offers-grid');
         if (!offersContainer) {
-            console.log('⏳ Contenedor no encontrado, no se puede inicializar ofertas');
             return;
         }
-        
         if (specialOffers && specialOffers.length > 0) {
             renderOffers();
             offersInitialized = true;
-            console.log('✅ Ofertas inicializadas correctamente');
         } else {
-            console.log('❌ No se pudieron generar ofertas especiales');
         }
     };
-    
     // Inicializar ofertas cuando el DOM esté listo
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initializeOffers);
     } else {
         initializeOffers();
     }
-    
     // También intentar cuando se detecten cambios en el DOM
     const offersObserver = new MutationObserver((mutations) => {
         let shouldCheck = false;
@@ -1688,57 +1401,46 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(initializeOffers, 500);
         }
     });
-    
     offersObserver.observe(document.body, {
         childList: true,
         subtree: true
     });
 });
-
 // Función global para inicializar el carrusel infinito de productos recomendados
 function initializeCarousel(currentProductId) {
     const carouselWrapper = document.getElementById('carousel-wrapper');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const dotsContainer = document.getElementById('carousel-dots');
-    
     if (!carouselWrapper || !prevBtn || !nextBtn || !dotsContainer) {
         return;
     }
-    
     // Función para intentar inicializar el carrusel
     const tryInitializeCarousel = () => {
         // Obtener productos desde localStorage
         const storedProducts = localStorage.getItem('huertohogar_products');
-        
         if (!storedProducts) {
             // Si no hay productos, esperar un poco y volver a intentar
             setTimeout(tryInitializeCarousel, 100);
             return;
         }
-        
         const allProducts = JSON.parse(storedProducts);
         const currentProduct = allProducts.find(p => p.id === currentProductId);
-        
         if (!currentProduct) {
             return;
         }
-        
         // Continuar con la inicialización del carrusel
         initializeCarouselWithProducts(allProducts, currentProduct);
     };
-    
     // Iniciar el proceso
     tryInitializeCarousel();
 }
-
 // Función auxiliar para inicializar el carrusel con los productos
 function initializeCarouselWithProducts(allProducts, currentProduct) {
     const carouselWrapper = document.getElementById('carousel-wrapper');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const dotsContainer = document.getElementById('carousel-dots');
-    
     // Filtrar productos relacionados (misma categoría o productos similares)
     const relatedProducts = allProducts.filter(product => 
         product.id !== currentProduct.id && 
@@ -1747,10 +1449,7 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
          product.category === 'Frutas Frescas' ||
          product.category === 'Verduras Orgánicas')
     ).slice(0, 8); // Aumentar a 8 productos para el loop infinito
-    
     if (relatedProducts.length === 0) {
-        console.warn('No se encontraron productos relacionados, usando productos de prueba');
-        
         // Productos de prueba para debuggear
         const testProducts = [
             {
@@ -1775,19 +1474,15 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
                 category: 'productos-organicos'
             }
         ];
-        
         initializeCarouselWithProducts(testProducts, currentProduct);
         return;
     }
-    
     // Configuración del carrusel infinito
     let currentIndex = 0;
     const itemsPerView = window.innerWidth <= 768 ? 2 : 3;
     const totalItems = relatedProducts.length;
-    
     // Crear productos duplicados para carrusel CSS infinito
     const duplicatedProducts = [...relatedProducts, ...relatedProducts];
-    
     // Función para obtener el nombre de la categoría
     function getCategoryName(category) {
         const categoryNames = {
@@ -1798,14 +1493,12 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
         };
         return categoryNames[category] || 'Producto';
     }
-    
     // Función para generar rating aleatorio
     function generateRating() {
         const rating = (4.0 + Math.random() * 1.0).toFixed(1);
         const reviewCount = Math.floor(Math.random() * 50) + 10;
         return { rating, reviewCount };
     }
-    
     // Renderizar productos en el carrusel
     function renderCarouselItems() {
         carouselWrapper.innerHTML = duplicatedProducts.map((product, index) => {
@@ -1813,10 +1506,8 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
             const offerPrice = getOfferPrice(product.id);
             const originalPrice = getOriginalPrice(product.id);
             const isOnOffer = isProductOnOffer(product.id);
-            
             const discountPercentage = isOnOffer ? Math.round((1 - offerPrice / originalPrice) * 100) : 0;
             const savings = isOnOffer ? (originalPrice - offerPrice) : 0;
-            
             return `
                 <div class="carousel-item" data-index="${index}" onclick="window.location.href='${window.productUrlMap[product.id] || '#'}'">
                     <div class="category-badge">${getCategoryName(product.category)}</div>
@@ -1844,7 +1535,6 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
             `;
         }).join('');
     }
-    
     // Renderizar puntos de navegación
     function renderDots() {
         dotsContainer.innerHTML = '';
@@ -1856,29 +1546,24 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
             dotsContainer.appendChild(dot);
         }
     }
-    
     // Ir a una slide específica optimizada
     function goToSlide(index) {
         currentIndex = index;
         const translateX = -currentIndex * itemWidth;
         carouselWrapper.style.transform = `translateX(${translateX}%)`;
-        
         // Actualizar puntos activos
         document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
             dot.classList.toggle('active', i === index);
         });
-        
         // Actualizar estado de botones
         prevBtn.disabled = false;
         nextBtn.disabled = false;
     }
-    
     // Siguiente slide con loop infinito perfecto
     function nextSlide() {
         currentIndex++;
         const translateX = -currentIndex * itemWidth;
         carouselWrapper.style.transform = `translateX(${translateX}%)`;
-        
         // Si llegamos al final de la primera copia, saltar al inicio de la segunda copia
         if (currentIndex >= totalItems) {
             setTimeout(() => {
@@ -1889,16 +1574,13 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
                 carouselWrapper.style.transition = 'transform 0.3s ease-out';
             }, 300);
         }
-        
         updateDots();
     }
-    
     // Slide anterior con loop infinito perfecto
     function prevSlide() {
         currentIndex--;
         const translateX = -currentIndex * itemWidth;
         carouselWrapper.style.transform = `translateX(${translateX}%)`;
-        
         // Si llegamos antes del inicio, saltar al final de la primera copia
         if (currentIndex < 0) {
             currentIndex = totalItems - 1;
@@ -1909,24 +1591,19 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
                 carouselWrapper.style.transition = 'transform 0.3s ease-out';
             }, 300);
         }
-        
         updateDots();
     }
-    
     // Actualizar puntos de navegación
     function updateDots() {
         const totalSlides = Math.ceil(totalItems / itemsPerView);
         const activeDot = currentIndex % totalSlides;
-        
         document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
             dot.classList.toggle('active', i === activeDot);
         });
     }
-    
     // Event listeners
     nextBtn.addEventListener('click', nextSlide);
     prevBtn.addEventListener('click', prevSlide);
-    
     // Auto-play del carrusel infinito
     let autoPlayInterval;
     function startAutoPlay() {
@@ -1934,39 +1611,31 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
             nextSlide();
         }, 2500); // Cambiar cada 2.5 segundos
     }
-    
     function stopAutoPlay() {
         if (autoPlayInterval) {
             clearInterval(autoPlayInterval);
         }
     }
-    
     // Pausar auto-play al hacer hover
     carouselWrapper.addEventListener('mouseenter', stopAutoPlay);
     carouselWrapper.addEventListener('mouseleave', startAutoPlay);
-    
     // Touch/swipe support para móviles
     let startX = 0;
     let isDragging = false;
-    
     carouselWrapper.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
         isDragging = true;
         stopAutoPlay();
     });
-    
     carouselWrapper.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
         e.preventDefault();
     });
-    
     carouselWrapper.addEventListener('touchend', (e) => {
         if (!isDragging) return;
         isDragging = false;
-        
         const endX = e.changedTouches[0].clientX;
         const diff = startX - endX;
-        
         if (Math.abs(diff) > 50) { // Mínimo swipe de 50px
             if (diff > 0) {
                 nextSlide();
@@ -1974,16 +1643,13 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
                 prevSlide();
             }
         }
-        
         startAutoPlay();
     });
-    
     // Inicializar carrusel
     renderCarouselItems();
     renderDots();
     goToSlide(0);
     startAutoPlay();
-    
     // Responsive: recalcular en resize
     let resizeTimeout;
     window.addEventListener('resize', () => {
@@ -1996,11 +1662,9 @@ function initializeCarouselWithProducts(allProducts, currentProduct) {
         }, 250);
     });
 }
-
 // ========================================
 // MODAL DE AUTENTICACIÓN
 // ========================================
-
 class AuthModal {
     constructor() {
         this.modal = document.getElementById('auth-modal');
@@ -2008,16 +1672,12 @@ class AuthModal {
         this.isAuthenticated = false;
         this.user = null;
         this.loginEmail = null;
-        
         this.init();
     }
-
     init() {
         this.bindEvents();
         this.checkExistingAuth();
-        console.log('🔐 Modal de autenticación inicializado');
     }
-
     bindEvents() {
         // Botones de navegación del modal
         document.getElementById('show-register')?.addEventListener('click', () => this.showSection('register'));
@@ -2026,45 +1686,36 @@ class AuthModal {
         document.getElementById('back-to-welcome-login')?.addEventListener('click', () => this.showSection('welcome'));
         document.getElementById('guest-checkout')?.addEventListener('click', () => this.handleGuestCheckout());
         document.getElementById('auth-modal-close')?.addEventListener('click', () => this.closeModal());
-
         // Formularios
         document.getElementById('register-form')?.addEventListener('submit', (e) => this.handleRegister(e));
         document.getElementById('login-email-form')?.addEventListener('submit', (e) => this.handleLoginStep1(e));
         document.getElementById('login-password-form')?.addEventListener('submit', (e) => this.handleLoginStep2(e));
-        
         // Event listeners para el flujo de login de dos pasos
         document.getElementById('switch-to-login')?.addEventListener('click', (e) => {
             e.preventDefault();
             this.showSection('login-step1');
         });
-
         document.getElementById('switch-to-register')?.addEventListener('click', (e) => {
             e.preventDefault();
             this.showSection('register');
         });
-
         document.getElementById('change-email-link')?.addEventListener('click', (e) => {
             e.preventDefault();
             this.showSection('login-step1');
         });
-
         // Toggle de visibilidad de contraseña
         document.getElementById('password-toggle')?.addEventListener('click', () => this.togglePasswordVisibility());
-
         // Validación en tiempo real
         this.setupRealTimeValidation();
-
         // Cerrar modal con ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.modal.classList.contains('active')) {
                 this.closeModal();
             }
         });
-
         // Remover el event listener de click fuera del modal
         // El modal solo se cerrará con el botón X o la tecla ESC
     }
-
     setupRealTimeValidation() {
         // Validación en tiempo real para registro
         const registerInputs = ['register-email', 'register-phone', 'register-firstname', 'register-lastname', 'register-rut', 'register-password', 'register-confirm-password'];
@@ -2075,7 +1726,6 @@ class AuthModal {
                 input.addEventListener('input', () => this.clearFieldError(inputId));
             }
         });
-
         // Validación en tiempo real para login
         const loginInputs = ['login-email', 'login-password'];
         loginInputs.forEach(inputId => {
@@ -2086,71 +1736,48 @@ class AuthModal {
             }
         });
     }
-
     openModal() {
-        console.log('🔐 Intentando abrir modal de autenticación...');
-        
         // Verificar si el usuario está autenticado
         this.checkAuthStatus();
-        
         if (this.isAuthenticated) {
-            console.log('✅ Usuario ya autenticado, procediendo al checkout');
             this.proceedToCheckout();
             return;
         }
-
         // Verificar que el modal existe
         if (!this.modal) {
-            console.error('❌ Modal de autenticación no encontrado');
             return;
         }
-
-        console.log('✅ Modal encontrado, mostrando...');
-
         // Asegurar que el modal esté visible
         this.modal.style.display = 'flex';
         this.modal.style.visibility = 'visible';
         this.modal.style.opacity = '1';
         this.modal.classList.add('active');
-        
         // Prevenir scroll del body
         document.body.style.overflow = 'hidden';
         document.body.classList.add('modal-open');
-        
         // Mostrar la sección de bienvenida
         this.showSection('welcome');
-        
         // Focus en el primer elemento interactivo
         setTimeout(() => {
             const firstButton = this.modal.querySelector('button:not(.close-btn)');
             if (firstButton) {
                 firstButton.focus();
-                console.log('✅ Focus establecido en el primer botón');
             } else {
-                console.warn('⚠️ No se encontró el primer botón para focus');
             }
         }, 100);
-
-        console.log('✅ Modal de autenticación abierto correctamente');
     }
-
     closeModal() {
         // Ocultar con animación
         this.modal.classList.remove('active');
-        
         // Restaurar scroll del body
         document.body.style.overflow = '';
         document.body.classList.remove('modal-open');
-        
         // Ocultar completamente después de la animación
         setTimeout(() => {
             this.modal.style.display = 'none';
         }, 300);
-        
         this.resetForms();
-        console.log('🔐 Modal de autenticación cerrado');
     }
-
     showSection(sectionName) {
         // Ocultar todas las secciones
         const sections = this.modal.querySelectorAll('.auth-section');
@@ -2158,11 +1785,9 @@ class AuthModal {
             section.classList.remove('active');
             section.style.display = 'none';
         });
-
         // Ocultar el contenido principal
         const mainBody = this.modal.querySelector('.auth-modal-body');
         const mainActions = this.modal.querySelector('.auth-actions');
-        
         // Actualizar el título del header según la sección
         const titleElement = document.getElementById('auth-modal-title');
         if (titleElement) {
@@ -2183,7 +1808,6 @@ class AuthModal {
                     titleElement.textContent = 'Inicia sesión o regístrate';
             }
         }
-        
         if (sectionName === 'welcome') {
             // Mostrar contenido principal
             if (mainBody) mainBody.style.display = 'block';
@@ -2193,13 +1817,11 @@ class AuthModal {
             // Ocultar contenido principal y mostrar formulario
             if (mainBody) mainBody.style.display = 'none';
             if (mainActions) mainActions.style.display = 'none';
-            
             const targetSection = document.getElementById(`auth-${sectionName}`);
             if (targetSection) {
                 targetSection.style.display = 'block';
                 targetSection.classList.add('active');
                 this.currentSection = sectionName;
-                
                 // Focus en el primer input de la sección
                 setTimeout(() => {
                     const firstInput = targetSection.querySelector('input');
@@ -2208,18 +1830,13 @@ class AuthModal {
             }
         }
     }
-
     validateField(fieldId) {
         const input = document.getElementById(fieldId);
         const errorElement = document.getElementById(`${fieldId}-error`);
-        
         if (!input || !errorElement) return true;
-
         let isValid = true;
         let errorMessage = '';
-
         const value = input.value.trim();
-
         switch (fieldId) {
             case 'register-firstname':
                 if (!value) {
@@ -2230,7 +1847,6 @@ class AuthModal {
                     isValid = false;
                 }
                 break;
-
             case 'register-lastname':
                 if (!value) {
                     errorMessage = 'El apellido es requerido';
@@ -2240,7 +1856,6 @@ class AuthModal {
                     isValid = false;
                 }
                 break;
-
             case 'register-phone':
                 if (!value) {
                     errorMessage = 'El teléfono es requerido';
@@ -2250,7 +1865,6 @@ class AuthModal {
                     isValid = false;
                 }
                 break;
-
             case 'register-rut':
                 if (!value) {
                     errorMessage = 'El RUT es requerido';
@@ -2260,7 +1874,6 @@ class AuthModal {
                     isValid = false;
                 }
                 break;
-
             case 'register-email':
             case 'login-email':
                 if (!value) {
@@ -2271,7 +1884,6 @@ class AuthModal {
                     isValid = false;
                 }
                 break;
-
             case 'register-password':
                 if (!value) {
                     errorMessage = 'La contraseña es requerida';
@@ -2281,7 +1893,6 @@ class AuthModal {
                     isValid = false;
                 }
                 break;
-
             case 'register-confirm-password':
                 const password = document.getElementById('register-password')?.value;
                 if (!value) {
@@ -2292,7 +1903,6 @@ class AuthModal {
                     isValid = false;
                 }
                 break;
-
             case 'login-password':
                 if (!value) {
                     errorMessage = 'La contraseña es requerida';
@@ -2300,68 +1910,52 @@ class AuthModal {
                 }
                 break;
         }
-
         this.showFieldError(fieldId, errorMessage, isValid);
         return isValid;
     }
-
     clearFieldError(fieldId) {
         const input = document.getElementById(fieldId);
         const errorElement = document.getElementById(`${fieldId}-error`);
-        
         if (input) input.classList.remove('error');
         if (errorElement) {
             errorElement.classList.remove('show');
             errorElement.textContent = '';
         }
     }
-
     showFieldError(fieldId, message, isValid) {
         const input = document.getElementById(fieldId);
         const errorElement = document.getElementById(`${fieldId}-error`);
-        
         if (input) {
             input.classList.toggle('error', !isValid);
         }
-        
         if (errorElement) {
             errorElement.textContent = message;
             errorElement.classList.toggle('show', !isValid);
         }
     }
-
     isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
-
     isValidRUT(rut) {
         // Limpiar el RUT
         rut = rut.replace(/[^0-9kK]/g, '');
-        
         if (rut.length < 8 || rut.length > 9) return false;
-        
         const body = rut.slice(0, -1);
         const dv = rut.slice(-1).toUpperCase();
-        
         // Calcular dígito verificador
         let sum = 0;
         let multiplier = 2;
-        
         for (let i = body.length - 1; i >= 0; i--) {
             sum += parseInt(body[i]) * multiplier;
             multiplier = multiplier === 7 ? 2 : multiplier + 1;
         }
-        
         const remainder = sum % 11;
         const calculatedDV = remainder === 0 ? '0' : remainder === 1 ? 'K' : (11 - remainder).toString();
-        
         return dv === calculatedDV;
     }
-
     validateForm(formType) {
         let isValid = true;
-        
         if (formType === 'register') {
             const fields = ['register-email', 'register-phone', 'register-firstname', 'register-lastname', 'register-rut', 'register-password', 'register-confirm-password'];
             fields.forEach(fieldId => {
@@ -2369,7 +1963,6 @@ class AuthModal {
                     isValid = false;
                 }
             });
-
             // Validar términos y condiciones
             const termsCheckbox = document.getElementById('register-terms');
             if (!termsCheckbox?.checked) {
@@ -2384,17 +1977,13 @@ class AuthModal {
                 }
             });
         }
-
         return isValid;
     }
-
     async handleRegister(e) {
         e.preventDefault();
-        
         if (!this.validateForm('register')) {
             return;
         }
-
         const formData = new FormData(e.target);
         const userData = {
             firstname: formData.get('firstname'),
@@ -2405,172 +1994,133 @@ class AuthModal {
             rut: formData.get('rut'),
             password: formData.get('password')
         };
-
         this.setLoadingState('register-submit', true);
-
         try {
             // Simular llamada a API
             await this.simulateApiCall(2000);
-            
             // Simular éxito
             this.user = userData;
             this.isAuthenticated = true;
-            
             this.showSuccessMessage('¡Cuenta creada exitosamente!');
-            
             setTimeout(() => {
                 this.closeModal();
                 this.proceedToCheckout();
             }, 1500);
-
         } catch (error) {
             this.showErrorMessage('Error al crear la cuenta. Inténtalo de nuevo.');
         } finally {
             this.setLoadingState('register-submit', false);
         }
     }
-
     async handleLogin(e) {
         e.preventDefault();
-        
         if (!this.validateForm('login')) {
             return;
         }
-
         const formData = new FormData(e.target);
         const loginData = {
             email: formData.get('email'),
             password: formData.get('password'),
             remember: formData.get('remember') === 'on'
         };
-
         this.setLoadingState('login-submit', true);
-
         try {
             // Simular llamada a API
             await this.simulateApiCall(1500);
-            
             // Simular éxito
             this.user = { name: 'Usuario', email: loginData.email };
             this.isAuthenticated = true;
-            
             this.showSuccessMessage('¡Bienvenido de vuelta!');
-            
             setTimeout(() => {
                 this.closeModal();
                 this.proceedToCheckout();
             }, 1500);
-
         } catch (error) {
             this.showErrorMessage('Credenciales incorrectas. Inténtalo de nuevo.');
         } finally {
             this.setLoadingState('login-submit', false);
         }
     }
-
     // Nuevo método para el paso 1 del login (ingreso de email)
     async handleLoginStep1(e) {
         e.preventDefault();
-        
         const email = document.getElementById('login-email').value.trim();
-        
         if (!email) {
             this.showErrorMessage('Por favor ingresa tu correo electrónico');
             return;
         }
-
         if (!this.isValidEmail(email)) {
             this.showErrorMessage('Por favor ingresa un correo electrónico válido');
             return;
         }
-
         this.setLoadingState('login-continue', true);
-
         try {
             // Simular verificación de email
             await this.simulateApiCall(1000);
-            
             // Guardar el email para el paso 2
             this.loginEmail = email;
-            
             // Actualizar el mensaje de bienvenida con el nombre del usuario
             const welcomeMessage = document.getElementById('login-welcome-message');
             if (welcomeMessage) {
                 const userName = this.extractUserNameFromEmail(email);
                 welcomeMessage.textContent = `Es un gusto tenerte de vuelta, ${userName}`;
             }
-            
             // Pasar al paso 2
             this.showSection('login-step2');
-            
             // Poblar el campo de email en el paso 2
             const emailDisplay = document.getElementById('login-email-display');
             if (emailDisplay) {
                 emailDisplay.value = email;
             }
-            
         } catch (error) {
             this.showErrorMessage('Error al verificar el correo. Inténtalo de nuevo.');
         } finally {
             this.setLoadingState('login-continue', false);
         }
     }
-
     // Nuevo método para el paso 2 del login (ingreso de contraseña)
     async handleLoginStep2(e) {
         e.preventDefault();
-        
         const password = document.getElementById('login-password').value;
-        
         if (!password) {
             this.showErrorMessage('Por favor ingresa tu contraseña');
             return;
         }
-
         this.setLoadingState('login-submit', true);
-
         try {
             // Simular llamada a API
             await this.simulateApiCall(1500);
-            
             // Simular éxito
             this.user = { 
                 name: this.extractUserNameFromEmail(this.loginEmail), 
                 email: this.loginEmail 
             };
             this.isAuthenticated = true;
-            
             this.showSuccessMessage('¡Bienvenido de vuelta!');
-            
             setTimeout(() => {
                 this.closeModal();
                 this.proceedToCheckout();
             }, 1500);
-
         } catch (error) {
             this.showErrorMessage('Contraseña incorrecta. Inténtalo de nuevo.');
         } finally {
             this.setLoadingState('login-submit', false);
         }
     }
-
     // Método para extraer nombre de usuario del email
     extractUserNameFromEmail(email) {
         const name = email.split('@')[0];
         return name.charAt(0).toUpperCase() + name.slice(1);
     }
-
     // Método para validar email
     isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
-
     // Método para toggle de visibilidad de contraseña
     togglePasswordVisibility() {
         const passwordInput = document.getElementById('login-password');
         const toggleIcon = document.getElementById('password-toggle');
-        
         if (passwordInput && toggleIcon) {
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
@@ -2590,17 +2140,13 @@ class AuthModal {
             }
         }
     }
-
     handleGuestCheckout() {
-        console.log('🛒 Continuando como invitado');
         this.closeModal();
         this.proceedToCheckout();
     }
-
     setLoadingState(buttonId, isLoading) {
         const button = document.getElementById(buttonId);
         if (!button) return;
-
         if (isLoading) {
             button.classList.add('loading');
             button.disabled = true;
@@ -2609,15 +2155,12 @@ class AuthModal {
             button.disabled = false;
         }
     }
-
     showSuccessMessage(message) {
         this.showMessage(message, 'success');
     }
-
     showErrorMessage(message) {
         this.showMessage(message, 'error');
     }
-
     showMessage(message, type) {
         // Crear elemento de mensaje temporal
         const messageEl = document.createElement('div');
@@ -2635,16 +2178,13 @@ class AuthModal {
             z-index: 10001;
             animation: slideInRight 0.3s ease-out;
         `;
-
         document.body.appendChild(messageEl);
-
         // Remover después de 3 segundos
         setTimeout(() => {
             messageEl.style.animation = 'slideOutRight 0.3s ease-out';
             setTimeout(() => messageEl.remove(), 300);
         }, 3000);
     }
-
     simulateApiCall(delay) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -2657,26 +2197,21 @@ class AuthModal {
             }, delay);
         });
     }
-
     resetForms() {
         // Limpiar formularios
         document.getElementById('register-form')?.reset();
         document.getElementById('login-form')?.reset();
-        
         // Limpiar errores
         const errorElements = this.modal.querySelectorAll('.error-message');
         errorElements.forEach(el => {
             el.classList.remove('show');
             el.textContent = '';
         });
-
         const errorInputs = this.modal.querySelectorAll('.error');
         errorInputs.forEach(input => input.classList.remove('error'));
-        
         // Volver a la vista principal
         this.showSection('welcome');
     }
-
     checkExistingAuth() {
         // Verificar si hay autenticación guardada en localStorage
         const savedAuth = localStorage.getItem('huertoHogarAuth');
@@ -2685,20 +2220,14 @@ class AuthModal {
                 const authData = JSON.parse(savedAuth);
                 this.user = authData.user;
                 this.isAuthenticated = authData.isAuthenticated;
-                console.log('🔐 Usuario autenticado encontrado:', this.user);
             } catch (error) {
-                console.error('Error al cargar autenticación:', error);
             }
         }
     }
-
     checkAuthStatus() {
-        console.log('🔐 Verificando estado de autenticación...');
         this.checkExistingAuth();
-        console.log('🔐 Estado actual - Autenticado:', this.isAuthenticated, 'Usuario:', this.user);
         return this.isAuthenticated;
     }
-
     saveAuth() {
         const authData = {
             user: this.user,
@@ -2707,114 +2236,79 @@ class AuthModal {
         };
         localStorage.setItem('huertoHogarAuth', JSON.stringify(authData));
     }
-
     proceedToCheckout() {
-        console.log('🛒 Procediendo al checkout...');
-        
         if (this.isAuthenticated) {
             this.saveAuth();
-            console.log('👤 Usuario autenticado:', this.user);
         } else {
-            console.log('👤 Checkout como invitado');
         }
-
         // Aquí se integraría con el sistema de checkout real
         // Por ahora, mostramos un mensaje
         this.showSuccessMessage('Redirigiendo al checkout...');
-        
         // Redirigir al checkout
         setTimeout(() => {
-            window.location.href = 'checkout.html';
-            console.log('🛒 Redirigiendo a checkout.html');
+            window.location.href = 'pago.html';
         }, 1000);
     }
-
     isUserAuthenticated() {
         return this.isAuthenticated;
     }
-
     getCurrentUser() {
         return this.user;
     }
-
     logout() {
         this.isAuthenticated = false;
         this.user = null;
-        
         // Verificar si es una sesión de administrador antes de limpiar
         const isAdmin = localStorage.getItem('huertohogar_is_admin') === 'true';
         const userRole = localStorage.getItem('huertohogar_user_role');
-        
         if (isAdmin && userRole === 'admin') {
-            console.log('🛡️ Sesión de administrador detectada, no limpiando localStorage');
         } else {
             localStorage.removeItem('huertoHogarAuth');
-            console.log('🔐 Usuario deslogueado');
         }
     }
 }
-
 // Inicializar modal cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Inicializando modal de autenticación...');
-    
     // No inicializar el modal de autenticación en la página de checkout
     // ya que tiene su propio sistema de autenticación
-    if (window.location.pathname.includes('checkout.html')) {
-        console.log('📋 Página de checkout detectada, omitiendo inicialización del modal de autenticación');
+    if (window.location.pathname.includes('pago.html')) {
         return;
     }
-    
     // Verificar que el modal existe antes de inicializarlo
     const modalElement = document.getElementById('auth-modal');
     if (modalElement) {
-        console.log('✅ Modal encontrado en el DOM');
         try {
             window.authModal = new AuthModal();
-            console.log('✅ Modal de autenticación inicializado correctamente');
         } catch (error) {
-            console.error('❌ Error al inicializar el modal:', error);
         }
     } else {
-        console.error('❌ Modal de autenticación no encontrado en el DOM');
     }
-    
     // Integrar con el botón de checkout existente
     const checkoutBtn = document.querySelector('.checkout-btn');
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log('🛒 Botón de checkout clickeado');
-            
             // Verificar si el modal existe
             if (window.authModal) {
-                console.log('✅ Modal de autenticación disponible');
                 // Verificar estado de autenticación antes de abrir modal
                 window.authModal.checkAuthStatus();
                 if (window.authModal.isAuthenticated) {
-                    console.log('✅ Usuario autenticado, yendo al checkout');
                     window.authModal.proceedToCheckout();
                 } else {
-                    console.log('❌ Usuario no autenticado, mostrando modal');
                     window.authModal.openModal();
                 }
             } else {
-                console.error('❌ Modal de autenticación no disponible');
                 // Redirigir directamente a checkout si no hay modal
-                window.location.href = 'checkout.html';
+                window.location.href = 'pago.html';
             }
         });
     } else {
-        console.error('❌ Botón de checkout no encontrado');
     }
-    
     // Función de respaldo para checkout directo
     window.goToCheckout = () => {
-        console.log('🛒 Redirigiendo a checkout...');
-        window.location.href = 'checkout.html';
+        window.location.href = 'pago.html';
     };
 });
-
 // Agregar estilos para animaciones de mensajes
 const style = document.createElement('style');
 style.textContent = `
@@ -2828,7 +2322,6 @@ style.textContent = `
             transform: translateX(0);
         }
     }
-    
     @keyframes slideOutRight {
         from {
             opacity: 1;
@@ -2841,26 +2334,20 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
-
 // ===========================================
 // MODAL DE OLVIDÉ MI CONTRASEÑA
 // ===========================================
-
 class ForgotPasswordModal {
     constructor() {
         this.modal = document.getElementById('forgot-password-modal');
         this.init();
     }
-
     init() {
         this.bindEvents();
-        console.log('🔐 Modal de olvidé mi contraseña inicializado');
     }
-
     bindEvents() {
         // Botón de cerrar
         document.getElementById('forgot-password-modal-close')?.addEventListener('click', () => this.closeModal());
-        
         // Cerrar modal con ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.modal && this.modal.style.display !== 'none') {
@@ -2868,7 +2355,6 @@ class ForgotPasswordModal {
             }
         });
     }
-
     setupRealTimeValidation() {
         const inputs = ['new-password', 'confirm-password'];
         inputs.forEach(inputId => {
@@ -2879,138 +2365,93 @@ class ForgotPasswordModal {
             }
         });
     }
-
     openModal() {
         if (this.modal) {
             this.modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            
             // Configurar event listeners cuando el modal se abre
             this.setupModalEvents();
-            
             // Verificar que los elementos existen
             this.debugElements();
-            
-            console.log('🔐 Modal de olvidé mi contraseña abierto');
         }
     }
-
     debugElements() {
-        console.log('🔍 Verificando elementos del modal:');
-        console.log('new-password input:', document.getElementById('new-password'));
-        console.log('new-password-toggle:', document.getElementById('new-password-toggle'));
-        console.log('confirm-password input:', document.getElementById('confirm-password'));
-        console.log('confirm-password-toggle:', document.getElementById('confirm-password-toggle'));
     }
-
     setupModalEvents() {
         // Formulario
         const form = document.getElementById('forgot-password-form');
         if (form && !form.hasAttribute('data-listener-added')) {
             form.addEventListener('submit', (e) => this.handleSubmit(e));
             form.setAttribute('data-listener-added', 'true');
-            console.log('✅ Event listener agregado al formulario de olvidé mi contraseña');
         }
-        
         // Toggle de visibilidad de contraseñas - Configurar directamente
         this.setupPasswordToggles();
-        
         // Validación en tiempo real
         this.setupRealTimeValidation();
     }
-
     setupPasswordToggles() {
-        console.log('🔧 Configurando toggles de contraseña...');
-        
         // Configurar toggle para nueva contraseña
         const newPasswordToggle = document.getElementById('new-password-toggle');
         if (newPasswordToggle) {
-            console.log('✅ Toggle de new-password encontrado');
-            
             // Agregar event listener directamente
             newPasswordToggle.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('👁️ Toggle clickeado para new-password');
                 this.togglePasswordVisibility('new-password');
             };
-            
             // También agregar con addEventListener como respaldo
             newPasswordToggle.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('👁️ Toggle clickeado para new-password (addEventListener)');
                 this.togglePasswordVisibility('new-password');
             });
-            
-            console.log('✅ Event listeners agregados al toggle de new-password');
         } else {
-            console.error('❌ No se encontró el toggle de new-password');
         }
-        
         // Configurar toggle para confirmar contraseña
         const confirmPasswordToggle = document.getElementById('confirm-password-toggle');
         if (confirmPasswordToggle) {
-            console.log('✅ Toggle de confirm-password encontrado');
-            
             // Agregar event listener directamente
             confirmPasswordToggle.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('👁️ Toggle clickeado para confirm-password');
                 this.togglePasswordVisibility('confirm-password');
             };
-            
             // También agregar con addEventListener como respaldo
             confirmPasswordToggle.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('👁️ Toggle clickeado para confirm-password (addEventListener)');
                 this.togglePasswordVisibility('confirm-password');
             });
-            
-            console.log('✅ Event listeners agregados al toggle de confirm-password');
         } else {
-            console.error('❌ No se encontró el toggle de confirm-password');
         }
     }
-
     closeModal() {
         if (this.modal) {
             this.modal.style.display = 'none';
             document.body.style.overflow = '';
             this.resetForm();
-            console.log('🔐 Modal de olvidé mi contraseña cerrado');
         }
     }
-
     async handleSubmit(e) {
         e.preventDefault();
-        
         const newPassword = document.getElementById('new-password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
-        
         // Validar campos
         if (!this.validatePassword(newPassword)) {
             this.showErrorMessage('new-password-error', 'La contraseña debe tener al menos 8 caracteres');
             return;
         }
-        
         if (newPassword !== confirmPassword) {
             this.showErrorMessage('confirm-password-error', 'Las contraseñas no coinciden');
             return;
         }
-        
         // Mostrar estado de carga
         this.setLoadingState(true);
-        
         try {
             // Simular llamada a API
             await this.simulateApiCall(2000);
-            
             // Mostrar mensaje de éxito
             this.showSuccessMessage();
-            
             // Cerrar modal después de 2 segundos y abrir verificación
             setTimeout(() => {
                 this.closeModal();
@@ -3020,22 +2461,18 @@ class ForgotPasswordModal {
                     window.openVerificationModal(userEmail);
                 }
             }, 2000);
-            
         } catch (error) {
             this.showErrorMessage('new-password-error', 'Error al crear la nueva contraseña. Inténtalo de nuevo.');
         } finally {
             this.setLoadingState(false);
         }
     }
-
     validatePassword(password) {
         return password && password.length >= 8;
     }
-
     validateField(fieldId) {
         const input = document.getElementById(fieldId);
         const value = input.value.trim();
-        
         if (fieldId === 'new-password') {
             if (!this.validatePassword(value)) {
                 this.showErrorMessage('new-password-error', 'La contraseña debe tener al menos 8 caracteres');
@@ -3048,25 +2485,21 @@ class ForgotPasswordModal {
                 return false;
             }
         }
-        
         this.clearFieldError(fieldId);
         return true;
     }
-
     clearFieldError(fieldId) {
         const errorElement = document.getElementById(fieldId + '-error');
         if (errorElement) {
             errorElement.textContent = '';
         }
     }
-
     showErrorMessage(elementId, message) {
         const errorElement = document.getElementById(elementId);
         if (errorElement) {
             errorElement.textContent = message;
         }
     }
-
     showSuccessMessage() {
         // Crear mensaje de éxito temporal
         const successMessage = document.createElement('div');
@@ -3086,10 +2519,8 @@ class ForgotPasswordModal {
                 ¡Contraseña creada exitosamente!
             </div>
         `;
-        
         const form = document.getElementById('forgot-password-form');
         form.parentNode.insertBefore(successMessage, form);
-        
         // Remover mensaje después de 3 segundos
         setTimeout(() => {
             if (successMessage.parentNode) {
@@ -3097,7 +2528,6 @@ class ForgotPasswordModal {
             }
         }, 3000);
     }
-
     setLoadingState(loading) {
         const button = document.getElementById('create-password-submit');
         if (button) {
@@ -3110,22 +2540,12 @@ class ForgotPasswordModal {
             }
         }
     }
-
     togglePasswordVisibility(fieldId) {
-        console.log(`🔄 TogglePasswordVisibility llamado para: ${fieldId}`);
-        
         const input = document.getElementById(fieldId);
         const toggle = document.getElementById(fieldId + '-toggle');
-        
-        console.log(`📝 Input encontrado:`, input);
-        console.log(`👁️ Toggle encontrado:`, toggle);
-        
         if (input && toggle) {
-            console.log(`🔍 Tipo actual del input: ${input.type}`);
-            
             if (input.type === 'password') {
                 input.type = 'text';
-                console.log('👁️ Cambiando a texto visible');
                 toggle.innerHTML = `
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="20" width="20">
                         <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path>
@@ -3133,7 +2553,6 @@ class ForgotPasswordModal {
                 `;
             } else {
                 input.type = 'password';
-                console.log('🔒 Cambiando a contraseña oculta');
                 toggle.innerHTML = `
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="20" width="20">
                         <path fill="#485760" fill-rule="evenodd" clip-rule="evenodd" d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12Z"></path>
@@ -3142,37 +2561,30 @@ class ForgotPasswordModal {
                 `;
             }
         } else {
-            console.error('❌ No se encontraron los elementos input o toggle');
         }
     }
-
     resetForm() {
         const form = document.getElementById('forgot-password-form');
         if (form) {
             form.reset();
         }
-        
         // Limpiar mensajes de error
         this.clearFieldError('new-password');
         this.clearFieldError('confirm-password');
     }
-
     getUserEmail() {
         // Obtener el email del usuario desde el modal de login
         const loginEmail = document.getElementById('login-email-display');
         if (loginEmail && loginEmail.value) {
             return loginEmail.value;
         }
-        
         // Fallback: usar el email del usuario autenticado si existe
         if (window.authModal && window.authModal.loginEmail) {
             return window.authModal.loginEmail;
         }
-        
         // Fallback por defecto
         return 'usuario@ejemplo.com';
     }
-
     async simulateApiCall(delay) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -3186,34 +2598,26 @@ class ForgotPasswordModal {
         });
     }
 }
-
 // Inicializar el modal de olvidé mi contraseña
 document.addEventListener('DOMContentLoaded', () => {
     const forgotPasswordModalElement = document.getElementById('forgot-password-modal');
     if (forgotPasswordModalElement) {
-        console.log('✅ Modal de olvidé mi contraseña encontrado en el DOM');
         try {
             window.forgotPasswordModal = new ForgotPasswordModal();
-            console.log('✅ Modal de olvidé mi contraseña inicializado correctamente');
         } catch (error) {
-            console.error('❌ Error al inicializar el modal de olvidé mi contraseña:', error);
         }
     } else {
-        console.error('❌ Modal de olvidé mi contraseña no encontrado en el DOM');
     }
 });
-
 // Función global para abrir el modal de olvidé mi contraseña
 window.openForgotPasswordModal = () => {
     if (window.forgotPasswordModal) {
         window.forgotPasswordModal.openModal();
     }
 };
-
 // ===========================================
 // MODAL DE VERIFICACIÓN DE CUENTA
 // ===========================================
-
 class VerificationModal {
     constructor() {
         this.modal = document.getElementById('verification-modal');
@@ -3221,22 +2625,16 @@ class VerificationModal {
         this.timeLeft = 300; // 5 minutos en segundos
         this.init();
     }
-
     init() {
         this.bindEvents();
-        console.log('🔐 Modal de verificación de cuenta inicializado');
     }
-
     bindEvents() {
         // Botón de cerrar
         document.getElementById('verification-modal-close')?.addEventListener('click', () => this.closeModal());
-        
         // Formulario
         document.getElementById('verification-form')?.addEventListener('submit', (e) => this.handleSubmit(e));
-        
         // Inputs de código
         this.setupCodeInputs();
-        
         // Cerrar modal con ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.modal && this.modal.style.display !== 'none') {
@@ -3244,10 +2642,8 @@ class VerificationModal {
             }
         });
     }
-
     setupCodeInputs() {
         const codeInputs = document.querySelectorAll('.code-input');
-        
         codeInputs.forEach((input, index) => {
             // Solo permitir números
             input.addEventListener('input', (e) => {
@@ -3255,31 +2651,25 @@ class VerificationModal {
                 if (!/^\d*$/.test(value)) {
                     e.target.value = value.replace(/\D/g, '');
                 }
-                
                 // Auto-avanzar al siguiente input
                 if (value && index < codeInputs.length - 1) {
                     codeInputs[index + 1].focus();
                 }
-                
                 // Actualizar estado visual
                 this.updateInputState(input);
             });
-            
             // Manejar teclas especiales
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace' && !input.value && index > 0) {
                     codeInputs[index - 1].focus();
                 }
-                
                 if (e.key === 'ArrowLeft' && index > 0) {
                     codeInputs[index - 1].focus();
                 }
-                
                 if (e.key === 'ArrowRight' && index < codeInputs.length - 1) {
                     codeInputs[index + 1].focus();
                 }
             });
-            
             // Pegar código completo
             input.addEventListener('paste', (e) => {
                 e.preventDefault();
@@ -3294,14 +2684,12 @@ class VerificationModal {
             });
         });
     }
-
     updateInputState(input) {
         input.classList.remove('filled', 'error');
         if (input.value) {
             input.classList.add('filled');
         }
     }
-
     openModal(email = 'usuario@ejemplo.com') {
         if (this.modal) {
             // Actualizar email en el modal
@@ -3309,59 +2697,43 @@ class VerificationModal {
             if (emailElement) {
                 emailElement.textContent = email;
             }
-            
             this.modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            
             // Iniciar countdown
             this.startCountdown();
-            
             // Limpiar inputs
             this.clearCodeInputs();
-            
-            console.log('🔐 Modal de verificación de cuenta abierto');
         }
     }
-
     closeModal() {
         if (this.modal) {
             this.modal.style.display = 'none';
             document.body.style.overflow = '';
             this.stopCountdown();
             this.clearCodeInputs();
-            console.log('🔐 Modal de verificación de cuenta cerrado');
         }
     }
-
     async handleSubmit(e) {
         e.preventDefault();
-        
         const codeInputs = document.querySelectorAll('.code-input');
         const code = Array.from(codeInputs).map(input => input.value).join('');
-        
         // Validar que todos los campos estén llenos
         if (code.length !== 6) {
             this.showError('Por favor ingresa el código completo de 6 dígitos');
             return;
         }
-        
         // Mostrar estado de carga
         this.setLoadingState(true);
-        
         try {
             // Simular llamada a API
             await this.simulateApiCall(2000);
-            
             // Mostrar mensaje de éxito
             this.showSuccess('¡Código verificado correctamente!');
-            
             // Cerrar modal después de 2 segundos
             setTimeout(() => {
                 this.closeModal();
                 // Aquí podrías redirigir o hacer otras acciones
-                console.log('✅ Verificación completada');
             }, 2000);
-            
         } catch (error) {
             this.showError('Código incorrecto. Inténtalo de nuevo.');
             this.clearCodeInputs();
@@ -3369,39 +2741,32 @@ class VerificationModal {
             this.setLoadingState(false);
         }
     }
-
     startCountdown() {
         this.timeLeft = 300; // 5 minutos
         this.updateCountdownDisplay();
-        
         this.countdownInterval = setInterval(() => {
             this.timeLeft--;
             this.updateCountdownDisplay();
-            
             if (this.timeLeft <= 0) {
                 this.stopCountdown();
             }
         }, 1000);
     }
-
     stopCountdown() {
         if (this.countdownInterval) {
             clearInterval(this.countdownInterval);
             this.countdownInterval = null;
         }
     }
-
     updateCountdownDisplay() {
         const minutes = Math.floor(this.timeLeft / 60);
         const seconds = this.timeLeft % 60;
         const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        
         const timerElement = document.getElementById('countdown-timer');
         if (timerElement) {
             timerElement.textContent = display;
         }
     }
-
     clearCodeInputs() {
         const codeInputs = document.querySelectorAll('.code-input');
         codeInputs.forEach(input => {
@@ -3410,41 +2775,33 @@ class VerificationModal {
         });
         codeInputs[0].focus();
     }
-
     showError(message) {
         this.clearMessages();
         const errorElement = document.createElement('div');
         errorElement.className = 'verification-error';
         errorElement.textContent = message;
-        
         const form = document.getElementById('verification-form');
         form.appendChild(errorElement);
-        
         // Resaltar inputs con error
         const codeInputs = document.querySelectorAll('.code-input');
         codeInputs.forEach(input => {
             input.classList.add('error');
         });
     }
-
     showSuccess(message) {
         this.clearMessages();
         const successElement = document.createElement('div');
         successElement.className = 'verification-success';
         successElement.textContent = message;
-        
         const form = document.getElementById('verification-form');
         form.appendChild(successElement);
     }
-
     clearMessages() {
         const existingError = document.querySelector('.verification-error');
         const existingSuccess = document.querySelector('.verification-success');
-        
         if (existingError) existingError.remove();
         if (existingSuccess) existingSuccess.remove();
     }
-
     setLoadingState(loading) {
         const button = document.getElementById('validate-code-submit');
         if (button) {
@@ -3457,7 +2814,6 @@ class VerificationModal {
             }
         }
     }
-
     async simulateApiCall(delay) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -3471,64 +2827,45 @@ class VerificationModal {
         });
     }
 }
-
 // Inicializar el modal de verificación
 document.addEventListener('DOMContentLoaded', () => {
     const verificationModalElement = document.getElementById('verification-modal');
     if (verificationModalElement) {
-        console.log('✅ Modal de verificación de cuenta encontrado en el DOM');
         try {
             window.verificationModal = new VerificationModal();
-            console.log('✅ Modal de verificación de cuenta inicializado correctamente');
         } catch (error) {
-            console.error('❌ Error al inicializar el modal de verificación de cuenta:', error);
         }
     } else {
-        console.error('❌ Modal de verificación de cuenta no encontrado en el DOM');
     }
 });
-
 // Función global para abrir el modal de verificación
 window.openVerificationModal = (email) => {
     if (window.verificationModal) {
         window.verificationModal.openModal(email);
     }
 };
-
 // Función global para probar el toggle de contraseñas
 window.testPasswordToggle = function(fieldId) {
-    console.log(`🧪 Probando toggle para: ${fieldId}`);
     const input = document.getElementById(fieldId);
     const toggle = document.getElementById(fieldId + '-toggle');
-    
-    console.log('Input:', input);
-    console.log('Toggle:', toggle);
-    
     if (input && toggle) {
         if (input.type === 'password') {
             input.type = 'text';
-            console.log('✅ Cambiado a texto visible');
         } else {
             input.type = 'password';
-            console.log('✅ Cambiado a contraseña oculta');
         }
     } else {
-        console.error('❌ Elementos no encontrados');
     }
 };
-
 // Sistema unificado de toggles de contraseñas
 class PasswordToggleManager {
     constructor() {
         this.init();
     }
-
     init() {
-        console.log('🔧 Inicializando sistema unificado de toggles de contraseñas');
         this.setupGlobalEventDelegation();
         this.setupDirectEventListeners();
     }
-
     setupDirectEventListeners() {
         // Configurar event listeners directos como respaldo
         const toggleIds = [
@@ -3538,121 +2875,78 @@ class PasswordToggleManager {
             'new-password-toggle',
             'confirm-password-toggle'
         ];
-
         toggleIds.forEach(toggleId => {
             const toggle = document.getElementById(toggleId);
             if (toggle) {
-                console.log(`✅ Configurando event listener directo para: ${toggleId}`);
-                
                 // Remover listeners existentes
                 toggle.replaceWith(toggle.cloneNode(true));
                 const newToggle = document.getElementById(toggleId);
-                
                 newToggle.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log(`👁️ Toggle directo clickeado: ${toggleId}`);
-                    
                     const inputId = toggleId.replace('-toggle', '');
                     const input = document.getElementById(inputId);
-                    
                     if (input) {
                         this.togglePasswordVisibility(inputId, newToggle);
                     } else {
-                        console.error(`❌ Input no encontrado para: ${inputId}`);
                     }
                 });
             }
         });
     }
-
     setupGlobalEventDelegation() {
         // Event delegation para todos los toggles de contraseñas
         document.addEventListener('click', (e) => {
-            console.log('🖱️ Click detectado en:', e.target);
-            console.log('🔍 Clases del elemento:', e.target.classList);
-            console.log('🔍 Contiene password-toggle?', e.target.classList.contains('password-toggle'));
-            
             if (e.target && e.target.classList.contains('password-toggle')) {
                 e.preventDefault();
                 e.stopPropagation();
-                
                 const toggle = e.target;
-                console.log('🎯 Toggle encontrado:', toggle);
-                
                 // Usar la función unificada
                 window.togglePasswordVisibility(toggle);
             }
         });
-        
-        console.log('✅ Sistema de event delegation configurado para toggles de contraseñas');
     }
-
     getInputIdFromToggle(toggle) {
-        console.log('🔍 Buscando input para toggle:', toggle);
-        
         // Método 1: Buscar por data-target
         if (toggle.dataset && toggle.dataset.target) {
             const inputId = toggle.dataset.target;
             const input = document.getElementById(inputId);
-            console.log('🔍 Data-target encontrado:', inputId);
-            console.log('🔍 Input encontrado por data-target:', input);
-            
             if (input) {
                 return inputId;
             }
         }
-        
         // Método 2: Buscar el input asociado al toggle en el contenedor
         const inputContainer = toggle.closest('.input-container, .password-input-container');
-        console.log('🔍 Input container encontrado:', inputContainer);
-        
         if (inputContainer) {
             const input = inputContainer.querySelector('input[type="password"], input[type="text"]');
-            console.log('🔍 Input encontrado:', input);
-            console.log('🔍 Input ID:', input ? input.id : 'No encontrado');
-            
             if (input) {
                 return input.id;
             }
         }
-        
         // Método 3: Buscar por ID del toggle
         const toggleId = toggle.id;
         if (toggleId && toggleId.includes('-toggle')) {
             const inputId = toggleId.replace('-toggle', '');
             const input = document.getElementById(inputId);
-            console.log('🔍 Método alternativo - Input ID:', inputId);
-            console.log('🔍 Método alternativo - Input encontrado:', input);
-            
             if (input) {
                 return inputId;
             }
         }
-        
         return null;
     }
-
     togglePasswordVisibility(inputId, toggle) {
         const input = document.getElementById(inputId);
-        
         if (input) {
-            console.log(`🔍 Tipo actual del input: ${input.type}`);
-            
             if (input.type === 'password') {
                 input.type = 'text';
-                console.log('👁️ Cambiando a texto visible');
                 this.updateToggleIcon(toggle, 'visible');
             } else {
                 input.type = 'password';
-                console.log('🔒 Cambiando a contraseña oculta');
                 this.updateToggleIcon(toggle, 'hidden');
             }
         } else {
-            console.error(`❌ No se encontró el input con ID: ${inputId}`);
         }
     }
-
     updateToggleIcon(toggle, state) {
         if (state === 'visible') {
             // Mostrar icono de ojo tachado (contraseña visible)
@@ -3669,35 +2963,22 @@ class PasswordToggleManager {
         }
     }
 }
-
 // Inicializar el sistema unificado
 window.passwordToggleManager = new PasswordToggleManager();
-
 // Función simple para inicializar toggles de contraseña
 function initializePasswordToggles() {
-    console.log('🔧 Inicializando toggles de contraseña...');
-    
     // Buscar todos los botones de toggle de contraseña
     const toggles = document.querySelectorAll('.password-toggle');
-    console.log(`🔍 Encontrados ${toggles.length} toggles de contraseña`);
-    
     toggles.forEach((toggle, index) => {
-        console.log(`🔧 Configurando toggle ${index + 1}:`, toggle);
-        
         // Remover listeners existentes
         const newToggle = toggle.cloneNode(true);
         toggle.parentNode.replaceChild(newToggle, toggle);
-        
         // Agregar event listener
         newToggle.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            
-            console.log('🖱️ Toggle clickeado:', this);
-            
             // Obtener el input asociado
             let inputId = null;
-            
             // Método 1: data-target
             if (this.dataset && this.dataset.target) {
                 inputId = this.dataset.target;
@@ -3712,87 +2993,61 @@ function initializePasswordToggles() {
                     }
                 }
             }
-            
             if (inputId) {
-                console.log('🎯 Input encontrado:', inputId);
                 const input = document.getElementById(inputId);
-                
                 if (input) {
                     if (input.type === 'password') {
                         input.type = 'text';
                         this.innerHTML = '<i class="fas fa-eye-slash"></i>';
                         this.classList.add('active');
-                        console.log('👁️ Contraseña visible');
                     } else {
                         input.type = 'password';
                         this.innerHTML = '<i class="fas fa-eye"></i>';
                         this.classList.remove('active');
-                        console.log('🔒 Contraseña oculta');
                     }
                 } else {
-                    console.error('❌ Input no encontrado:', inputId);
                 }
             } else {
-                console.error('❌ No se pudo determinar el input asociado');
             }
         });
-        
-        console.log('✅ Toggle configurado correctamente');
     });
-    
-    console.log('✅ Todos los toggles de contraseña inicializados');
 }
-
 // Inicializar cuando el DOM esté listo
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializePasswordToggles);
 } else {
     initializePasswordToggles();
 }
-
 // Función para inicializar la validación de contraseña
 function initializePasswordStrength() {
-    console.log('🔧 Inicializando validación de fortaleza de contraseña...');
-    
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirm-password');
     const strengthIndicator = document.getElementById('password-strength');
-    
     if (passwordInput && strengthIndicator) {
-        console.log('✅ Input de contraseña y indicador encontrados');
-        
         passwordInput.addEventListener('input', function() {
             const password = this.value;
             updatePasswordStrength(password, strengthIndicator);
-            
             // Si hay campo de confirmación, validar también
             if (confirmPasswordInput) {
                 validatePasswordMatch();
             }
         });
-        
         // Validación inicial
         updatePasswordStrength(passwordInput.value, strengthIndicator);
     } else {
-        console.log('❌ No se encontraron elementos de validación de contraseña');
     }
-    
     // Validar confirmación de contraseña si existe
     if (confirmPasswordInput) {
         confirmPasswordInput.addEventListener('input', validatePasswordMatch);
     }
 }
-
 // Función para validar que las contraseñas coincidan
 function validatePasswordMatch() {
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirm-password');
-    
     if (!passwordInput || !confirmPasswordInput) return;
-    
     const password = passwordInput.value;
     const confirmPassword = confirmPasswordInput.value;
-    
     if (confirmPassword.length > 0) {
         if (password === confirmPassword) {
             confirmPasswordInput.setCustomValidity('');
@@ -3806,34 +3061,24 @@ function validatePasswordMatch() {
         confirmPasswordInput.style.borderColor = '';
     }
 }
-
 // Función para actualizar la fortaleza de la contraseña
 function updatePasswordStrength(password, indicator) {
     const strengthBar = indicator.querySelector('.strength-bar span');
     const strengthText = indicator.querySelector('.strength-text');
-    
     if (!strengthBar || !strengthText) {
-        console.error('❌ Elementos de la barra de fortaleza no encontrados');
         return;
     }
-    
     const strength = calculatePasswordStrength(password);
-    
     // Remover clases anteriores
     indicator.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
-    
     // Actualizar barra y texto
     strengthBar.style.width = strength.percentage + '%';
     strengthText.textContent = strength.text;
-    
     // Agregar clase de fortaleza
     if (strength.level > 0) {
         indicator.classList.add(strength.class);
     }
-    
-    console.log(`🔒 Fortaleza de contraseña: ${strength.level} (${strength.percentage}%) - ${strength.text}`);
 }
-
 // Función para calcular la fortaleza de la contraseña
 function calculatePasswordStrength(password) {
     if (!password || password.length === 0) {
@@ -3844,51 +3089,42 @@ function calculatePasswordStrength(password) {
             class: ''
         };
     }
-    
     let score = 0;
     let feedback = [];
-    
     // Longitud mínima (8 caracteres)
     if (password.length >= 8) {
         score += 2; // Peso mayor para longitud
     } else {
         feedback.push('Mínimo 8 caracteres');
     }
-    
     // Longitud óptima (10+ caracteres)
     if (password.length >= 10) {
         score += 1;
     }
-    
     // Contiene letras mayúsculas
     if (/[A-Z]/.test(password)) {
         score += 1;
     } else {
         feedback.push('Incluye mayúsculas');
     }
-    
     // Contiene letras minúsculas
     if (/[a-z]/.test(password)) {
         score += 1;
     } else {
         feedback.push('Incluye minúsculas');
     }
-    
     // Contiene números
     if (/[0-9]/.test(password)) {
         score += 1;
     } else {
         feedback.push('Incluye números');
     }
-    
     // Contiene caracteres especiales (opcional, no obligatorio)
     if (/[^A-Za-z0-9]/.test(password)) {
         score += 1;
     }
-    
     // Determinar nivel de fortaleza (criterios más flexibles)
     let level, percentage, text, className;
-    
     if (score <= 3) {
         level = 1;
         percentage = 30;
@@ -3905,7 +3141,6 @@ function calculatePasswordStrength(password) {
         text = 'Fuerte - ¡Excelente contraseña!';
         className = 'strength-strong';
     }
-    
     return {
         level: level,
         percentage: percentage,
@@ -3913,47 +3148,32 @@ function calculatePasswordStrength(password) {
         class: className
     };
 }
-
 // Inicializar validación de contraseña cuando el DOM esté listo
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializePasswordStrength);
 } else {
     initializePasswordStrength();
 }
-
 // Función de prueba para verificar la validación
 window.testPasswordStrength = function(password = 'Nachovn114') {
-    console.log('🧪 Probando validación de contraseña con:', password);
     const result = calculatePasswordStrength(password);
-    console.log('📊 Resultado:', result);
     return result;
 };
-
 // ===== SISTEMA DE AUTENTICACIÓN SOCIAL =====
 function initializeSocialAuth() {
-    console.log('🔐 Inicializando autenticación social...');
-    
     // Botones de autenticación social
     const googleBtn = document.querySelector('.google-btn');
     const facebookBtn = document.querySelector('.facebook-btn');
-    
     if (googleBtn) {
         googleBtn.addEventListener('click', handleGoogleAuth);
-        console.log('✅ Botón de Google configurado');
     }
-    
     if (facebookBtn) {
         facebookBtn.addEventListener('click', handleFacebookAuth);
-        console.log('✅ Botón de Facebook configurado');
     }
 }
-
 function handleGoogleAuth() {
-    console.log('🔵 Iniciando autenticación con Google...');
-    
     // Simular autenticación con Google
     showNotification('Redirigiendo a Google...', 'info');
-    
     // En una implementación real, aquí se integraría con Google OAuth
     setTimeout(() => {
         // Simular éxito de autenticación
@@ -3962,17 +3182,12 @@ function handleGoogleAuth() {
             email: 'usuario@gmail.com',
             provider: 'google'
         };
-        
         handleSocialAuthSuccess(userData);
     }, 2000);
 }
-
 function handleFacebookAuth() {
-    console.log('🔵 Iniciando autenticación con Facebook...');
-    
     // Simular autenticación con Facebook
     showNotification('Redirigiendo a Facebook...', 'info');
-    
     // En una implementación real, aquí se integraría con Facebook OAuth
     setTimeout(() => {
         // Simular éxito de autenticación
@@ -3981,52 +3196,36 @@ function handleFacebookAuth() {
             email: 'usuario@facebook.com',
             provider: 'facebook'
         };
-        
         handleSocialAuthSuccess(userData);
     }, 2000);
 }
-
 function handleSocialAuthSuccess(userData) {
-    console.log('✅ Autenticación social exitosa:', userData);
-    
     // Guardar datos del usuario
     localStorage.setItem('huertoHogarUser', JSON.stringify(userData));
-    
     // Mostrar notificación de éxito
     showNotification(`¡Bienvenido ${userData.name}!`, 'success');
-    
     // Redirigir al inicio
     setTimeout(() => {
         window.location.href = 'index.html';
     }, 1500);
 }
-
 // ===== SISTEMA DE REGISTRO Y LOGIN =====
 function initializeAuthForms() {
-    console.log('🔐 Inicializando formularios de autenticación...');
-    
     // Formulario de registro
     const registerForm = document.querySelector('form[data-auth="register"]');
     if (registerForm) {
         registerForm.addEventListener('submit', handleRegister);
-        console.log('✅ Formulario de registro configurado');
     }
-    
     // Formulario de login
     const loginForm = document.querySelector('form[data-auth="login"]');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
-        console.log('✅ Formulario de login configurado');
     }
-    
     // Verificar si hay email en URL para prellenar
     checkEmailFromURL();
 }
-
 function handleRegister(event) {
     event.preventDefault();
-    console.log('📝 Procesando registro...');
-    
     const formData = new FormData(event.target);
     const userData = {
         nombres: formData.get('nombres'),
@@ -4037,15 +3236,12 @@ function handleRegister(event) {
         terms: formData.get('terms'),
         newsletter: formData.get('newsletter')
     };
-    
     // Validar datos
     if (!validateRegisterData(userData)) {
         return;
     }
-    
     // Simular proceso de registro
     showNotification('Creando tu cuenta...', 'info');
-    
     setTimeout(() => {
         // Guardar datos del usuario
         const user = {
@@ -4054,48 +3250,36 @@ function handleRegister(event) {
             provider: 'email',
             createdAt: new Date().toISOString()
         };
-        
         localStorage.setItem('huertoHogarUser', JSON.stringify(user));
-        
         // Mostrar notificación de éxito
         showNotification('¡Cuenta creada exitosamente!', 'success');
-        
         // Redirigir al login con el email prellenado
         setTimeout(() => {
             const loginURL = `login.html?email=${encodeURIComponent(userData.email)}`;
             window.location.href = loginURL;
         }, 2000);
-        
     }, 1500);
 }
-
 function handleLogin(event) {
     event.preventDefault();
-    console.log('🔑 Procesando login...');
-    
     const formData = new FormData(event.target);
     const loginData = {
         email: formData.get('email'),
         password: formData.get('password'),
         remember: formData.get('remember')
     };
-    
     // Validar datos
     if (!validateLoginData(loginData)) {
         return;
     }
-    
     // Simular proceso de login
     showNotification('Iniciando sesión...', 'info');
-    
     setTimeout(() => {
         // Cargar datos del usuario
         const user = JSON.parse(localStorage.getItem('huertoHogarUser') || '{}');
-        
         if (user.email === loginData.email) {
             // Login exitoso
             showNotification(`¡Bienvenido ${user.name}!`, 'success');
-            
             // Redirigir al inicio
             setTimeout(() => {
                 window.location.href = 'index.html';
@@ -4105,48 +3289,40 @@ function handleLogin(event) {
         }
     }, 1000);
 }
-
 function validateRegisterData(data) {
     // Validar nombres
     if (!data.nombres || data.nombres.trim().length < 2) {
         showNotification('Los nombres deben tener al menos 2 caracteres', 'error');
         return false;
     }
-    
     // Validar apellidos
     if (!data.apellidos || data.apellidos.trim().length < 2) {
         showNotification('Los apellidos deben tener al menos 2 caracteres', 'error');
         return false;
     }
-    
     // Validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!data.email || !emailRegex.test(data.email)) {
         showNotification('Ingresa un email válido', 'error');
         return false;
     }
-    
     // Validar contraseña
     if (!data.password || data.password.length < 8) {
         showNotification('La contraseña debe tener al menos 8 caracteres', 'error');
         return false;
     }
-    
     // Validar confirmación de contraseña
     if (data.password !== data.confirmPassword) {
         showNotification('Las contraseñas no coinciden', 'error');
         return false;
     }
-    
     // Validar términos y condiciones
     if (!data.terms) {
         showNotification('Debes aceptar los términos y condiciones', 'error');
         return false;
     }
-    
     return true;
 }
-
 function validateLoginData(data) {
     // Validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -4154,29 +3330,23 @@ function validateLoginData(data) {
         showNotification('Ingresa un email válido', 'error');
         return false;
     }
-    
     // Validar contraseña
     if (!data.password || data.password.length < 6) {
         showNotification('La contraseña debe tener al menos 6 caracteres', 'error');
         return false;
     }
-    
     return true;
 }
-
 function checkEmailFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const email = urlParams.get('email');
-    
     if (email) {
         const emailInput = document.getElementById('email');
         if (emailInput) {
             emailInput.value = email;
-            console.log('✅ Email prellenado:', email);
         }
     }
 }
-
 // Inicializar autenticación social cuando el DOM esté listo
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
@@ -4187,55 +3357,34 @@ if (document.readyState === 'loading') {
     initializeSocialAuth();
     initializeAuthForms();
 }
-
 // Función específica para probar el modal de olvidé mi contraseña
 window.testForgotPasswordToggle = function() {
-    console.log('🧪 Probando toggles del modal de olvidé mi contraseña');
-    
     const newPasswordToggle = document.getElementById('new-password-toggle');
     const confirmPasswordToggle = document.getElementById('confirm-password-toggle');
     const newPasswordInput = document.getElementById('new-password');
     const confirmPasswordInput = document.getElementById('confirm-password');
-    
-    console.log('🔍 new-password-toggle:', newPasswordToggle);
-    console.log('🔍 confirm-password-toggle:', confirmPasswordToggle);
-    console.log('🔍 new-password input:', newPasswordInput);
-    console.log('🔍 confirm-password input:', confirmPasswordInput);
-    
     if (newPasswordToggle && newPasswordInput) {
-        console.log('✅ Toggle de nueva contraseña encontrado');
         newPasswordToggle.click();
     } else {
-        console.error('❌ Toggle de nueva contraseña no encontrado');
     }
-    
     if (confirmPasswordToggle && confirmPasswordInput) {
-        console.log('✅ Toggle de confirmar contraseña encontrado');
         confirmPasswordToggle.click();
     } else {
-        console.error('❌ Toggle de confirmar contraseña no encontrado');
     }
 };
-
 // Función unificada para toggle de contraseñas
 window.togglePasswordVisibility = function(toggleElement) {
     if (!toggleElement) return;
-    
     const inputId = toggleElement.getAttribute('data-target') || 
                    toggleElement.id.replace('-toggle', '');
     const input = document.getElementById(inputId);
-    
     if (!input) {
-        console.error(`❌ Input no encontrado para: ${inputId}`);
         return;
     }
-    
     const icon = toggleElement.querySelector('i');
     if (!icon) {
-        console.error(`❌ Ícono no encontrado en el toggle`);
         return;
     }
-    
     if (input.type === 'password') {
         input.type = 'text';
         toggleElement.classList.add('active');

@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon/favicon-512x512.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
     <link rel="manifest" href="assets/favicon/site.webmanifest">
-    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/normalizar.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -60,7 +60,6 @@
             </div>
         </div>
     </header>
-
     <main class="page-container">
         <div class="auth-wrapper">
             <div class="auth-card">
@@ -68,7 +67,6 @@
                     <h1>Crear Cuenta</h1>
                     <p>Únete a HuertoHogar y disfruta de productos frescos</p>
                 </div>
-                
                 <form data-auth="register" class="auth-form" id="register-form">
                     <div class="form-row">
                         <div class="form-group">
@@ -82,19 +80,16 @@
                             <div class="field-error" id="apellidos-error"></div>
                         </div>
                     </div>
-                    
                     <div class="form-group">
                         <label for="rut">RUT *</label>
                         <input type="text" id="rut" name="rut" placeholder="12.345.678-9" required>
                         <div class="field-error" id="rut-error"></div>
                     </div>
-                    
                     <div class="form-group">
                         <label for="email">Email *</label>
                         <input type="email" id="email" name="email" placeholder="tu@email.com" required>
                         <div class="field-error" id="email-error"></div>
                     </div>
-                    
                     <div class="form-group">
                         <label for="telefono">Teléfono *</label>
                         <div class="phone-field">
@@ -107,13 +102,11 @@
                         </div>
                         <div class="field-error" id="telefono-error"></div>
                     </div>
-                    
                     <div class="form-group">
                         <label for="direccion">Dirección de Entrega *</label>
                         <input type="text" id="direccion" name="direccion" placeholder="Calle, número, comuna" required>
                         <div class="field-error" id="direccion-error"></div>
                     </div>
-                    
                     <div class="form-group">
                         <label for="password">Contraseña *</label>
                         <div class="password-field">
@@ -148,7 +141,6 @@
                         </div>
                         <div class="field-error" id="password-error"></div>
                     </div>
-                    
                     <div class="form-group">
                         <label for="confirm-password">Confirmar Contraseña *</label>
                         <div class="password-field">
@@ -159,7 +151,6 @@
                         </div>
                         <div class="field-error" id="confirm-password-error"></div>
                     </div>
-                    
                     <div class="form-options">
                         <label class="checkbox-label">
                             <input type="checkbox" id="terms" name="terms" required>
@@ -173,7 +164,6 @@
                             Quiero recibir novedades y promociones por email
                         </label>
                     </div>
-                    
                     <button type="submit" class="btn-primary" id="register-submit">
                         <span class="btn-text">Crear Cuenta</span>
                         <span class="btn-loading" style="display: none;">
@@ -182,11 +172,9 @@
                         </span>
                     </button>
                 </form>
-                
                 <div class="divider">
                     <span>o regístrate con</span>
                 </div>
-                
                 <div class="social-auth">
                     <button type="button" class="social-btn google-btn">
                         <i class="fab fa-google"></i>
@@ -197,14 +185,12 @@
                         Facebook
                     </button>
                 </div>
-                
                 <div class="auth-footer">
                     <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></p>
                 </div>
             </div>
         </div>
     </main>
-
     <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -231,7 +217,6 @@
         </div>
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
-    
     <div id="cart-overlay" class="hidden"></div>
     <div id="cart-offcanvas" class="hidden">
         <div class="cart-header">
@@ -248,8 +233,7 @@
             <button class="btn btn-primary checkout-btn">Finalizar Compra</button>
         </div>
     </div>
-
     <script src="assets/js/script.js"></script>
-    <script src="assets/js/auth-enhanced.js"></script>
+    <script src="assets/js/autenticacion-mejorada.js"></script>
 </body>
 </html>

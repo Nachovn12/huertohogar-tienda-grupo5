@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - HuertoHogar</title>
-    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
@@ -15,15 +14,14 @@
     <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon/favicon-512x512.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
     <link rel="manifest" href="assets/favicon/site.webmanifest">
-    
     <!-- Estilos -->
-    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/normalizar.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/admin-panel.css">
+    <link rel="stylesheet" href="assets/css/panel-administrador.css">
 </head>
 <body>
     <!-- Barra de información superior -->
@@ -39,7 +37,6 @@
             </div>
         </div>
     </div>
-    
     <header class="main-header">
         <div class="header-content">
             <a href="index.html" class="logo-container">
@@ -57,7 +54,7 @@
                 <div class="user-profile" id="user-profile">
                     <span class="user-name" id="user-name">Administrador</span>
                     <div class="user-menu">
-                        <a href="admin-panel.html" class="user-menu-item">
+                        <a href="panel-administrador.html" class="user-menu-item">
                             <i class="fas fa-cog"></i>
                             Panel Admin
                         </a>
@@ -70,9 +67,7 @@
             </div>
         </div>
     </header>
-
     <!-- Modal de Login de Administrador ELIMINADO - Ahora se usa login.html -->
-
     <main class="admin-main" id="admin-main-content">
         <!-- Header del Panel de Administración -->
         <section class="admin-header">
@@ -100,7 +95,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Estadísticas del Panel -->
         <section class="admin-stats">
             <div class="stats-grid">
@@ -142,7 +136,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Filtros y Búsqueda -->
         <section class="admin-filters">
             <div class="filters-container">
@@ -168,7 +161,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Tabla de Productos -->
         <section class="admin-products">
             <div class="products-container">
@@ -189,7 +181,6 @@
                     </button>
                 </div>
                 </div>
-                
                 <div class="products-table-container">
                     <table class="products-table" id="products-table">
                         <thead>
@@ -209,14 +200,12 @@
                         </tbody>
                     </table>
                 </div>
-                
                 <div class="products-pagination" id="products-pagination">
                     <!-- La paginación se generará dinámicamente -->
                 </div>
             </div>
         </section>
     </main>
-
     <!-- Modal para Agregar/Editar Producto -->
     <div id="product-modal" class="modal-overlay" style="display: none;">
         <div class="modal-container">
@@ -242,7 +231,6 @@
                             </select>
                         </div>
                     </div>
-                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="product-price">Precio (CLP) *</label>
@@ -253,7 +241,6 @@
                             <input type="number" id="product-stock" name="stock" min="0" required>
                         </div>
                     </div>
-                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="product-image">URL de la Imagen *</label>
@@ -270,17 +257,14 @@
                             </select>
                         </div>
                     </div>
-                    
                     <div class="form-group">
                         <label for="product-description">Descripción</label>
                         <textarea id="product-description" name="description" rows="4" placeholder="Describe las características del producto..."></textarea>
                     </div>
-                    
                     <div class="form-group">
                         <label for="product-features">Características (separadas por comas)</label>
                         <input type="text" id="product-features" name="features" placeholder="Ej: Orgánico, Fresco, De temporada">
                     </div>
-                    
                     <div class="form-row">
                         <div class="form-group checkbox-group">
                             <label class="checkbox-label">
@@ -297,7 +281,6 @@
                             </label>
                         </div>
                     </div>
-                    
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" id="cancel-product">Cancelar</button>
                         <button type="submit" class="btn btn-primary" id="save-product">
@@ -312,7 +295,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal de Confirmación de Eliminación -->
     <div id="delete-modal" class="modal-overlay" style="display: none;">
         <div class="modal-container delete-modal">
@@ -337,7 +319,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal de Papelera -->
     <div id="trash-modal" class="modal-overlay" style="display: none;">
         <div class="modal-container trash-modal">
@@ -352,7 +333,6 @@
                 <div class="trash-info">
                     <p>Productos eliminados recientemente. Puedes recuperarlos o eliminarlos permanentemente.</p>
                 </div>
-                
                 <div class="trash-actions">
                     <button id="restore-all-btn" class="btn btn-success" disabled>
                         <i class="fas fa-undo"></i>
@@ -363,7 +343,6 @@
                         Eliminar Todo Permanentemente
                     </button>
                 </div>
-                
                 <div class="trash-table-container">
                     <table class="trash-table" id="trash-table">
                         <thead>
@@ -384,7 +363,6 @@
                         </tbody>
                     </table>
                 </div>
-                
                 <div class="trash-empty" id="trash-empty" style="display: none;">
                     <div class="empty-state">
                         <i class="fas fa-trash-alt"></i>
@@ -395,10 +373,8 @@
             </div>
         </div>
     </div>
-
     <!-- Input oculto para importar archivos -->
     <input type="file" id="import-file-input" accept=".json" style="display: none;">
-
     <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -412,7 +388,7 @@
                     <li><a href="productos.html">Productos</a></li>
                     <li><a href="nosotros.html">Nosotros</a></li>
                     <li><a href="blog.html">Blog</a></li>
-                    <li><a href="admin-panel.html">Panel Admin</a></li>
+                    <li><a href="panel-administrador.html">Panel Admin</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -426,37 +402,25 @@
         </div>
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
-
     <!-- Script de protección de sesión de administrador - DEBE EJECUTARSE PRIMERO -->
-    <script src="assets/js/admin-session-protection.js"></script>
-    
+    <script src="assets/js/proteccion-sesion-admin.js"></script>
     <script src="assets/js/script.js"></script>
-    <script src="assets/js/auth-enhanced.js"></script>
-    <script src="assets/js/admin-panel.js"></script>
-    
+    <script src="assets/js/autenticacion-mejorada.js"></script>
+    <script src="assets/js/panel-administrador.js"></script>
     <script>
         // Verificar permisos de administrador al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔍 Verificando permisos de administrador...');
-            
             const isAdmin = localStorage.getItem('huertohogar_is_admin') === 'true';
             const userRole = localStorage.getItem('huertohogar_user_role');
-            
             if (!isAdmin || userRole !== 'admin') {
-                console.log('❌ Sin permisos de administrador, redirigiendo al login...');
                 alert('Acceso denegado. Necesitas permisos de administrador.');
                 window.location.href = 'login.html';
                 return;
             }
-            
-            console.log('✅ Permisos de administrador verificados');
-            
                 // Configurar logout desde el header
                 const logoutBtn = document.getElementById('logout-btn');
                 if (logoutBtn) {
                     logoutBtn.addEventListener('click', function() {
-                        console.log('🚪 Cerrando sesión de administrador...');
-                        
                         // Usar función de limpieza autorizada si existe
                         if (typeof window.clearAdminSession === 'function') {
                             window.clearAdminSession();
@@ -466,7 +430,6 @@
                             localStorage.removeItem('huertohogar_user_role');
                             localStorage.removeItem('huertoHogarAuth');
                         }
-                        
                         // Redirigir al login
                         window.location.href = 'login.html';
                     });

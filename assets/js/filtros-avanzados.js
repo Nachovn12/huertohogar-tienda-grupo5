@@ -1,20 +1,16 @@
 // Filtros avanzados para la página de productos - VERSIÓN CORREGIDA
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Script avanzado cargado');
-    
     // Elementos del DOM
     const quickFilters = document.querySelectorAll('.elegant-filter-btn');
     const productGrid = document.getElementById('product-list-full');
     const productsCount = document.getElementById('products-count');
     const productsTotal = document.getElementById('products-total');
     const sortSelect = document.getElementById('sort-by');
-    
     // Estado de los filtros
     let currentFilters = {
         category: '',
         sort: 'recommended'
     };
-    
     // Productos según la rúbrica del proyecto - Ordenados alfabéticamente
     const allProducts = [
         { 
@@ -162,14 +158,11 @@ document.addEventListener('DOMContentLoaded', function() {
             reviewCount: 91
         }
     ];
-
     // Función para renderizar productos
     function renderProducts(products) {
         if (!productGrid) {
-            console.error('Product grid not found');
             return;
         }
-
         if (products.length === 0) {
             productGrid.innerHTML = `
                 <div class="no-results">
@@ -180,9 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             return;
         }
-
         productGrid.innerHTML = products.map(product => createProductCard(product)).join('');
-        
         // Asegurar que las imágenes se carguen correctamente
         const images = productGrid.querySelectorAll('img');
         images.forEach(img => {
@@ -191,26 +182,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.style.opacity = '1';
             });
             img.addEventListener('error', function() {
-                console.error('Error cargando imagen:', this.src);
                 this.style.display = 'none';
             });
         });
-        
         // Aplicar estilos de vista de grid (única vista disponible)
         applyGridViewStyles();
-        
         // Actualizar contador de productos
         updateResultsInfo(products.length);
     }
-
     // Función para crear tarjeta de producto
     function createProductCard(product) {
         const offerPrice = getOfferPrice(product.id);
         const originalPrice = getOriginalPrice(product.id);
         const isOnOffer = isProductOnOffer(product.id);
-        
         const discountPercentage = isOnOffer ? Math.round((1 - offerPrice / originalPrice) * 100) : 0;
-        
         return `
             <div class="product-card" data-category="${product.category}">
                 <div class="product-badges">
@@ -251,12 +236,10 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
     }
-
     // Función para formatear precios
     function formatPrice(price) {
         return `$${price.toLocaleString('es-CL')} CLP`;
     }
-
     // Funciones de ofertas (importadas del script principal)
     function getOfferPrice(productId) {
         if (typeof window.getOfferPrice === 'function') {
@@ -264,21 +247,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return null;
     }
-
     function getOriginalPrice(productId) {
         if (typeof window.getOriginalPrice === 'function') {
             return window.getOriginalPrice(productId);
         }
         return null;
     }
-
     function isProductOnOffer(productId) {
         if (typeof window.isProductOnOffer === 'function') {
             return window.isProductOnOffer(productId);
         }
         return false;
     }
-
     // Función para actualizar información de resultados
     function updateResultsInfo(count) {
         if (productsCount) {
@@ -288,11 +268,9 @@ document.addEventListener('DOMContentLoaded', function() {
             productsTotal.textContent = `de ${allProducts.length} total`;
         }
     }
-
     // Función para ordenar productos
     function sortProducts(products, sortBy) {
         const sortedProducts = [...products];
-        
         switch (sortBy) {
             case 'recommended':
                 // Ordenar por recomendación (puntuación alta + muchas reseñas)
@@ -302,7 +280,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const scoreB = (b.rating * 0.7) + ((b.reviewCount || 0) / 100 * 0.3);
                     return scoreB - scoreA;
                 });
-                
             case 'best-selling':
                 // Ordenar por popularidad (productos populares primero)
                 return sortedProducts.sort((a, b) => {
@@ -310,7 +287,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (!a.popular && b.popular) return 1;
                     return a.name.localeCompare(b.name, 'es', { sensitivity: 'base' });
                 });
-                
             case 'best-discount':
                 // Ordenar por descuento (mayor descuento primero)
                 return sortedProducts.sort((a, b) => {
@@ -320,7 +296,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (discountA < discountB) return 1;
                     return a.name.localeCompare(b.name, 'es', { sensitivity: 'base' });
                 });
-                
             case 'price-desc':
                 // Ordenar por precio descendente
                 return sortedProducts.sort((a, b) => {
@@ -328,7 +303,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const priceB = getOfferPrice(b.id) || b.price;
                     return priceB - priceA;
                 });
-                
             case 'price-asc':
                 // Ordenar por precio ascendente
                 return sortedProducts.sort((a, b) => {
@@ -336,20 +310,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     const priceB = getOfferPrice(b.id) || b.price;
                     return priceA - priceB;
                 });
-                
             case 'name-asc':
                 // Ordenar alfabéticamente A-Z
                 return sortedProducts.sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
-                
             case 'name-desc':
                 // Ordenar alfabéticamente Z-A
                 return sortedProducts.sort((a, b) => b.name.localeCompare(a.name, 'es', { sensitivity: 'base' }));
-                
             default:
                 return sortedProducts;
         }
     }
-    
     // Función para obtener el porcentaje de descuento
     function getDiscountPercentage(productId) {
         const offerPrice = getOfferPrice(productId);
@@ -359,30 +329,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return 0;
     }
-
     // Función para aplicar filtros
     function applyFilters() {
         let filteredProducts = allProducts;
-        
         if (currentFilters.category && currentFilters.category !== 'all') {
             filteredProducts = allProducts.filter(product => 
                 product.category === currentFilters.category
             );
         }
-        
         // Aplicar ordenamiento
         filteredProducts = sortProducts(filteredProducts, currentFilters.sort);
-        
-        console.log(`Productos filtrados y ordenados por ${currentFilters.sort}:`, filteredProducts.map(p => p.name));
-        
         renderProducts(filteredProducts);
     }
-
-
     // Función para manejar filtros rápidos
     function handleQuickFilter(category) {
         currentFilters.category = category;
-        
         // Actualizar botones de filtro
         quickFilters.forEach(btn => {
             btn.classList.remove('active');
@@ -390,14 +351,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.classList.add('active');
             }
         });
-        
         applyFilters();
     }
-
     // Función para configurar event listeners
     function setupEventListeners() {
-        console.log('Configurando event listeners');
-        
         // Filtros rápidos
         quickFilters.forEach(btn => {
             btn.addEventListener('click', function() {
@@ -405,38 +362,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 handleQuickFilter(category);
             });
         });
-        
         // Configurar dropdown de ordenamiento
         if (sortSelect) {
             sortSelect.addEventListener('change', function(e) {
                 const sortBy = this.value;
-                console.log('Ordenamiento seleccionado:', sortBy);
                 currentFilters.sort = sortBy;
                 applyFilters();
             });
         }
-        
         // Vista de productos
     }
-
     // Función para aplicar estilos de vista de grid
     function applyGridViewStyles() {
         if (!productGrid) return;
-        
         const cards = productGrid.querySelectorAll('.product-card');
         cards.forEach(card => {
             card.style.display = 'block';
             card.style.width = '100%';
             card.style.maxWidth = '100%';
         });
-        
-        console.log('Estilos de vista de grid aplicados correctamente');
     }
-
-
     // Inicializar todo
-    console.log('Inicializando filtros avanzados...');
     setupEventListeners();
     applyFilters();
-    console.log('Filtros avanzados inicializados correctamente');
 });

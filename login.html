@@ -14,13 +14,13 @@
     <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon/favicon-512x512.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
     <link rel="manifest" href="assets/favicon/site.webmanifest">
-    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/normalizar.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/admin-panel.css">
+    <link rel="stylesheet" href="assets/css/panel-administrador.css">
     <style>
         .user-type-select {
             width: 100%;
@@ -32,12 +32,10 @@
             cursor: pointer;
             transition: border-color 0.3s ease;
         }
-        
         .user-type-select:focus {
             outline: none;
             border-color: #2E8B57;
         }
-        
         .admin-help {
             margin-top: 15px;
             padding: 12px;
@@ -46,12 +44,10 @@
             border-left: 4px solid #2E8B57;
             text-align: center;
         }
-        
         .admin-help p {
             margin: 5px 0;
             font-size: 14px;
         }
-        
         .admin-help code {
             background: #e9ecef;
             padding: 2px 6px;
@@ -60,7 +56,6 @@
             color: #2E8B57;
             font-weight: bold;
         }
-        
         .divider {
             margin: 20px 0;
             position: relative;
@@ -69,7 +64,6 @@
             justify-content: center;
             width: 100%;
         }
-        
         .divider::before {
             content: '';
             position: absolute;
@@ -80,7 +74,6 @@
             background: #e0e0e0;
             z-index: 0;
         }
-        
         .divider span {
             background: white;
             padding: 0 20px;
@@ -91,7 +84,6 @@
             display: inline-block;
             white-space: nowrap;
         }
-        
         .social-auth {
             display: flex;
             gap: 12px;
@@ -99,7 +91,6 @@
             width: 100%;
             align-items: stretch;
         }
-        
         .social-btn {
             flex: 1;
             padding: 12px 16px;
@@ -118,7 +109,6 @@
             text-align: center;
             min-height: 44px;
         }
-        
         .social-btn i {
             font-size: 16px;
             line-height: 1;
@@ -126,23 +116,19 @@
             align-items: center;
             justify-content: center;
         }
-        
         .social-btn:hover {
             border-color: #2E8B57;
             background: #f8f9fa;
             transform: translateY(-1px);
         }
-        
         .google-btn:hover {
             border-color: #db4437;
             color: #db4437;
         }
-        
         .facebook-btn:hover {
             border-color: #4267B2;
             color: #4267B2;
         }
-        
         .admin-panel-container {
             position: fixed;
             top: 0;
@@ -153,17 +139,14 @@
             z-index: 1000;
             overflow-y: auto;
         }
-        
         .admin-login-container {
             max-width: 400px;
             margin: 5% auto;
         }
-        
         .admin-login-header {
             text-align: center;
             margin-bottom: 30px;
         }
-        
         .admin-login-icon {
             width: 60px;
             height: 60px;
@@ -176,7 +159,6 @@
             color: white;
             font-size: 24px;
         }
-        
         .admin-login-help {
             margin-top: 20px;
             padding: 15px;
@@ -184,12 +166,10 @@
             border-radius: 8px;
             border-left: 4px solid #2E8B57;
         }
-        
         .admin-login-help p {
             margin: 5px 0;
             font-size: 14px;
         }
-        
         .admin-login-help code {
             background: #e9ecef;
             padding: 2px 6px;
@@ -239,7 +219,6 @@
             </div>
         </div>
     </header>
-
     <main class="page-container">
         <div class="auth-wrapper">
             <div class="auth-card">
@@ -247,7 +226,6 @@
                     <h1>Iniciar Sesión</h1>
                     <p>Accede a tu cuenta de HuertoHogar</p>
                 </div>
-                
                 <form class="auth-form" id="login-form" novalidate data-custom-handler="true" data-skip-auth="true">
                     <div class="form-group">
                         <label for="user-type">Tipo de Acceso</label>
@@ -256,19 +234,16 @@
                             <option value="admin">Administrador</option>
                         </select>
                     </div>
-                    
                     <div class="form-group" id="email-group">
                         <label for="email">Email *</label>
                         <input type="email" id="email" name="email" placeholder="tu@email.com">
                         <div class="field-error" id="email-error"></div>
                     </div>
-                    
                     <div class="form-group" id="username-group" style="display: none;">
                         <label for="username">Usuario *</label>
                         <input type="text" id="username" name="username" placeholder="admin">
                         <div class="field-error" id="username-error"></div>
                     </div>
-                    
                     <div class="form-group">
                         <label for="password">Contraseña *</label>
                         <div class="password-field">
@@ -280,7 +255,6 @@
                         <a href="recuperar.html" class="forgot-link" id="forgot-link">¿Olvidaste tu contraseña?</a>
                         <div class="field-error" id="password-error"></div>
                     </div>
-                    
                     <div class="form-options">
                         <label class="checkbox-label">
                             <input type="checkbox" id="remember" name="remember">
@@ -288,7 +262,6 @@
                             Recordar sesión
                         </label>
                     </div>
-                    
                     <button type="submit" class="btn-primary" id="login-submit">
                         <span class="btn-text">Iniciar Sesión</span>
                         <span class="btn-loading" style="display: none;">
@@ -296,11 +269,9 @@
                             Iniciando sesión...
                         </span>
                     </button>
-                
                 <div class="divider">
                     <span>o continúa con</span>
                 </div>
-                
                 <div class="social-auth">
                     <button type="button" class="social-btn google-btn">
                         <i class="fab fa-google"></i>
@@ -312,7 +283,6 @@
                     </button>
                 </div>
                 </form>
-                
                 <div class="auth-footer">
                     <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
             <div class="admin-help" id="admin-help" style="display: none;">
@@ -323,8 +293,6 @@
             </div>
         </div>
     </main>
-
-
     <!-- Panel de Administración (oculto inicialmente) -->
     <div id="admin-panel-container" class="admin-panel-container" style="display: none;">
         <!-- Header del Panel de Administración -->
@@ -353,7 +321,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Estadísticas del Panel -->
         <section class="admin-stats">
             <div class="stats-grid">
@@ -395,7 +362,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Filtros y Búsqueda -->
         <section class="admin-filters">
             <div class="filters-container">
@@ -421,7 +387,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Tabla de Productos -->
         <section class="admin-products">
             <div class="products-container">
@@ -442,7 +407,6 @@
                     </button>
                 </div>
                 </div>
-                
                 <div class="products-table-container">
                     <table class="products-table" id="products-table">
                         <thead>
@@ -462,14 +426,12 @@
                         </tbody>
                     </table>
                 </div>
-                
                 <div class="products-pagination" id="products-pagination">
                     <!-- La paginación se generará dinámicamente -->
                 </div>
             </div>
         </section>
     </div>
-
     <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -496,7 +458,6 @@
         </div>
         <p class="footer-bottom">© 2025 HuertoHogar. Todos los derechos reservados.</p>
     </footer>
-    
     <!-- Modales del Panel de Administración -->
     <!-- Modal para Agregar/Editar Producto -->
     <div id="product-modal" class="modal-overlay" style="display: none;">
@@ -523,7 +484,6 @@
                             </select>
                         </div>
                     </div>
-                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="product-price">Precio (CLP) *</label>
@@ -534,7 +494,6 @@
                             <input type="number" id="product-stock" name="stock" min="0" required>
                         </div>
                     </div>
-                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="product-image">URL de la Imagen *</label>
@@ -551,17 +510,14 @@
                             </select>
                         </div>
                     </div>
-                    
                     <div class="form-group">
                         <label for="product-description">Descripción</label>
                         <textarea id="product-description" name="description" rows="4" placeholder="Describe las características del producto..."></textarea>
                     </div>
-                    
                     <div class="form-group">
                         <label for="product-features">Características (separadas por comas)</label>
                         <input type="text" id="product-features" name="features" placeholder="Ej: Orgánico, Fresco, De temporada">
                     </div>
-                    
                     <div class="form-row">
                         <div class="form-group checkbox-group">
                             <label class="checkbox-label">
@@ -578,7 +534,6 @@
                             </label>
                         </div>
                     </div>
-                    
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" id="cancel-product">Cancelar</button>
                         <button type="submit" class="btn btn-primary" id="save-product">
@@ -593,7 +548,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal de Confirmación de Eliminación -->
     <div id="delete-modal" class="modal-overlay" style="display: none;">
         <div class="modal-container delete-modal">
@@ -618,7 +572,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal de Papelera -->
     <div id="trash-modal" class="modal-overlay" style="display: none;">
         <div class="modal-container trash-modal">
@@ -633,7 +586,6 @@
                 <div class="trash-info">
                     <p>Productos eliminados recientemente. Puedes recuperarlos o eliminarlos permanentemente.</p>
                 </div>
-                
                 <div class="trash-actions">
                     <button id="restore-all-btn" class="btn btn-success" disabled>
                         <i class="fas fa-undo"></i>
@@ -644,7 +596,6 @@
                         Eliminar Todo Permanentemente
                     </button>
                 </div>
-                
                 <div class="trash-table-container">
                     <table class="trash-table" id="trash-table">
                         <thead>
@@ -665,7 +616,6 @@
                         </tbody>
                     </table>
                 </div>
-                
                 <div class="trash-empty" id="trash-empty" style="display: none;">
                     <div class="empty-state">
                         <i class="fas fa-trash-alt"></i>
@@ -676,10 +626,8 @@
             </div>
         </div>
     </div>
-
     <!-- Input oculto para importar archivos -->
     <input type="file" id="import-file-input" accept=".json" style="display: none;">
-    
     <div id="cart-overlay" class="hidden"></div>
     <div id="cart-offcanvas" class="hidden">
         <div class="cart-header">
@@ -696,37 +644,27 @@
             <button class="btn btn-primary checkout-btn">Finalizar Compra</button>
         </div>
     </div>
-    
     <script src="assets/js/script.js"></script>
-    
-    <!-- Script para deshabilitar auth-enhanced.js ANTES de que se cargue -->
+    <!-- Script para deshabilitar autenticacion-mejorada.js ANTES de que se cargue -->
     <script>
-        // Deshabilitar auth-enhanced.js completamente para nuestro formulario
+        // Deshabilitar autenticacion-mejorada.js completamente para nuestro formulario
         (function() {
             // Interceptar el objeto AuthEnhanced antes de que se inicialice
             window.AuthEnhanced = function() {
-                console.log('🚫 AuthEnhanced interceptado y deshabilitado');
                 return {
                     init: function() {
-                        console.log('🚫 AuthEnhanced.init() deshabilitado');
                     },
                     validateForm: function() {
-                        console.log('🚫 AuthEnhanced.validateForm() deshabilitado');
                         return true; // Siempre retorna true para evitar errores
                     }
                 };
             };
-            
-            console.log('✅ AuthEnhanced interceptado y deshabilitado');
         })();
     </script>
-    
-    <!-- <script src="assets/js/auth-enhanced.js"></script> -->
-    <script src="assets/js/admin-panel.js"></script>
-    
+    <!-- <script src="assets/js/autenticacion-mejorada.js"></script> -->
+    <script src="assets/js/panel-administrador.js"></script>
     <!-- Script inmediato para configurar campos -->
     <script>
-
         // Configurar campos inmediatamente
         function setupFormFields() {
             const userTypeSelect = document.getElementById('user-type');
@@ -737,18 +675,15 @@
             const divider = document.querySelector('.divider');
             const socialAuth = document.querySelector('.social-auth');
             const authFooter = document.querySelector('.auth-footer');
-            
             if (userTypeSelect && emailGroup && usernameGroup) {
                 function updateFields() {
                     const userType = userTypeSelect.value;
-                    
                     if (userType === 'admin') {
                         // Ocultar campos de usuario normal
                         emailGroup.style.display = 'none';
                         usernameGroup.style.display = 'block';
                         if (forgotLink) forgotLink.style.display = 'none';
                         if (adminHelp) adminHelp.style.display = 'block';
-                        
                         // Ocultar opciones de redes sociales y registro
                         if (divider) divider.style.display = 'none';
                         if (socialAuth) socialAuth.style.display = 'none';
@@ -757,7 +692,6 @@
                             const registerLink = authFooter.querySelector('p');
                             if (registerLink) registerLink.style.display = 'none';
                         }
-                        
                         document.getElementById('password').placeholder = 'admin';
                         document.getElementById('username').required = true;
                         document.getElementById('email').required = false;
@@ -768,7 +702,6 @@
                         usernameGroup.style.display = 'none';
                         if (forgotLink) forgotLink.style.display = 'block';
                         if (adminHelp) adminHelp.style.display = 'none';
-                        
                         // Mostrar opciones de redes sociales y registro
                         if (divider) divider.style.display = 'flex';
                         if (socialAuth) socialAuth.style.display = 'flex';
@@ -777,7 +710,6 @@
                             const registerLink = authFooter.querySelector('p');
                             if (registerLink) registerLink.style.display = 'block';
                         }
-                        
                         document.getElementById('password').placeholder = 'Tu contraseña';
                         document.getElementById('email').required = true;
                         document.getElementById('email').setAttribute('required', 'required');
@@ -785,15 +717,12 @@
                         document.getElementById('username').removeAttribute('required');
                     }
                 }
-                
                 // Configurar inicialmente
                 updateFields();
-                
                 // Agregar listener
                 userTypeSelect.addEventListener('change', updateFields);
             }
         }
-        
         // Ejecutar inmediatamente
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', setupFormFields);
@@ -801,65 +730,41 @@
             setupFormFields();
         }
     </script>
-    
     <script>
         // SCRIPT COMPLETAMENTE NUEVO Y SIMPLE
-        console.log('🔧 Script de login completamente nuevo iniciado');
-        
         // Función simple para manejar el login
         function handleLogin() {
-            console.log('🎯 Función handleLogin ejecutada');
-            
             const userType = document.getElementById('user-type').value;
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            
-            console.log('🔍 Valores:', userType, username, password);
-            
             if (userType === 'admin' && username === 'admin' && password === 'admin') {
-                console.log('✅ Credenciales correctas, redirigiendo...');
                 localStorage.setItem('huertohogar_is_admin', 'true');
                 localStorage.setItem('huertohogar_user_role', 'admin');
-                window.location.href = 'admin-panel.html';
+                window.location.href = 'panel-administrador.html';
             } else {
-                console.log('❌ Credenciales incorrectas');
                 alert('Credenciales incorrectas. Usa admin/admin para acceder.');
             }
         }
-        
         // Configurar el formulario cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔧 DOM listo, configurando formulario...');
-            
             const loginForm = document.getElementById('login-form');
             if (loginForm) {
-                console.log('✅ Formulario encontrado');
-                
                 // Limpiar el formulario
                 const newForm = loginForm.cloneNode(true);
                 loginForm.parentNode.replaceChild(newForm, loginForm);
-                
                 // Configurar el nuevo formulario
                 const freshForm = document.getElementById('login-form');
                 freshForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    console.log('🎯 Formulario enviado!');
                     handleLogin();
                 });
-                
                 // Configurar el cambio dinámico de campos
                 setupFormFields();
-                
-                console.log('✅ Formulario configurado correctamente');
             } else {
-                console.error('❌ Formulario no encontrado');
             }
         });
-
         // Función para configurar campos dinámicamente
         function setupFormFields() {
-            console.log('🔧 Configurando campos dinámicos...');
-            
             const userTypeSelect = document.getElementById('user-type');
             const emailGroup = document.getElementById('email-group');
             const usernameGroup = document.getElementById('username-group');
@@ -868,19 +773,15 @@
             const divider = document.querySelector('.divider');
             const socialAuth = document.querySelector('.social-auth');
             const authFooter = document.querySelector('.auth-footer');
-            
             if (userTypeSelect && emailGroup && usernameGroup) {
                 function updateFields() {
                     const userType = userTypeSelect.value;
-                    console.log('🔄 Cambiando tipo de acceso a:', userType);
-                    
                     if (userType === 'admin') {
                         // Ocultar campos de usuario normal
                         emailGroup.style.display = 'none';
                         usernameGroup.style.display = 'block';
                         if (forgotLink) forgotLink.style.display = 'none';
                         if (adminHelp) adminHelp.style.display = 'block';
-                        
                         // Ocultar opciones de redes sociales y registro
                         if (divider) divider.style.display = 'none';
                         if (socialAuth) socialAuth.style.display = 'none';
@@ -888,20 +789,16 @@
                             const registerLink = authFooter.querySelector('p');
                             if (registerLink) registerLink.style.display = 'none';
                         }
-                        
                         document.getElementById('password').placeholder = 'admin';
                         document.getElementById('username').required = true;
                         document.getElementById('email').required = false;
                         document.getElementById('email').removeAttribute('required');
-                        
-                        console.log('✅ Campos configurados para administrador');
                     } else {
                         // Mostrar campos de usuario normal
                         emailGroup.style.display = 'block';
                         usernameGroup.style.display = 'none';
                         if (forgotLink) forgotLink.style.display = 'block';
                         if (adminHelp) adminHelp.style.display = 'none';
-                        
                         // Mostrar opciones de redes sociales y registro
                         if (divider) divider.style.display = 'flex';
                         if (socialAuth) socialAuth.style.display = 'flex';
@@ -909,31 +806,21 @@
                             const registerLink = authFooter.querySelector('p');
                             if (registerLink) registerLink.style.display = 'block';
                         }
-                        
                         document.getElementById('password').placeholder = 'Tu contraseña';
                         document.getElementById('email').required = true;
                         document.getElementById('email').setAttribute('required', 'required');
                         document.getElementById('username').required = false;
                         document.getElementById('username').removeAttribute('required');
-                        
-                        console.log('✅ Campos configurados para usuario normal');
                     }
                 }
-                
                 // Configurar inicialmente
                 updateFields();
-                
                 // Agregar listener
                 userTypeSelect.addEventListener('change', updateFields);
-                
-                console.log('✅ Campos dinámicos configurados');
             } else {
-                console.error('❌ Elementos del formulario no encontrados');
             }
         }
-
         // TODO EL CÓDIGO PROBLEMÁTICO ELIMINADO
-
     </script>
 </body>
 </html>
