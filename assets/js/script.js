@@ -418,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             // Renderizado simplificado para debug
             let html = '';
-            productsToRender.forEach((product, index) => {
+                productsToRender.forEach((product, index) => {
                 try {
                     const offerPrice = getOfferPrice(product.id);
                     const originalPrice = getOriginalPrice(product.id);
@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <p class="price ${isOnOffer ? 'has-offer' : ''}">${formatPrice(offerPrice || product.price)}</p>
                                     <span class="product-unit">${product.unit || 'por unidad'}</span>
                                     ${isOnOffer ? `<span class="original-price">Antes: ${formatPrice(originalPrice)}</span>` : ''}
-                                    ${isOnOffer ? `<span class="savings-badge">💰 Ahorras $${formatPrice(savings)}</span>` : ''}
+                                        ${isOnOffer ? `<span class="savings-badge">💰 Ahorras ${formatPrice(savings)}</span>` : ''}
                                 </div>
                                 <div class="product-actions">
                                     <button class="view-details-btn" data-id="${product.id}">
@@ -520,7 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <p class="price ${isOnOffer ? 'has-offer' : ''}">${formatPrice(offerPrice || product.price)}</p>
                                     <span class="product-unit">${product.unit || 'por unidad'}</span>
                                     ${isOnOffer ? `<span class="original-price">Antes: ${formatPrice(originalPrice)}</span>` : ''}
-                                    ${isOnOffer ? `<span class="savings-badge">💰 Ahorras $${formatPrice(savings)}</span>` : ''}
+                                        ${isOnOffer ? `<span class="savings-badge">💰 Ahorras ${formatPrice(savings)}</span>` : ''}
                                 </div>
                                 <div class="product-actions">
                                     <button class="view-details-btn" data-id="${product.id}">
