@@ -1,3 +1,314 @@
+/* --- Dropdown de categorías en menú hamburguesa móvil --- */
+@media (max-width: 900px) {
+    .main-nav-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+    }
+    .main-nav-list > li {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .main-nav-list > li > a {
+        display: block;
+        font-size: 1.35rem;
+        color: #222;
+        padding: 1.2rem 0 1.2rem 1.2rem;
+        border-radius: 0 24px 24px 0;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        transition: background 0.2s, color 0.2s;
+        width: 100%;
+        box-sizing: border-box;
+        background: none;
+        border: none;
+        text-align: left;
+    }
+    .main-nav-list > li > a:hover {
+        background: #f0f0f0;
+        color: #2e8b57;
+    }
+    .dropdown-categorias {
+        width: 100%;
+        position: relative;
+        margin-top: 1.5rem;
+    }
+    .dropdown-toggle {
+        width: 100%;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2e8b57;
+        padding: 1.2rem 0 1.2rem 1.2rem;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .dropdown-arrow {
+        font-size: 1.1rem;
+        margin-left: 0.5rem;
+        transition: transform 0.2s;
+    }
+    .dropdown-categorias.open .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+    .dropdown-menu {
+        display: none;
+        flex-direction: column;
+        background: #f8f8f8;
+        border-radius: 0 0 18px 18px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+        margin: 0;
+        padding: 0.5rem 0 0.5rem 0.5rem;
+        position: static;
+        width: 100%;
+        z-index: 1201;
+    }
+    .dropdown-categorias.open .dropdown-menu {
+        display: flex;
+    }
+    .dropdown-menu li {
+        width: 100%;
+    }
+    .dropdown-menu a {
+        font-size: 1.15rem;
+        color: #222;
+        padding: 1rem 0 1rem 0.8rem;
+        border-radius: 0 18px 18px 0;
+        width: 100%;
+        display: block;
+        background: none;
+        transition: background 0.2s, color 0.2s;
+    }
+    .dropdown-menu a:hover {
+        background: #e0f5e9;
+        color: #2e8b57;
+    }
+}
+/* --- Ocultar menú principal en móvil por defecto, mostrar solo con .open --- */
+@media (max-width: 900px) {
+    .main-nav {
+        display: none;
+    }
+    .main-nav.open {
+        display: flex;
+    }
+}
+/* --- Drawer hamburguesa 100% responsivo y visual tipo app --- */
+@media (max-width: 900px) {
+    .main-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        max-width: none;
+        background: #fff;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+        box-shadow: 2px 0 32px rgba(0,0,0,0.08);
+        z-index: 1100;
+        transform: translateX(-120%);
+        transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+        gap: 0;
+        display: flex;
+        border-top-right-radius: 24px;
+        border-bottom-right-radius: 24px;
+    }
+    .main-nav.open {
+        transform: translateX(0);
+    }
+    .main-nav a,
+    .main-nav .mobile-categories a {
+        display: block;
+        font-size: 1.35rem;
+        color: #222;
+        padding: 1.2rem 0 1.2rem 1.2rem;
+        border-radius: 0 24px 24px 0;
+        margin: 0;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        transition: background 0.2s, color 0.2s;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .main-nav a:hover,
+    .main-nav .mobile-categories a:hover {
+        background: #f0f0f0;
+        color: #2e8b57;
+    }
+    .main-nav .mobile-categories {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-top: 2.5rem;
+        width: 100%;
+        border-top: 1px solid #e0e0e0;
+        padding-top: 1.5rem;
+    }
+    .main-nav .mobile-categories-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #2e8b57;
+        margin-bottom: 0.5rem;
+        padding-left: 1.2rem;
+    }
+    .main-nav {
+        overflow-y: auto;
+    }
+    .hamburger {
+        position: relative;
+        z-index: 1200;
+    }
+    body.menu-open {
+        overflow: hidden;
+    }
+}
+/* --- Menú hamburguesa tipo drawer lateral --- */
+@media (max-width: 900px) {
+    .main-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 80vw;
+        max-width: 340px;
+        background: #fff;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+        box-shadow: 2px 0 32px rgba(0,0,0,0.08);
+        z-index: 1100;
+        transform: translateX(-120%);
+        transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+        gap: 0;
+        display: flex;
+        border-top-right-radius: 24px;
+        border-bottom-right-radius: 24px;
+    }
+    .main-nav.open {
+        transform: translateX(0);
+    }
+    .main-nav a,
+    .main-nav .mobile-categories a {
+        display: block;
+        font-size: 1.25rem;
+        color: #222;
+        padding: 1.1rem 0 1.1rem 0.5rem;
+        border-radius: 0 24px 24px 0;
+        margin: 0;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        transition: background 0.2s, color 0.2s;
+    }
+    .main-nav a:hover,
+    .main-nav .mobile-categories a:hover {
+        background: #f0f0f0;
+        color: #2e8b57;
+    }
+    .main-nav .mobile-categories {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-top: 2.5rem;
+        width: 100%;
+        border-top: 1px solid #e0e0e0;
+        padding-top: 1.5rem;
+    }
+    .main-nav .mobile-categories-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #2e8b57;
+        margin-bottom: 0.5rem;
+        padding-left: 0.5rem;
+    }
+    .hamburger {
+        position: relative;
+        z-index: 1200;
+    }
+    body.menu-open {
+        overflow: hidden;
+    }
+}
+/* --- Submenú de categorías solo en menú hamburguesa móvil --- */
+.mobile-categories {
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding-left: 0.5rem;
+}
+.mobile-categories-title {
+    font-weight: bold;
+    color: #2e8b57;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+@media (max-width: 900px) {
+    .main-nav.open .mobile-categories {
+        display: flex;
+    }
+}
+/* --- Menú hamburguesa responsivo --- */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1101;
+}
+.hamburger span {
+    display: block;
+    width: 28px;
+    height: 4px;
+    margin: 4px 0;
+    background: #2e8b57;
+    border-radius: 2px;
+    transition: 0.3s;
+}
+.hamburger.open span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+@media (max-width: 900px) {
+    .hamburger { display: flex; }
+    .main-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        background: #fff;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        z-index: 1100;
+        transform: translateY(-120%);
+        transition: transform 0.3s;
+        width: 100vw;
+        height: 100vh;
+        gap: 1.5rem;
+        display: flex;
+    }
+    .main-nav.open {
+        transform: translateY(0);
+    }
+}
 /* === HOJA DE ESTILOS HUERTOHOGAR - FINAL Y COMPLETA === */
 
 /* Barra de información superior */
@@ -4098,10 +4409,26 @@ body.cart-open { overflow: hidden; }
 }
 
 /* Grid para productos destacados en la página principal */
-.product-grid:not(.few-products) {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 900px;
-    gap: 3rem;
+
+/* Grid para productos destacados en la página principal (6 productos) */
+.product-grid#product-list-home:not(.few-products) {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1200px;
+        gap: 2.5rem;
+}
+
+@media (max-width: 1024px) {
+    .product-grid#product-list-home:not(.few-products) {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 900px;
+    }
+}
+
+@media (max-width: 600px) {
+    .product-grid#product-list-home:not(.few-products) {
+        grid-template-columns: 1fr;
+        max-width: 98vw;
+    }
 }
 
 /* Distribución perfecta para 6 productos */

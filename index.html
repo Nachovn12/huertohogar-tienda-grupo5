@@ -24,39 +24,31 @@
     <link rel="stylesheet" href="assets/css/modal-verificacion.css">
 </head>
 <body>
-    <!-- Barra de información superior -->
-    <div class="top-info-bar">
-        <div class="top-info-content">
-            <div class="info-left">
-                <span><i class="fas fa-truck"></i> Despacho gratis desde $15.000</span>
-                <span><i class="fas fa-clock"></i> Lunes a Sábado 9:00 - 19:00</span>
-            </div>
-            <div class="info-right">
-                <span><i class="fas fa-phone"></i> +56 9 1234 5678</span>
-                <span><i class="fas fa-envelope"></i> contacto@huertohogar.cl</span>
-            </div>
-        </div>
-    </div>
     <header class="main-header">
         <div class="header-content">
+        <!-- Botón hamburguesa solo móvil (único) -->
+        <button class="hamburger" id="hamburger-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="main-nav" style="display:none">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
             <a href="index.html" class="logo-container">
                 <img src="assets/img/Logo Huerto Hogar.jpg" alt="Logo de HuertoHogar" class="logo">
                 <h2>HuertoHogar</h2>
             </a>
             <nav class="main-nav">
+            <div class="nav-links" id="nav-links">
                 <a href="index.html">Inicio</a>
                 <a href="productos.html">Productos</a>
                 <a href="nosotros.html">Nosotros</a>
                 <a href="blog.html">Blog</a>
+            </div>
             </nav>
             <div class="header-actions">
-                <div class="search-bar">
+                <div class="search-bar" style="position: relative;">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Buscar..." id="search-input" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="off">
-                    <div class="search-dropdown" id="search-dropdown">
-                        <div class="search-suggestions" id="search-suggestions"></div>
-                    </div>
-                </div>
+                    <input type="text" placeholder="Buscar...">
+                <div id="search-suggestions" class="search-suggestions" style="position: absolute; top: 100%; left: 0px; right: 0px; background: white; border: 1px solid rgb(226, 232, 240); border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 20px; z-index: 1000; display: none; max-height: 300px; overflow-y: auto;"></div></div>
                 <a href="login.html" class="login-link" id="user-login-link">Ingresar</a>
                 <div class="user-profile" id="user-profile" style="display: none;">
                     <span class="user-name" id="user-name"></span>
@@ -82,6 +74,530 @@
             </div>
         </div>
     </header>
+        <style>
+        @media (max-width: 900px) {
+            .logo-container { display: none !important; }
+            .hamburger { display: flex !important; position: static !important; margin-left: 0.2rem; }
+            .login-link {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 36px;
+            }
+        }
+        </style>
+        <style>
+        @media (max-width: 900px) {
+            .header-content {
+                display: grid;
+                grid-template-columns: 40px 1fr 1fr;
+                align-items: center;
+                padding: 0.4rem 0.7rem;
+                min-height: 48px;
+                background: #fff;
+                position: sticky;
+                top: 0;
+                z-index: 1300;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            }
+            .logo-container {
+                grid-column: 2;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.4rem;
+                justify-self: center;
+            }
+            .logo-container img.logo {
+                height: 26px;
+                width: 26px;
+                object-fit: contain;
+                margin: 0 0.15rem 0 0;
+            }
+            .logo-container h2 {
+                font-size: 1.18rem;
+                font-weight: 700;
+                color: #219150;
+                margin: 0;
+            }
+        }
+        </style>
+        <style>
+        @media (max-width: 900px) {
+            .header-content {
+                display: grid;
+                grid-template-columns: 40px 1fr 1fr;
+                align-items: center;
+                padding: 0.4rem 0.7rem;
+                min-height: 48px;
+                background: #fff;
+                position: sticky;
+                top: 0;
+                z-index: 1300;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            }
+            .hamburger {
+                grid-column: 1;
+                justify-self: start;
+                display: flex !important;
+                position: static !important;
+                margin: 0;
+            }
+            .logo-container {
+                grid-column: 2;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.4rem;
+            }
+            .logo-container img.logo {
+                height: 26px;
+                width: 26px;
+                object-fit: contain;
+                margin: 0 0.15rem 0 0;
+            }
+            .logo-container h2 {
+                font-size: 1.18rem;
+                font-weight: 700;
+                color: #219150;
+                margin: 0;
+            }
+            .header-actions {
+                grid-column: 3;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 0.5rem;
+            }
+            .search-bar {
+                display: flex !important;
+                align-items: center;
+                margin-right: 0.3rem;
+            }
+            .cart-button {
+                margin-left: 0.2rem;
+            }
+            .user-profile {
+                display: none !important;
+            }
+            .login-link {
+                font-size: 1rem;
+                padding: 0.18rem 0.85rem;
+                border-radius: 1.3rem;
+                border-width: 1.5px;
+                margin-right: 0.1rem;
+            }
+        }
+        </style>
+        <style>
+        @media (max-width: 900px) {
+            .header-content {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.4rem 0.9rem 0.4rem 0.9rem;
+                min-height: 48px;
+                background: #fff;
+                position: sticky;
+                top: 0;
+                z-index: 1300;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+            }
+            .logo-container img.logo {
+                height: 26px;
+                width: 26px;
+                object-fit: contain;
+                margin: 0 0.15rem 0 0;
+            }
+            .logo-container h2 {
+                font-size: 1.18rem;
+                font-weight: 700;
+                color: #219150;
+                margin: 0;
+            }
+            .header-actions {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .search-bar {
+                display: none !important;
+            }
+            .cart-button {
+                margin-left: 0.2rem;
+            }
+            .user-profile {
+                display: none !important;
+            }
+            .login-link {
+                font-size: 1rem;
+                padding: 0.18rem 0.85rem;
+                border-radius: 1.3rem;
+                border-width: 1.5px;
+                margin-right: 0.1rem;
+            }
+            .hamburger {
+                display: flex !important;
+                position: static !important;
+                margin-left: 0.5rem;
+            }
+        }
+        </style>
+        <style>
+        /* HAMBURGER BUTTON SOLO EN MÓVIL */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1201;
+        }
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 4px;
+            background: #219150;
+            margin: 4px 0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        @media (max-width: 900px) {
+            .hamburger {
+                display: flex !important;
+                position: absolute;
+                right: 1.2rem;
+                top: 1.2rem;
+            }
+            .main-nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 70vw;
+                max-width: 320px;
+                height: 100vh;
+                background: #fff;
+                box-shadow: 2px 0 16px rgba(0,0,0,0.08);
+                flex-direction: column;
+                align-items: flex-start;
+                padding-top: 2.5rem;
+                z-index: 1200;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            .main-nav.open {
+                transform: translateX(0);
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                gap: 2rem;
+                width: 100%;
+                padding-left: 2rem;
+            }
+            .main-nav.open .nav-links {
+                display: flex;
+            }
+            .nav-links a {
+                font-size: 1.3rem;
+                color: #222;
+                text-decoration: none;
+                font-weight: 500;
+                padding: 0.7rem 0;
+                display: block;
+                border-radius: 0.5rem;
+                transition: background 0.2s, color 0.2s;
+            }
+            .nav-links a:hover,
+            .nav-links a:focus {
+                background: #e6f4ea;
+                color: #219150;
+            }
+        }
+        @media (min-width: 901px) {
+            .hamburger {
+                display: none !important;
+            }
+            .main-nav {
+                position: static !important;
+                width: auto !important;
+                height: auto !important;
+                background: none !important;
+                box-shadow: none !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                padding-top: 0 !important;
+                transform: none !important;
+            }
+            .nav-links {
+                display: flex !important;
+                flex-direction: row !important;
+                gap: 2.5rem !important;
+                padding-left: 0 !important;
+            }
+        }
+        </style>
+        <script>
+        // Hamburguesa solo móvil
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger-btn');
+            const nav = document.querySelector('.main-nav');
+            hamburger.addEventListener('click', function() {
+                nav.classList.toggle('open');
+                hamburger.setAttribute('aria-expanded', nav.classList.contains('open'));
+            });
+            // Cierra el menú al hacer click en un enlace
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    nav.classList.remove('open');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                });
+            });
+        });
+        </script>
+        <style>
+        /* HAMBURGER BUTTON SOLO EN MÓVIL */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1201;
+        }
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 4px;
+            background: #219150;
+            margin: 4px 0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        @media (max-width: 900px) {
+            .hamburger {
+                display: flex !important;
+                position: absolute;
+                right: 1.2rem;
+                top: 1.2rem;
+            }
+            .main-nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 70vw;
+                max-width: 320px;
+                height: 100vh;
+                background: #fff;
+                box-shadow: 2px 0 16px rgba(0,0,0,0.08);
+                flex-direction: column;
+                align-items: flex-start;
+                padding-top: 2.5rem;
+                z-index: 1200;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            .main-nav.open {
+                transform: translateX(0);
+            }
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                width: 100%;
+                padding-left: 2rem;
+            }
+            .nav-links a {
+                font-size: 1.3rem;
+                color: #222;
+                text-decoration: none;
+                font-weight: 500;
+                padding: 0.7rem 0;
+                display: block;
+                border-radius: 0.5rem;
+                transition: background 0.2s, color 0.2s;
+            }
+            .nav-links a:hover,
+            .nav-links a:focus {
+                background: #e6f4ea;
+                color: #219150;
+            }
+            /* Oculta los enlaces en horizontal */
+            .main-nav:not(.open) .nav-links {
+                display: none;
+            }
+        }
+        @media (min-width: 901px) {
+            .hamburger {
+                display: none !important;
+            }
+            .main-nav {
+                position: static !important;
+                width: auto !important;
+                height: auto !important;
+                background: none !important;
+                box-shadow: none !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                padding-top: 0 !important;
+                transform: none !important;
+            }
+            .nav-links {
+                display: flex !important;
+                flex-direction: row !important;
+                gap: 2.5rem !important;
+                padding-left: 0 !important;
+            }
+        }
+        </style>
+        <script>
+        // Hamburguesa solo móvil
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger-btn');
+            const nav = document.querySelector('.main-nav');
+            hamburger.addEventListener('click', function() {
+                nav.classList.toggle('open');
+                hamburger.setAttribute('aria-expanded', nav.classList.contains('open'));
+            });
+            // Cierra el menú al hacer click en un enlace
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    nav.classList.remove('open');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                });
+            });
+        });
+        </script>
+        <style>
+        /* HAMBURGER BUTTON SOLO EN MÓVIL */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1201;
+        }
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 4px;
+            background: #219150;
+            margin: 4px 0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        @media (max-width: 900px) {
+            .hamburger {
+                display: flex !important;
+                position: absolute;
+                right: 1.2rem;
+                top: 1.2rem;
+            }
+            .main-nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 70vw;
+                max-width: 320px;
+                height: 100vh;
+                background: #fff;
+                box-shadow: 2px 0 16px rgba(0,0,0,0.08);
+                flex-direction: column;
+                align-items: flex-start;
+                padding-top: 2.5rem;
+                z-index: 1200;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            .main-nav.open {
+                transform: translateX(0);
+            }
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                width: 100%;
+                padding-left: 2rem;
+            }
+            .nav-links a {
+                font-size: 1.3rem;
+                color: #222;
+                text-decoration: none;
+                font-weight: 500;
+                padding: 0.7rem 0;
+                display: block;
+                border-radius: 0.5rem;
+                transition: background 0.2s, color 0.2s;
+            }
+            .nav-links a:hover,
+            .nav-links a:focus {
+                background: #e6f4ea;
+                color: #219150;
+            }
+            /* Oculta los enlaces en horizontal */
+            .main-nav:not(.open) .nav-links {
+                display: none;
+            }
+        }
+        @media (min-width: 901px) {
+            .hamburger {
+                display: none !important;
+            }
+            .main-nav {
+                position: static !important;
+                width: auto !important;
+                height: auto !important;
+                background: none !important;
+                box-shadow: none !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                padding-top: 0 !important;
+                transform: none !important;
+            }
+            .nav-links {
+                display: flex !important;
+                flex-direction: row !important;
+                gap: 2.5rem !important;
+                padding-left: 0 !important;
+            }
+        }
+        </style>
+        <script>
+        // Hamburguesa solo móvil
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger-btn');
+            const nav = document.querySelector('.main-nav');
+            hamburger.addEventListener('click', function() {
+                nav.classList.toggle('open');
+                hamburger.setAttribute('aria-expanded', nav.classList.contains('open'));
+            });
+            // Cierra el menú al hacer click en un enlace
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    nav.classList.remove('open');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                });
+            });
+        });
+        </script>
     <main>
         <section class="hero-section" style="background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url('https://images.pexels.com/photos/128402/pexels-photo-128402.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');">
             <h1>Del Campo a tu Hogar</h1>
@@ -144,7 +660,7 @@
                 </div>
                 <div class="category-card detailed-card">
                     <div class="category-image">
-                        <img src="https://jappi.com.co/wp-content/uploads/2022/09/Jappi-1-1.jpg" alt="Productos Orgánicos">
+                        <img src="https://natureganix.store/cdn/shop/articles/Natural_1024x.jpg?v=1618006760" alt="Productos Orgánicos">
                         <div class="category-overlay">
                             <i class="fas fa-leaf"></i>
                         </div>
@@ -207,7 +723,11 @@
             <!-- Header de la sección -->
             <div class="offers-header">
                 <div class="section-header">
-                    <h2 class="offers-section-title">🔥 Ofertas Especiales 🔥</h2>
+                                                                    <h2 class="offers-section-title" style="display:inline-block;">
+                                                                        <span style="font-size:1.1em;vertical-align:middle;">🔥</span>
+                                                                          <span style="margin:0 0.1em;vertical-align:middle;font-size:1.25rem;">Ofertas Especiales</span>
+                                                                        <span style="font-size:1.1em;vertical-align:middle;">🔥</span>
+                                                                    </h2>
                     <p class="section-subtitle">Descubre nuestros productos con descuentos exclusivos</p>
                 </div>
                 <a href="productos.html" class="offers-view-all-btn">
@@ -225,8 +745,122 @@
                 <h2 class="section-title">Productos Destacados</h2>
                 <p class="section-subtitle">Los mejores productos seleccionados especialmente para ti</p>
             </div>
-            <div id="product-list-home" class="product-grid">
+            <div id="product-list-home" class="product-grid content-section">
+                <div class="product-card grid-card">
+                    <div class="offer-badge">🔥 15% OFF</div>
+                    <img src="https://santaisabel.vtexassets.com/arquivos/ids/174684-900-900?width=900&amp;height=900&amp;aspect=true" alt="Manzanas Fuji">
+                    <div class="product-info">
+                        <h4>Manzanas Fuji</h4>
+                        <div class="product-pricing">
+                            <p class="price has-offer">$1.020 CLP</p>
+                            <span class="product-unit">kilos</span>
+                            <span class="original-price">Antes: $1.200 CLP</span>
+                            <span class="savings-badge">💰 Ahorras $180 CLP</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="view-details-btn" data-id="FR001">
+                                <i class="fas fa-info-circle"></i> Ver Detalles
+                            </button>
+                            <button class="add-to-cart-btn" data-id="FR001">
+                                <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
                 </div>
+                <div class="product-card grid-card">
+                    <img src="https://static.vecteezy.com/system/resources/previews/022/825/544/non_2x/orange-fruit-orange-on-transparent-background-free-png.png" alt="Naranjas Valencia">
+                    <div class="product-info">
+                        <h4>Naranjas Valencia</h4>
+                        <div class="product-pricing">
+                            <p class="price">$1.000 CLP</p>
+                            <span class="product-unit">kilos</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="view-details-btn" data-id="FR002">
+                                <i class="fas fa-info-circle"></i> Ver Detalles
+                            </button>
+                            <button class="add-to-cart-btn" data-id="FR002">
+                                <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card grid-card">
+                    <img src="https://png.pngtree.com/png-vector/20240128/ourmid/pngtree-ripe-cavendish-banana-png-image_11508971.png" alt="Plátanos Cavendish">
+                    <div class="product-info">
+                        <h4>Plátanos Cavendish</h4>
+                        <div class="product-pricing">
+                            <p class="price">$800 CLP</p>
+                            <span class="product-unit">kilos</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="view-details-btn" data-id="FR003">
+                                <i class="fas fa-info-circle"></i> Ver Detalles
+                            </button>
+                            <button class="add-to-cart-btn" data-id="FR003">
+                                <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card grid-card">
+                    <img src="https://png.pngtree.com/png-vector/20241225/ourmid/pngtree-fresh-organic-carrots-in-a-neat-stack-png-image_14812590.png" alt="Zanahorias Orgánicas">
+                    <div class="product-info">
+                        <h4>Zanahorias Orgánicas</h4>
+                        <div class="product-pricing">
+                            <p class="price">$900 CLP</p>
+                            <span class="product-unit">kilos</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="view-details-btn" data-id="VR001">
+                                <i class="fas fa-info-circle"></i> Ver Detalles
+                            </button>
+                            <button class="add-to-cart-btn" data-id="VR001">
+                                <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card grid-card">
+                    <img src="https://pngimg.com/uploads/spinach/spinach_PNG45.png" alt="Espinacas Frescas">
+                    <div class="product-info">
+                        <h4>Espinacas Frescas</h4>
+                        <div class="product-pricing">
+                            <p class="price">$700 CLP</p>
+                            <span class="product-unit">bolsas de 500g</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="view-details-btn" data-id="VR002">
+                                <i class="fas fa-info-circle"></i> Ver Detalles
+                            </button>
+                            <button class="add-to-cart-btn" data-id="VR002">
+                                <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card grid-card">
+                    <div class="offer-badge">🔥 18% OFF</div>
+                    <img src="https://png.pngtree.com/png-vector/20241212/ourmid/pngtree-colored-paprica-raw-paprika-fruit-png-image_14613829.png" alt="Pimientos Tricolores">
+                    <div class="product-info">
+                        <h4>Pimientos Tricolores</h4>
+                        <div class="product-pricing">
+                            <p class="price has-offer">$1.230 CLP</p>
+                            <span class="product-unit">kilos</span>
+                            <span class="original-price">Antes: $1.500 CLP</span>
+                            <span class="savings-badge">💰 Ahorras $270 CLP</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="view-details-btn" data-id="VR003">
+                                <i class="fas fa-info-circle"></i> Ver Detalles
+                            </button>
+                            <button class="add-to-cart-btn" data-id="VR003">
+                                <i class="fas fa-shopping-cart"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
         <section id="about" class="content-section about-section">
             <div class="about-content">

@@ -1,3 +1,58 @@
+// --- Dropdown de categorías en menú hamburguesa móvil ---
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdown = document.querySelector('.dropdown-categorias');
+    if (dropdown) {
+        const toggle = dropdown.querySelector('.dropdown-toggle');
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', dropdown.classList.contains('open'));
+        });
+        // Cerrar el dropdown si se hace click fuera
+        document.addEventListener('click', function(e) {
+            if (dropdown.classList.contains('open') && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+        // Cerrar el dropdown al hacer click en un enlace
+        dropdown.querySelectorAll('.dropdown-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                dropdown.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+});
+// ================= MENÚ HAMBURGUESA RESPONSIVO =================
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.getElementById('hamburger-menu');
+    const mainNav = document.getElementById('main-nav');
+    if (hamburger && mainNav) {
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            mainNav.classList.toggle('open');
+            document.body.classList.toggle('menu-open', mainNav.classList.contains('open'));
+        });
+        // Cerrar menú al hacer click fuera
+        document.addEventListener('click', function(e) {
+            if (mainNav.classList.contains('open')) {
+                if (!mainNav.contains(e.target) && e.target !== hamburger) {
+                    mainNav.classList.remove('open');
+                    document.body.classList.remove('menu-open');
+                }
+            }
+        });
+        // Cerrar menú al hacer click en un enlace
+        mainNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function() {
+                mainNav.classList.remove('open');
+                document.body.classList.remove('menu-open');
+            });
+        });
+    }
+});
 document.addEventListener('DOMContentLoaded', () => {
     // --- Inicializar sesión de usuario ---
     if (window.authEnhanced && typeof window.authEnhanced.checkExistingSession === 'function') {
