@@ -1,5 +1,17 @@
 // Filtros avanzados para la página de productos - VERSIÓN CORREGIDA
 document.addEventListener('DOMContentLoaded', function() {
+    // --- Filtro automático por parámetro en la URL ---
+    function autoFilterByCategory() {
+        const params = new URLSearchParams(window.location.search);
+        const categoria = params.get('categoria');
+        if (categoria) {
+            // Buscar botón con data-category igual a la categoría
+            const btn = Array.from(quickFilters).find(b => b.dataset.category === categoria);
+            if (btn) {
+                btn.click();
+            }
+        }
+    }
     // Elementos del DOM
     const quickFilters = document.querySelectorAll('.elegant-filter-btn');
     const productGrid = document.getElementById('product-list-full');
@@ -8,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const sortSelect = document.getElementById('sort-by');
     // Estado de los filtros
     let currentFilters = {
-        category: '',
+        category: 'all',
         sort: 'recommended'
     };
     // Productos según la rúbrica del proyecto - Ordenados alfabéticamente
@@ -385,4 +397,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar todo
     setupEventListeners();
     applyFilters();
+    autoFilterByCategory();
 });

@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     // --- Cargar productos desde localStorage o usar los por defecto ---
     let products = loadProductsFromStorage();
-    if (!products) {
+    if (!products || !Array.isArray(products) || products.length === 0) {
         products = getDefaultProducts();
         saveProductsToStorage(products);
     }
@@ -834,9 +834,11 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProducts('all', productListHome, 6);
     }
     if (productListFull) {
-        renderProducts('all', productListFull);
-        // Aplicar filtrado automático si hay parámetro de categoría en la URL
-        autoFilterByCategory();
+    renderProducts('all', productListFull);
+    // Forzar reflow para corregir bug de renderizado en móvil
+    window.dispatchEvent(new Event('resize'));
+    // Aplicar filtrado automático si hay parámetro de categoría en la URL
+    autoFilterByCategory();
     }
     renderCart();
     // --- Animación de Categorías ---

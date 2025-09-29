@@ -82,6 +82,77 @@
                 justify-content: center;
                 height: 36px;
             }
+            /* Filtros responsivos y compactos */
+            .filters-wrapper {
+                display: flex;
+                overflow-x: auto;
+                gap: 0.5rem;
+                padding-bottom: 0.3rem;
+                scrollbar-width: thin;
+                scrollbar-color: #219150 #e6f4ea;
+                -webkit-overflow-scrolling: touch;
+                margin-bottom: 1rem;
+            }
+            .elegant-filter-btn {
+                flex: 0 0 auto;
+                min-width: 90px;
+                max-width: 80vw;
+                font-size: 0.82rem;
+                white-space: nowrap;
+                padding: 0.45rem 0.7rem;
+                border-radius: 1.1rem;
+                box-shadow: 0 1px 4px rgba(33,145,80,0.06);
+                border: none;
+                background: #fff;
+                color: #219150;
+                transition: background 0.2s, color 0.2s;
+                margin: 0;
+            }
+            .elegant-filter-btn.active {
+                background: #219150;
+                color: #fff;
+                font-weight: 600;
+            }
+        }
+        @media (min-width: 901px) {
+            .filters-wrapper {
+                display: flex;
+                gap: 0.7rem;
+                justify-content: flex-start;
+                align-items: center;
+                margin-bottom: 1.1rem;
+                overflow-x: visible;
+            }
+            .elegant-filter-btn {
+                font-size: 0.85rem;
+                padding: 0.42rem 1rem;
+                border-radius: 1rem;
+                border: none;
+                background: #fff;
+                color: #219150;
+                transition: background 0.2s, color 0.2s;
+                box-shadow: 0 1px 4px rgba(33,145,80,0.06);
+                margin: 0;
+                white-space: nowrap;
+                min-width: 80px;
+                max-width: 220px;
+            }
+            .elegant-filter-btn.active {
+                background: #219150;
+                color: #fff;
+                font-weight: 600;
+            }
+        }
+        /* Scrollbar personalizado para filtros */
+        .filters-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+        .filters-wrapper::-webkit-scrollbar-thumb {
+            background: #219150;
+            border-radius: 3px;
+        }
+        .filters-wrapper::-webkit-scrollbar-track {
+            background: #e6f4ea;
         }
     .hamburger {display:none;background:none;border:none;width:40px;height:40px;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;z-index:1201;}
     .hamburger span {display:block;width:28px;height:4px;background:#219150;margin:4px 0;border-radius:2px;transition:all 0.3s;}
