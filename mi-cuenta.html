@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Cuenta - HuertoHogar</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon/favicon-48x48.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/favicon-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon/favicon-512x512.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="assets/img/Logo_Huerto_Hogar_Flavicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/Logo_Huerto_Hogar_Flavicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/Logo_Huerto_Hogar_Flavicon.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="assets/img/Logo_Huerto_Hogar_Flavicon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/img/Logo_Huerto_Hogar_Flavicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/img/Logo_Huerto_Hogar_Flavicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/img/Logo_Huerto_Hogar_Flavicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/Logo_Huerto_Hogar_Flavicon.png">
     <link rel="manifest" href="assets/favicon/site.webmanifest">
     <link rel="stylesheet" href="assets/css/normalizar.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -5348,7 +5348,7 @@
     <header class="main-header">
         <div class="header-content">
             <a href="index.html" class="logo-container">
-                <img src="assets/img/Logo Huerto Hogar.jpg" alt="Logo de HuertoHogar" class="logo">
+                <img src="assets/img/Logo_HuertoHogar.png" alt="Logo de HuertoHogar" class="logo">
                 <h2>HuertoHogar</h2>
             </a>
             <nav class="main-nav">
@@ -6867,10 +6867,6 @@
         // Función para manejar logout desde sidebar
         function handleSidebarLogout() {
         // Verificar disponibilidad de authEnhanced
-            exists: !!window.authEnhanced,
-            hasLogout: !!(window.authEnhanced && typeof window.authEnhanced.logout === 'function'),
-            windowKeys: Object.keys(window).filter(key => key.includes('auth'))
-        });
         // Si authEnhanced no está disponible, intentar inicializarlo
         if (!window.authEnhanced) {
             try {
@@ -6909,9 +6905,6 @@
             // Actualizar header
             const loginLink = document.getElementById('user-login-link');
             const userProfile = document.getElementById('user-profile');
-                loginLink: !!loginLink,
-                userProfile: !!userProfile
-            });
             if (loginLink && userProfile) {
                 loginLink.style.display = 'inline-block';
                 userProfile.style.display = 'none';
@@ -7006,13 +6999,6 @@
         }
         // Función para cargar datos del perfil
         function loadProfileData(user) {
-                nombres: user.nombres,
-                apellidos: user.apellidos,
-                rut: user.rut,
-                telefono: user.telefono,
-                direccion: user.direccion,
-                email: user.email
-            });
             // Campos básicos del formulario
             const fields = {
                 'profile-name': user.nombres || user.nombre || '',

@@ -253,11 +253,6 @@
         // Validar campos requeridos
         requiredFields.forEach(fieldName => {
             const field = document.getElementById(fieldName);
-                field: field,
-                value: field ? field.value : 'undefined',
-                trimmed: field ? field.value.trim() : 'undefined',
-                isEmpty: !field || !field.value.trim()
-            });
             if (!field || !field.value.trim()) {
                 showFieldError(field, 'Este campo es obligatorio');
                 isValid = false;
@@ -595,10 +590,6 @@
         if (phoneInput) {
             const fullPhoneNumber = phoneInput.getAttribute('data-full-phone') || phoneInput.value;
         }
-            delivery: orderData.delivery,
-            totals: orderData.totals,
-            products: orderData.products
-        });
         // Simular procesamiento
         showLoading(true);
         setTimeout(() => {
@@ -943,12 +934,6 @@
         // El input ahora contiene la parte editable (ej: "9 1234 5678")
         // Remover espacios y validar que sean exactamente 9 dígitos
         const cleanPhone = phone.replace(/\s/g, '');
-            original: phone,
-            clean: cleanPhone,
-            length: cleanPhone.length,
-            isNumeric: /^\d+$/.test(cleanPhone),
-            isValid: /^9\d{8}$/.test(cleanPhone)
-        });
         // Debe tener exactamente 9 dígitos empezando con 9 (números chilenos)
         // Acepta cualquier número de 9 dígitos que empiece con 9 ya que el prefijo +56 está fijo
         return /^9\d{8}$/.test(cleanPhone);
@@ -1168,11 +1153,11 @@
         let html = '<div class="confirmation-products">';
         products.forEach((product, index) => {
             // Obtener imagen del producto (usar imagen por defecto si no existe)
-            const productImage = product.image || 'assets/img/Logo Huerto Hogar.jpg';
+            const productImage = product.image || 'assets/img/Logo_HuertoHogar.png';
             html += `
                 <div class="product-item">
                     <div class="product-image">
-                        <img src="${productImage}" alt="${product.name}" onerror="this.src='assets/img/Logo Huerto Hogar.jpg'">
+                        <img src="${productImage}" alt="${product.name}" onerror="this.src='assets/img/Logo_HuertoHogar.png'">
                     </div>
                     <div class="product-info">
                         <h4>${product.name}</h4>

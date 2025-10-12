@@ -445,7 +445,7 @@ body.cart-open { overflow: hidden; }
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.2rem;
     text-decoration: none;
     color: var(--color-text-main);
     transition: transform 0.2s ease;
@@ -458,15 +458,27 @@ body.cart-open { overflow: hidden; }
 }
 
 .logo { 
-    max-width: 55px; 
+    max-width: 75px; 
     height: auto; 
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(46, 139, 87, 0.15);
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.logo-horizontal {
+    max-width: 200px;
+    height: auto;
+    transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .logo-container:hover .logo {
     box-shadow: 0 4px 12px rgba(46, 139, 87, 0.25);
+    transform: scale(1.05);
+}
+
+.logo-container:hover .logo-horizontal {
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .logo-container h2 { 
@@ -6409,7 +6421,7 @@ body.cart-open { overflow: hidden; }
     }
     
     .logo {
-        max-width: 45px;
+        max-width: 60px;
     }
     
     .header-actions { 
@@ -6603,7 +6615,7 @@ body.cart-open { overflow: hidden; }
     }
     
     .logo {
-        max-width: 35px;
+        max-width: 50px;
     }
     
     .header-actions {
