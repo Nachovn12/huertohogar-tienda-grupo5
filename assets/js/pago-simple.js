@@ -1153,11 +1153,11 @@
         let html = '<div class="confirmation-products">';
         products.forEach((product, index) => {
             // Obtener imagen del producto (usar imagen por defecto si no existe)
-            const productImage = product.image || 'assets/img/Logo_HuertoHogar.png';
+            const productImage = product.image || 'assets/img/Logo_HuertoHogar_Web.png';
             html += `
                 <div class="product-item">
                     <div class="product-image">
-                        <img src="${productImage}" alt="${product.name}" onerror="this.src='assets/img/Logo_HuertoHogar.png'">
+                        <img src="${productImage}" alt="${product.name}" onerror="this.src='assets/img/Logo_HuertoHogar_Web.png'">
                     </div>
                     <div class="product-info">
                         <h4>${product.name}</h4>
